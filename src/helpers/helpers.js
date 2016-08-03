@@ -8,7 +8,7 @@ export default {
    * @param  { String } string - source string
    * @returns { String } - cleaned string
    */
-  trim: function(string) {
-    return string.replace(/^\s+|\s+$/gm, '')
-  }
-}
+  trim(string) {
+    return string.replace(/^\s+|\s+$/gm, '');
+  },
+};

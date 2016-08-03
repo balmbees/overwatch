@@ -19,7 +19,13 @@ we originally thought that would be really helpful to
       - User Tracking (&#128309;)
 4. Put detailed monitoring / tracking tool links in one place (Sentry, NewRelic...)
 
-## Design Principles
+## Concepts
+
+## Road Map
+
+1. Build basic Component / Service Monitoring Tool
+  - Support AWS CloudWatch based monitoring
+  - Support Slack Notification Adapter
 
 this project used skeleton of https://github.com/GianlucaGuarini/es6-project-starter-kit,
 and inspired by great monitoring tool project such as https://github.com/arachnys/cabot about status / alert structure,

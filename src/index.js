@@ -1,17 +1,14 @@
-import helpers from './helpers/helpers'
+import requireDir from 'require-dir';
+import ComponentLoader from './components/loader';
 
-/**
- * An awesome script
- */
-export default class {
-  constructor(name = 'Dear Coder', text = 'hi there') {
-    this.name = name
-    this.text = text
-  }
-  get message() {
-    return `${this.text} ${this.name}!`
-  }
-  set message(text) {
-    this.text = helpers.trim(text)
-  }
-}
+const dir = requireDir('./database/components');
+
+const components = Object.keys(dir).map((key) => {
+  const value = dir[key];
+  return ComponentLoader.load(value);
+});
+
+Promise.all(components.map((c) => c.watch()))
+  .then((components) => {
+    console.log(components);
+  });

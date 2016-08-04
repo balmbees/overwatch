@@ -1,0 +1,19 @@
+{
+  "name": "Vingle Sidekiq",
+  "description": "<a href=\"https://www.vingle.net/sikdeiq\">Background Workers.</a>",
+  "notifier": {
+    "type": "SlackNotifier",
+    "settings" : {
+      "webhook_url": "https://hooks.slack.com/services/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"
+    }
+  },
+  "watcher": {
+    "type": "CloudWatchAlarmWatcher",
+    "settings": {
+      "alarmName": "sidekiq_production_newsfeed_thread_utilization_high",
+      "awsConfig": {
+        "region": "us-east-1"
+      }
+    }
+  }
+}

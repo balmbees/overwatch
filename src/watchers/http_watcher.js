@@ -3,7 +3,7 @@ import request from 'request';
 import BaseWatcher from './base';
 import WatchResult from './watch_result';
 
-export default class HTTPWatcher extends BaseWatcher {
+export default class HttpWatcher extends BaseWatcher {
   watch() {
     return new Promise((resolve) => {
       request(this.settings.url, (error, response) => {

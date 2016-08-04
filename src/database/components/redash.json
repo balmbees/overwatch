@@ -8,7 +8,7 @@
     }
   },
   "watcher": {
-    "type": "HTTPWatcher",
+    "type": "HttpWatcher",
     "settings": {
       "url" : "http://redash.vingle.net/"
     }

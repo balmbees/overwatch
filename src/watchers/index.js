@@ -1,7 +1,7 @@
-import HTTPWatcher from './http_watcher';
-import CloudWatchAlarmWatcher from './cloudwatch_alarm_watcher';
+import HttpWatcher from './http_watcher';
+import CloudwatchAlarmWatcher from './cloudwatch_alarm_watcher';
 
 export default {
-  HTTPWatcher,
-  CloudWatchAlarmWatcher,
+  HttpWatcher,
+  CloudwatchAlarmWatcher,
 };

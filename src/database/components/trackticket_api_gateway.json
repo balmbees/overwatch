@@ -8,12 +8,9 @@
     }
   },
   "watcher": {
-    "type": "CloudWatchAlarmWatcher",
+    "type": "CloudwatchAlarmWatcher",
     "settings": {
-      "alarmName": "Track Ticket API Gateway 5XX error",
-      "awsConfig": {
-        "region": "us-east-1"
-      }
+      "alarmName": "Track Ticket API Gateway 5XX error"
     }
   }
 }

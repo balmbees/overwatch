@@ -3,7 +3,7 @@ import { CloudWatch } from 'aws-sdk';
 import BaseWatcher from './base';
 import WatchResult from './watch_result';
 
-export default class CloudWatchAlarmWatcher extends BaseWatcher {
+export default class CloudwatchAlarmWatcher extends BaseWatcher {
   watch() {
     return new Promise((resolve) => {
       const cloudwatch = new CloudWatch(this.settings.awsConfig);

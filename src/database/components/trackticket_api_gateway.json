@@ -1,0 +1,19 @@
+{
+  "name": "TrackTicket AWS API Gateway",
+  "description": "<a href=\"https://www.vingle.net/sikdeiq\">Background Workers.</a>",
+  "notifier": {
+    "type": "SlackNotifier",
+    "settings" : {
+      "webhook_url": "https://hooks.slack.com/services/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"
+    }
+  },
+  "watcher": {
+    "type": "CloudWatchAlarmWatcher",
+    "settings": {
+      "alarmName": "Track Ticket API Gateway 5XX error",
+      "awsConfig": {
+        "region": "us-east-1"
+      }
+    }
+  }
+}

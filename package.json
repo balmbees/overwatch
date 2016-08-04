@@ -5,7 +5,8 @@
   "main": "index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
-    "start": "gulp clean && gulp build && node dst/index.js"
+    "start": "gulp clean && gulp build && node dst/index.js",
+    "lint": "eslint ./src"
   },
   "repository": {
     "type": "git",
@@ -41,7 +42,9 @@
   },
   "homepage": "https://github.com/GianlucaGuarini/es6-project-starter-kit",
   "dependencies": {
+    "aws-sdk": "^2.4.12",
     "request": "^2.74.0",
+    "require-dir": "^0.3.0",
     "underscore": "^1.8.3"
   }
 }

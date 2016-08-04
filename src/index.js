@@ -1,8 +1,14 @@
+import requireDir from 'require-dir';
 import ComponentLoader from './components/loader';
 
-const redashComponent =
-  ComponentLoader.load(require('./database/components/redash.json'));
+const dir = requireDir('./database/components');
 
-redashComponent.watch().then((watchResult) => {
-  console.log(watchResult);
+const components = Object.keys(dir).map((key) => {
+  const value = dir[key];
+  return ComponentLoader.load(value);
 });
+
+Promise.all(components.map((c) => c.watch()))
+  .then((results) => {
+    console.log(results);
+  });

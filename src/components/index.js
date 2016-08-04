@@ -16,7 +16,7 @@ export default class Component {
   }
 
   watch() {
-    return this.watcher.watch().then((watchResult)=> {
+    return this.watcher.watch().then((watchResult) => {
       this.watchResult = watchResult;
       return Promise.resolve(watchResult);
     });

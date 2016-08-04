@@ -11,7 +11,14 @@ export default class Component {
     ]));
   }
 
+  set watchResult(watchResult) {
+    this._watchResult = watchResult;
+  }
+
   watch() {
-    return this.watcher.watch();
+    return this.watcher.watch().then((watchResult)=> {
+      this.watchResult = watchResult;
+      return Promise.resolve(watchResult);
+    });
   }
 }

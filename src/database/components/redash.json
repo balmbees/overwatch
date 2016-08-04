@@ -10,7 +10,7 @@
   "watcher": {
     "type": "HTTPWatcher",
     "settings": {
-      "url" : "http://redash.vingle.net"
+      "url" : "http://redash.vingle.net/"
     }
   }
 }

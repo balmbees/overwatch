@@ -16,3 +16,6 @@ node_modules
 coverage
 .DS_Store
 dst
+dist
+
+.idea/

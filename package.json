@@ -6,7 +6,8 @@
   "jsnext:main": "src/index.js",
   "scripts": {
     "start": "gulp clean && gulp build && node dst/index.js",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "local": "gulp clean && gulp build && NEO4J_URL=http://localhost:7474 NEO4J_USER=neo4j NEO4J_PASS=neo4j node dst/index.js"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "require-dir": "^0.3.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
-    "glob": "^7.0.5"
+    "glob": "^7.0.5",
+    "neo4j-driver": "^1.0.3"
   }
 }

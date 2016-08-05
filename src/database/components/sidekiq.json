@@ -8,12 +8,9 @@
     }
   },
   "watcher": {
-    "type": "CloudWatchAlarmWatcher",
+    "type": "CloudwatchAlarmWatcher",
     "settings": {
-      "alarmName": "sidekiq_production_newsfeed_thread_utilization_high",
-      "awsConfig": {
-        "region": "us-east-1"
-      }
+      "alarmName": "sidekiq_production_newsfeed_thread_utilization_high"
     }
   }
 }

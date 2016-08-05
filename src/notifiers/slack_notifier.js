@@ -3,15 +3,18 @@ import request from 'request';
 import BaseNotifier from './base';
 
 export default class SlackNotifier extends BaseNotifier {
-  notify(watchResult) {
-    request({
-      uri: this.settings.webhook_url,
-      method: 'POST',
-      json: {
-        text: watchResult.description,
-      },
-    }, (error, response) => {
-      console.log(response.statusCode);
+  notify(component) {
+    return new Promise((resolve, reject) => {
+      request({
+        uri: this.settings.webhook_url,
+        method: 'POST',
+        json: {
+          text: this.message(component),
+        },
+      }, (err, response) => {
+        if (err) reject(err);
+        else resolve(response);
+      });
     });
   }
 }

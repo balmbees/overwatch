@@ -9,6 +9,5 @@ const components = Object.keys(dir).map((key) => {
 });
 
 Promise.all(components.map((c) => c.watch()))
-  .then((component) => {
-    console.log(component);
+  .then((components) => {
   });

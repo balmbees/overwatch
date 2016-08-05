@@ -10,7 +10,7 @@ export default class BaseWatcher {
 
   static globalSettings() {
     const className = _s(this.name).underscored().value();
-    const rawFile = fs.readFileSync(path.resolve(__dirname, `../database/watchers/${className}.json`), 'utf8');
+    const rawFile = fs.readFileSync(path.resolve(__dirname, `../../database/watchers/${className}.json`), 'utf8');
     if (!rawFile) {
       throw new Error(`${this.name} should have global config file but could not find it`);
     }

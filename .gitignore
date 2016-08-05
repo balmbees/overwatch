@@ -19,3 +19,8 @@ dst
 dist
 
 .idea/
+
+database/*
+!database/skeleton
+
+

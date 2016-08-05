@@ -1,7 +1,7 @@
 import requireDir from 'require-dir';
 import ComponentLoader from './components/loader';
 
-const dir = requireDir('./database/components');
+const dir = requireDir('../database/components');
 
 const components = Object.keys(dir).map((key) => {
   const value = dir[key];

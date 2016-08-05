@@ -47,6 +47,7 @@
     "request": "^2.74.0",
     "require-dir": "^0.3.0",
     "underscore": "^1.8.3",
-    "underscore.string": "^3.3.4"
+    "underscore.string": "^3.3.4",
+    "glob": "^7.0.5"
   }
 }

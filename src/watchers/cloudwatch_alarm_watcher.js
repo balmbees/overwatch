@@ -1,4 +1,4 @@
-import { CloudWatch } from 'aws-sdk';
+import {CloudWatch} from 'aws-sdk';
 
 import BaseWatcher from './base';
 import WatchResult from './watch_result';
@@ -19,16 +19,23 @@ export default class CloudwatchAlarmWatcher extends BaseWatcher {
           }));
         } else {
           const alarm = data.MetricAlarms[0];
-          if (alarm.StateValue === 'ALARM') {
+          if (!alarm) {
             resolve(new WatchResult({
               status: 'Error',
-              description: alarm.StateReason,
+              description: 'Alarm not exists.',
             }));
           } else {
-            resolve(new WatchResult({
-              status: 'Success',
-              description: alarm.StateReason,
-            }));
+            if (alarm.StateValue === 'ALARM') {
+              resolve(new WatchResult({
+                status: 'Error',
+                description: alarm.StateReason,
+              }));
+            } else {
+              resolve(new WatchResult({
+                status: 'Success',
+                description: alarm.StateReason,
+              }));
+            }
           }
         }
       });

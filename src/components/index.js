@@ -13,7 +13,7 @@ export default class Component {
 
   set watchResult(watchResult) {
     this._watchResult = watchResult;
-    
+
     this.notifier.notify(this._watchResult);
   }
 

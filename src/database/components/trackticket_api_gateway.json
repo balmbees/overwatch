@@ -1,12 +1,7 @@
 {
   "name": "TrackTicket AWS API Gateway",
   "description": "<a href=\"https://www.vingle.net/sikdeiq\">Background Workers.</a>",
-  "notifier": {
-    "type": "SlackNotifier",
-    "settings" : {
-      "webhook_url": "https://hooks.slack.com/services/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"
-    }
-  },
+  "notifier": "TedSlackNotifier",
   "watcher": {
     "type": "CloudwatchAlarmWatcher",
     "settings": {

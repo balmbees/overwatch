@@ -8,16 +8,16 @@ import NotifierLoader from './loader';
 const notifiers = {};
 
 // Glob must perform a synchronous job
-glob.sync(path.resolve(__dirname, `../../database/notifiers/*.json`)).forEach((filepath) => {
+glob.sync(path.resolve(__dirname, '../../database/notifiers/*.json')).forEach((filepath) => {
   const f = fs.readFileSync(filepath);
   if (!f) {
     return;
   }
   const notifierSettings = JSON.parse(f);
-  const notifierName = _s.capitalize(_s.camelize(path.basename(filepath, `.json`)));
-  notifiers[notifierName] = NotifierLoader.load(notifierSettings)
+  const notifierName = _s.capitalize(_s.camelize(path.basename(filepath, '.json')));
+  notifiers[notifierName] = NotifierLoader.load(notifierSettings);
 });
 
 export default {
-  notifiers
-}
+  notifiers,
+};

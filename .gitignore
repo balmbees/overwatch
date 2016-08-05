@@ -22,5 +22,3 @@ dist
 
 database/*
 !database/skeleton
-
-

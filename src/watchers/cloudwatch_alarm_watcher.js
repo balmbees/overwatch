@@ -1,4 +1,4 @@
-import {CloudWatch} from 'aws-sdk';
+import { CloudWatch } from 'aws-sdk';
 
 import BaseWatcher from './base';
 import WatchResult from './watch_result';

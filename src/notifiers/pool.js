@@ -8,7 +8,7 @@ import NotifierLoader from './loader';
 const notifiers = {};
 
 // Glob must perform a synchronous job
-glob.sync(path.resolve(__dirname, '../database/notifiers/*.json')).forEach((filepath) => {
+glob.sync(path.resolve(__dirname, '../../database/notifiers/*.json')).forEach((filepath) => {
   const f = fs.readFileSync(filepath);
   if (!f) {
     return;

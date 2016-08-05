@@ -1,7 +1,7 @@
 import requireDir from 'require-dir';
 import ComponentLoader from './components/loader';
 
-const dir = requireDir('./database/components');
+const dir = requireDir('../database/components');
 
 const components = Object.keys(dir).map((key) => {
   const value = dir[key];
@@ -9,6 +9,6 @@ const components = Object.keys(dir).map((key) => {
 });
 
 Promise.all(components.map((c) => c.watch()))
-  .then((components) => {
-    console.log(components);
+  .then((component) => {
+    console.log(component);
   });

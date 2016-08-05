@@ -1,6 +1,0 @@
-{
-  "type": "SlackNotifier",
-  "settings": {
-    "webhook_url": "https://hooks.slack.com/services/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"
-  }
-}

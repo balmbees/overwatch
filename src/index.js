@@ -12,4 +12,4 @@
 //   .then((components) => {
 //   });
 
-import server from './web_app/server';
+import server from './web_app';

@@ -1,12 +1,7 @@
 {
   "name": "Re:dash",
   "description": "<a href=\"http://redash.vingle.net\">Vingle BI Tool</a>",
-  "notifier": {
-    "type": "SlackNotifier",
-    "settings" : {
-      "webhook_url": "https://hooks.slack.com/services/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"
-    }
-  },
+  "notifier": "SlackNotifier",
   "watcher": {
     "type": "HttpWatcher",
     "settings": {

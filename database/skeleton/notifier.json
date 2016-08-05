@@ -1,0 +1,10 @@
+{
+  "name": "name",
+  "description": "description",
+  "notifier": "notifier name",
+  "watcher": {
+    "type": "watcher class name",
+    "settings": {
+    }
+  }
+}

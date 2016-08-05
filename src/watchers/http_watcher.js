@@ -8,13 +8,11 @@ export default class HttpWatcher extends BaseWatcher {
     return new Promise((resolve) => {
       request(this.settings.url, (error, response) => {
         if (error || response.statusCode < 200 || response.statusCode > 299) {
-          resolve(new WatchResult({
-            status: 'Error',
+          resolve(WatchResult.error({
             description: error.message,
           }));
         } else {
-          resolve(new WatchResult({
-            status: 'Success',
+          resolve(WatchResult.success({
             description: `Status: ${response.statusCode}`,
           }));
         }

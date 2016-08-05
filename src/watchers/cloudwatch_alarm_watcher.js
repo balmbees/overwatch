@@ -13,8 +13,7 @@ export default class CloudwatchAlarmWatcher extends BaseWatcher {
         ],
       }, (err, data) => {
         if (err) {
-          resolve(new WatchResult({
-            status: 'Error',
+          resolve(WatchResult.error({
             description: err.message,
           }));
         } else {
@@ -24,18 +23,14 @@ export default class CloudwatchAlarmWatcher extends BaseWatcher {
               status: 'Error',
               description: 'Alarm not exists.',
             }));
+          } else if (alarm.StateValue === 'ALARM') {
+            resolve(WatchResult.error({
+              description: alarm.StateReason,
+            }));
           } else {
-            if (alarm.StateValue === 'ALARM') {
-              resolve(new WatchResult({
-                status: 'Error',
-                description: alarm.StateReason,
-              }));
-            } else {
-              resolve(new WatchResult({
-                status: 'Success',
-                description: alarm.StateReason,
-              }));
-            }
+            resolve(WatchResult.success({
+              description: alarm.StateReason,
+            }));
           }
         }
       });

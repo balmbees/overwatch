@@ -6,11 +6,11 @@ export default class SlackNotifier extends BaseNotifier {
   notify(watchResult) {
     request({
       uri: this.settings.webhook_url,
-      method: "POST",
+      method: 'POST',
       json: {
-        "text": watchResult.description
-      }
-    }, (error, response, body) => {
+        text: watchResult.description,
+      },
+    }, (error, response) => {
       console.log(response.statusCode);
     });
   }

@@ -10,16 +10,25 @@ const components = Object.keys(dir).map((key) => {
 });
 
 let currentStatus = null;
-Promise.all(components.map((c) => c.watch()))
-  .then(() => {
-    currentStatus = components.map((c) => {
-      return {
-        name: c.name,
-        status: c.watchResult.status,
-        description: c.watchResult.description,
-      };
+
+setInterval(() => {
+  Promise.all(components.map((c) => c.watch()))
+    .then(() => {
+      currentStatus = components.map((c) => {
+        return {
+          name: c.name,
+          status: c.watchResult.status,
+          description: c.watchResult.description,
+          statusUpdatedAt: c.watchResult.createdAt,
+        };
+      });
+
+      App.io.sockets.emit('action', {
+        type: 'STATUS_UPDATE',
+        data: currentStatus,
+      });
     });
-  });
+}, 3000);
 
 App.io.on('connection', (socket) => {
   socket.emit('action', {

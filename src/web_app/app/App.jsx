@@ -7,9 +7,12 @@ class App extends React.Component {
     const { app } = this.props;
     const components = app.status.map((component) => {
       return (
-        <div>
+        <div key={component.name}>
           <h4>{component.name}</h4>
+          <b>{component.statusUpdatedAt}</b>
+          <br />
           <span>{component.status}</span>
+          <br />
           <span>{component.description}</span>
         </div>
       );
@@ -19,11 +22,6 @@ class App extends React.Component {
         {components}
       </div>
     );
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log("shouldComponentUpdate", nextProps, nextState);
-    return true;
   }
 }
 

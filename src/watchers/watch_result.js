@@ -1,10 +1,11 @@
+import _ from 'lodash';
 import
   STATUS,
   { STATUS_SUCCESS,
     STATUS_ERROR }
   from './watch_result_status';
 
-const statusValues = Object.values(STATUS);
+const statusValues = _.values(STATUS);
 
 export default class WatchResult {
   constructor(options) {
@@ -23,7 +24,7 @@ export default class WatchResult {
   }
 
   set status(status) {
-    if (!statusValues.includes(status)) {
+    if (!_(statusValues).includes(status)) {
       throw new Error(`${status} is invalid value for WatchResult.status`);
     }
     this._status = status;

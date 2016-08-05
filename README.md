@@ -20,6 +20,10 @@ we originally thought that would be really helpful to
 4. Put detailed monitoring / tracking tool links in one place (Sentry, NewRelic...)
 
 ## Concepts
+# Notifiers
+Currently, we supports
+1. SlackNotifier
+2. SnsNotifier (AWS SNS)
 
 ## Road Map
 

@@ -1,0 +1,6 @@
+{
+  "type": "notifier type(NOTE: NOTIFIER CLASS NAME ONLY)",
+  "settings": {
+    "webhook_url": "slack webhook url"
+  }
+}

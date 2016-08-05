@@ -1,0 +1,11 @@
+{
+  "name": "Vingle Sidekiq",
+  "description": "<a href=\"https://www.vingle.net/sikdeiq\">Background Workers.</a>",
+  "notifier": "TedSlackNotifier",
+  "watcher": {
+    "type": "CloudwatchAlarmWatcher",
+    "settings": {
+      "alarmName": "sidekiq_production_newsfeed_thread_utilization_high"
+    }
+  }
+}

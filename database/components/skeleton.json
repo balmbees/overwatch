@@ -1,0 +1,11 @@
+{
+  "name": "name",
+  "description": "description",
+  "notifier": "notifier name (ex: WebTeamSlackNotifier)",
+  "watcher": {
+    "type": "watcher type (ex: CloudwatchAlarmWatcher)",
+    "settings": {
+      "alarmName": "cloudwatch alarm name"
+    }
+  }
+}

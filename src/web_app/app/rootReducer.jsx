@@ -2,11 +2,12 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
 const rootReducer = combineReducers({
-  app: (state = {}, action) => {
-    console.log(action);
+  app: (state = { status: [] }, action) => {
     switch (action.type) {
-      case 'message':
-        return Object.assign({}, { message: action.data });
+      case 'STATUS_UPDATE':
+        return {
+          status: action.data,
+        };
       default:
         return state;
     }

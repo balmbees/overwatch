@@ -5,43 +5,47 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from './webpack.config.js';
 
-const isDeveloping = process.env.NODE_ENV !== 'production';
-const port = isDeveloping ? 3000 : process.env.PORT;
-const app = express();
+function createServer() {
+  const isDeveloping = process.env.NODE_ENV !== 'production';
+  const port = isDeveloping ? 3000 : process.env.PORT;
+  const app = express();
 
-if (isDeveloping) {
-  const compiler = webpack(config);
-  const middleware = webpackMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-    contentBase: 'src',
-    stats: {
-      colors: true,
-      hash: false,
-      timings: true,
-      chunks: false,
-      chunkModules: false,
-      modules: false,
-    },
+  if (isDeveloping) {
+    const compiler = webpack(config);
+    const middleware = webpackMiddleware(compiler, {
+      publicPath: config.output.publicPath,
+      contentBase: 'src',
+      stats: {
+        colors: true,
+        hash: false,
+        timings: true,
+        chunks: false,
+        chunkModules: false,
+        modules: false,
+      },
+    });
+
+    app.use(middleware);
+    app.use(webpackHotMiddleware(compiler));
+    app.get('*', (req, res) => {
+      res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'dist/index.html')));
+      res.end();
+    });
+  } else {
+    app.use(express.static(path.join(__dirname, 'dist')));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, 'dist/index.html'));
+    });
+  }
+
+  const server = app.listen(port, '0.0.0.0', (err) => {
+    if (err) {
+      console.log(err);
+    }
+    console.info('==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.', port, port);
   });
 
-  app.use(middleware);
-  app.use(webpackHotMiddleware(compiler));
-  app.get('*', (req, res) => {
-    res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'dist/index.html')));
-    res.end();
-  });
-} else {
-  app.use(express.static(path.join(__dirname, 'dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
-  });
+  return server;
 }
 
-const server = app.listen(port, '0.0.0.0', (err) => {
-  if (err) {
-    console.log(err);
-  }
-  console.info('==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.', port, port);
-});
-
-export default server;
+export { createServer }

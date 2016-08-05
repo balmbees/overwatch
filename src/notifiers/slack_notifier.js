@@ -4,7 +4,6 @@ import BaseNotifier from './base';
 
 export default class SlackNotifier extends BaseNotifier {
   notify(watchResult) {
-    console.log(this.settings);
     request({
       uri: this.settings.webhook_url,
       method: "POST",

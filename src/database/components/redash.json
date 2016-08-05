@@ -1,7 +1,7 @@
 {
   "name": "Re:dash",
   "description": "<a href=\"http://redash.vingle.net\">Vingle BI Tool</a>",
-  "notifier": "SlackNotifier",
+  "notifier": "TedSlackNotifier",
   "watcher": {
     "type": "HttpWatcher",
     "settings": {

@@ -5,38 +5,19 @@ import path from 'path';
 
 import NotifierLoader from './loader';
 
-let _instance = null;
+const notifiers = {};
 
-export default class NotifierPool {
-  constructor() {
-    if (!_instance) {
-      this.notifiers = {};
-      this._loadNotifiers();
-
-      _instance = this;
-    }
-
-    return _instance;
+// Glob must perform a synchronous job
+glob.sync(path.resolve(__dirname, `../database/notifiers/*.json`)).forEach((filepath) => {
+  const f = fs.readFileSync(filepath);
+  if (!f) {
+    return;
   }
+  const notifierSettings = JSON.parse(f);
+  const notifierName = _s.capitalize(_s.camelize(path.basename(filepath, `.json`)));
+  notifiers[notifierName] = NotifierLoader.load(notifierSettings)
+});
 
-  getNotifier(className) {
-    return this.notifiers[className];
-  }
-
-  _loadNotifiers() {
-    const that = this;
-
-    // Glob must perform a synchronous job
-    glob.sync(path.resolve(__dirname, `../database/notifiers/*.json`)).forEach((filepath) => {
-      const f = fs.readFileSync(filepath);
-      if (!f) {
-        return;
-      }
-      const notifierSettings = JSON.parse(f);
-      const className = _s.capitalize(_s.camelize(path.basename(filepath, `.json`)));
-      that.notifiers[className] = NotifierLoader.load({type: className, settings: notifierSettings})
-    });
-  }
-
-
+export default {
+  notifiers
 }

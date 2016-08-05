@@ -5,7 +5,7 @@ export default class Component {
     Object.assign(this, _.pick(settings, [
       'name',
       'description',
-      'status',
+      'watchResult',
       'notifier',
       'watcher',
     ]));
@@ -13,8 +13,13 @@ export default class Component {
 
   set watchResult(watchResult) {
     this._watchResult = watchResult;
+    if (this.notifier && watchResult) {
+      this.notifier.notify(this);
+    }
+  }
 
-    this.notifier.notify(this._watchResult);
+  get watchResult() {
+    return this._watchResult;
   }
 
   watch() {

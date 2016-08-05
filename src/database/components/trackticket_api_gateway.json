@@ -1,7 +1,7 @@
 {
   "name": "TrackTicket AWS API Gateway",
   "description": "<a href=\"https://www.vingle.net/sikdeiq\">Background Workers.</a>",
-  "notifier": "TedSlackNotifier",
+  "notifier": "FrontendSmsNotifier",
   "watcher": {
     "type": "CloudwatchAlarmWatcher",
     "settings": {

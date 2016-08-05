@@ -1,0 +1,9 @@
+{
+  "type": "SnsNotifier",
+  "settings": {
+    "awsConfig" : {
+      "region" : "us-east-1"
+    },
+    "targetArn" : "arn:aws:sns:us-east-1:921281748045:emergency-frontend-sms"
+  }
+}

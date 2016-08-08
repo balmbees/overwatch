@@ -21,8 +21,12 @@ gulp.task('build', () => {
     .pipe(gulpSourcemaps.write('.'))
     .pipe(gulp.dest('dst'));
 
-  return gulp.src('src/**/*.json')
-           .pipe(gulp.dest('dst'));
+  return gulp.src([
+    'src/**/*.json',
+    'src/**/*.jsx',
+    'src/**/*.css',
+    'src/**/*.tpl.html',
+  ]).pipe(gulp.dest('dst'));
 });
 
 gulp.task('pack', (cb) => {

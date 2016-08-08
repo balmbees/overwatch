@@ -1,10 +1,11 @@
-import Component from './components/index';
+import cron from 'node-cron';
 
+import Component from './components/index';
 import App from './web_app';
 
 let currentStatus = null;
 
-setInterval(() => {
+cron.schedule('*/3 * * * * *', () => {
   Component.fetchAll().then((components) => {
     Promise.all(components.map((c) => c.watch()))
       .then(() => {
@@ -23,7 +24,7 @@ setInterval(() => {
         });
       });
   });
-}, 3000);
+});
 
 App.io.on('connection', (socket) => {
   socket.emit('action', {

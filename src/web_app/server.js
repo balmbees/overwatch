@@ -5,7 +5,7 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from './webpack.config.js';
 
-function createServer() {
+export default function createServer() {
   const isDeveloping = process.env.NODE_ENV !== 'production';
   const port = isDeveloping ? 3000 : process.env.PORT;
   const app = express();
@@ -47,5 +47,3 @@ function createServer() {
 
   return server;
 }
-
-export { createServer }

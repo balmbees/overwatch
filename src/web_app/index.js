@@ -1,5 +1,5 @@
-import { createServer } from './server';
-import { createSocketIO } from './socket_io';
+import createServer from './server';
+import createSocketIO from './socket_io';
 
 const server = createServer();
 const io = createSocketIO(server);

@@ -1,11 +1,11 @@
-import NotifierPool from '../notifiers/pool';
 import WatcherLoader from '../watchers/loader';
 import Component from './index';
+import getNotifier from '../notifiers/pool';
 
 export default class ComponentLoader {
-  static load(settings) {
-    settings.notifier = NotifierPool.notifiers[settings.notifier];
-    settings.watcher = WatcherLoader.load(settings.watcher);
+  static load(settings, notifierSettings, watcherSettings) {
+    settings.notifier = getNotifier(notifierSettings);
+    settings.watcher = WatcherLoader.load(watcherSettings);
 
     return new Component(settings);
   }

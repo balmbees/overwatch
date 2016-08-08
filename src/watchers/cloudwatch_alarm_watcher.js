@@ -1,4 +1,4 @@
-import { CloudWatch } from 'aws-sdk';
+import { CloudWatch, Config } from 'aws-sdk';
 
 import BaseWatcher from './base';
 import WatchResult from './watch_result';
@@ -6,7 +6,13 @@ import WatchResult from './watch_result';
 export default class CloudwatchAlarmWatcher extends BaseWatcher {
   watch() {
     return new Promise((resolve) => {
-      const cloudwatch = new CloudWatch(this.settings.awsConfig);
+      const config = new Config({
+        accessKeyId: this.settings.awsAccessKeyId,
+        secretAccessKey: this.settings.awsSecretAccessKey,
+        region: this.settings.awsRegion,
+      });
+      const cloudwatch = new CloudWatch(config);
+
       cloudwatch.describeAlarms({
         AlarmNames: [
           this.settings.alarmName,

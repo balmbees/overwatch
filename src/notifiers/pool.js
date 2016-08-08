@@ -1,4 +1,4 @@
-import NotifierLoader from "./loader";
+import NotifierLoader from './loader';
 
 const notifiers = {};
 

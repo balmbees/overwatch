@@ -3,12 +3,12 @@
  */
 import request from 'request';
 
-export default class Neo4jDB {
+export default class GrapheneDB {
   constructor(url) {
     this.url = url;
   }
 
-  cyper(q) {
+  cypher(q) {
     return new Promise((resolve, reject) => {
       request({
         uri: `${this.url}/db/data/transaction/commit`,

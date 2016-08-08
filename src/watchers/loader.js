@@ -7,6 +7,6 @@ export default class WatcherLoader {
       throw new Error(`"${object.type}" is not supported Watcher`);
     }
 
-    return new type(object.settings);
+    return new type(object);
   }
 }

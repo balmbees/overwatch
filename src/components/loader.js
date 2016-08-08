@@ -3,9 +3,9 @@ import WatcherLoader from '../watchers/loader';
 import Component from './index';
 
 export default class ComponentLoader {
-  static load(settings) {
-    settings.notifier = NotifierPool.getNotifier(settings.notifier);
-    settings.watcher = WatcherLoader.load(settings.watcher);
+  static load(settings, notifierSettings, watcherSettings) {
+    settings.notifier = NotifierPool.getNotifier(notifierSettings);
+    settings.watcher = WatcherLoader.load(watcherSettings);
 
     return new Component(settings);
   }

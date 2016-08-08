@@ -7,6 +7,6 @@ export default class NotifierLoader {
       throw new Error(`"${object.type}" is not supported Notifier`);
     }
 
-    return new type(object.settings);
+    return new type(object);
   }
 }

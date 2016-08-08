@@ -10,7 +10,7 @@ export default class NotifierPool {
 
   static initPool() {
     return new Promise((resolve, reject) => {
-      const neo4jDB = new Neo4jDB(process.env.NEO4J_URL, process.env.NEO4J_USER, process.env.NEO4J_PASS);
+      const neo4jDB = new Neo4jDB(process.env.GRAPHENEDB_URL);
 
       neo4jDB.cyper('MATCH (a:Notifier) RETURN a').then((resp) => {
         const results = resp.body.results;
@@ -20,10 +20,8 @@ export default class NotifierPool {
           const data = results[0].data;
           data.forEach((r) => {
             const rowData = r.row[0];
-            const notifierName = rowData.name;
-            delete rowData.name;
 
-            notifiers[notifierName] = NotifierLoader.load(rowData);
+            notifiers[rowData.name] = NotifierLoader.load(rowData);
           });
           resolve();
         }

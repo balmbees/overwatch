@@ -4,21 +4,15 @@
 import request from 'request';
 
 export default class Neo4jDB {
-  constructor(url, username, password) {
+  constructor(url) {
     this.url = url;
-    this.username = username;
-    this.password = password;
-    this.authHeader = new Buffer(`${username}:${password}`).toString('base64');
   }
 
   cyper(q) {
     return new Promise((resolve, reject) => {
       request({
-        uri: `${this.url}/transaction/commit`,
+        uri: `${this.url}/db/data/transaction/commit`,
         method: 'POST',
-        headers: {
-          Authorization: `Basic ${this.authHeader}`,
-        },
         json: {
           statements: [{
             statement: q,
@@ -34,4 +28,3 @@ export default class Neo4jDB {
     });
   }
 }
-

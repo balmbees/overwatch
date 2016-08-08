@@ -7,7 +7,7 @@
   "scripts": {
     "start": "gulp clean && gulp build && node dst/index.js",
     "lint": "eslint ./src",
-    "local": "gulp clean && gulp build && NEO4J_URL=http://localhost:7474/db/data NEO4J_USER=neo4j NEO4J_PASS=neo4j node dst/index.js"
+    "local": "gulp clean && gulp build && GRAPHENEDB_URL=http://app54690432-fPdT1o:BmGrjucsn2wF4TTthBkC@app54690432fpdt1o.sb10.stations.graphenedb.com:24789 node dst/index.js"
   },
   "repository": {
     "type": "git",

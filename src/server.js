@@ -36,6 +36,8 @@ import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import { port, auth } from './config';
 
+import { updateComponents } from './actions/home';
+
 import work from './worker';
 
 const app = express();
@@ -190,19 +192,7 @@ models.sync().catch(err => console.error(err.stack)).then(() => {
 
   cron.schedule('*/3 * * * * *', () => {
     work().then((components) => {
-      console.log(components);
-      io.sockets.emit('action', {
-        type: 'COMPONENTS_STATUS_UPDATED',
-        data: {
-          components: components.map(
-            c => ({
-              id: c.id,
-              name: c.name,
-              status: c.status,
-            })
-          ),
-        },
-      });
+      io.sockets.emit('action', updateComponents(components));
     });
   });
 

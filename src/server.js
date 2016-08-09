@@ -34,6 +34,7 @@ import assets from './assets'; // eslint-disable-line import/no-unresolved
 import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import { port, auth } from './config';
+import cron from 'node-cron';
 
 const app = express();
 
@@ -192,12 +193,12 @@ models.sync().catch(err => console.error(err.stack)).then(() => {
     });
   });
 
-  setInterval(() => {
+  cron.schedule('*/3 * * * * *', () => {
     io.sockets.emit('action', {
       type: 'SOCKET_CONNECTED',
       data: { now: new Date() },
     });
-  }, 1000);
+  });
 
   server.listen(port, () => {
     console.log(`The server is running at http://localhost:${port}/`);

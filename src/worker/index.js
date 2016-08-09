@@ -5,9 +5,9 @@
 import Component from './models/component';
 
 export default function work() {
-  Component.fetchAll().then((components) => {
+  Component.fetchAll().then(components => {
     components.forEach(component => {
-      console.log(component);
+      component.watch();
     });
   });
 }

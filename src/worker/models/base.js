@@ -22,7 +22,7 @@ export class GrapheneDB {
         },
       }, (err, response) => {
         if (err || response.statusCode < 200 || response.statusCode > 200) {
-          reject({ err, response });
+          reject({err, response});
         } else {
           resolve(response);
         }
@@ -39,7 +39,7 @@ export default class BaseModel {
 
   static fetchById(id, label) {
     return new Promise(resolve => {
-      this.db().cypher(`MATCH (n:${label}) WHERE id(n)=${id} RETURN n`).then(resp => {
+      this.db().cypher(`MATCH (n:${label}) WHERE id(n)=${id} RETURN id(n), n`).then(resp => {
         const result = resp.body.results[0].data[0];
         resolve(new this(result.row[0], result.row[1]));
       });
@@ -48,11 +48,9 @@ export default class BaseModel {
 
   static fetchAll(label, limit = 30) {
     return new Promise(resolve => {
-      this.db().cypher(`MATCH (n:${label}) RETURN n LIMIT ${limit}`).then(resp => {
+      this.db().cypher(`MATCH (n:${label}) RETURN id(n), n LIMIT ${limit}`).then(resp => {
         const result = resp.body.results[0].data;
-        resolve(result.map(r => {
-          return new this(r.row[0], r.row[1]);
-        }));
+        resolve(result.map(r => new this(r.row[0], r.row[1])));
       });
     });
   }

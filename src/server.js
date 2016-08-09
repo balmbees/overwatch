@@ -19,6 +19,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import SocketIO from 'socket.io';
 import http from 'http';
+import cron from 'node-cron';
 
 import Html from './components/Html';
 import { ErrorPage } from './routes/error/ErrorPage';
@@ -34,7 +35,8 @@ import assets from './assets'; // eslint-disable-line import/no-unresolved
 import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import { port, auth } from './config';
-import cron from 'node-cron';
+
+import work from './worker';
 
 const app = express();
 
@@ -194,6 +196,7 @@ models.sync().catch(err => console.error(err.stack)).then(() => {
   });
 
   cron.schedule('*/3 * * * * *', () => {
+    work();
     io.sockets.emit('action', {
       type: 'SOCKET_CONNECTED',
       data: { now: new Date() },

@@ -25,7 +25,7 @@ export class Watcher extends BaseModel {
 export class HttpWatcher extends Watcher {
   watch() {
     return new Promise((resolve) => {
-      request(this.settings.url, (error, response) => {
+      request(this.url, (error, response) => {
         if (error || response.statusCode < 200 || response.statusCode > 299) {
           resolve(WatchResult.error({
             description: error.message,
@@ -44,15 +44,15 @@ export class CloudwatchAlarmWatcher extends Watcher {
   watch() {
     return new Promise((resolve) => {
       const config = new Config({
-        accessKeyId: this.settings.awsAccessKeyId,
-        secretAccessKey: this.settings.awsSecretAccessKey,
-        region: this.settings.awsRegion,
+        accessKeyId: this.awsAccessKeyId,
+        secretAccessKey: this.awsSecretAccessKey,
+        region: this.awsRegion,
       });
       const cloudwatch = new CloudWatch(config);
 
       cloudwatch.describeAlarms({
         AlarmNames: [
-          this.settings.alarmName,
+          this.alarmName,
         ],
       }, (err, data) => {
         if (err) {
@@ -62,8 +62,7 @@ export class CloudwatchAlarmWatcher extends Watcher {
         } else {
           const alarm = data.MetricAlarms[0];
           if (!alarm) {
-            resolve(new WatchResult({
-              status: 'Error',
+            resolve(WatchResult.error({
               description: 'Alarm not exists.',
             }));
           } else if (alarm.StateValue === 'ALARM') {

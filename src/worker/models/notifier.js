@@ -4,7 +4,7 @@
 import request from 'request';
 import BaseModel from './base';
 
-export const notifiers = {};
+export const notifierPool = {};
 
 const label = 'Notifier';
 export class Notifier extends BaseModel {
@@ -25,7 +25,7 @@ export class SlackNotifier extends Notifier {
   notify(watchResult) {
     return new Promise((resolve, reject) => {
       request({
-        uri: this.settings.webhook_url,
+        uri: this.webhook_url,
         method: 'POST',
         json: {
           text: watchResult.getMessage(),

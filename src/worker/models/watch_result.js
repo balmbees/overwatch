@@ -28,17 +28,6 @@ export default class WatchResult {
     return new this(STATUS_ERROR, options);
   }
 
-  set status(status) {
-    if (!_(statusValues).includes(status)) {
-      throw new Error(`${status} is invalid value for WatchResult.status`);
-    }
-    this.status = status;
-  }
-
-  get status() {
-    return this.status;
-  }
-
   getMessage() {
     return `${this.status} : ${this.description}`;
   }

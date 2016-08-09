@@ -186,14 +186,7 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 /* eslint-disable no-console */
 models.sync().catch(err => console.error(err.stack)).then(() => {
   const server = new http.Server(app);
-
   const io = new SocketIO(server);
-  io.on('connection', (socket) => {
-    socket.emit('action', {
-      type: 'SOCKET_CONNECTED',
-      data: { now: new Date() },
-    });
-  });
 
   cron.schedule('*/3 * * * * *', () => {
     work().then((components) => {

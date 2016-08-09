@@ -21,7 +21,24 @@ function Home(props, context) {
       <div className={s.container}>
         <h1 className={s.title}>Overwatch</h1>
         <div>
-          {JSON.stringify(props.data)}
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {props.components.map((component) => (
+                <tr>
+                  <td>{component.name}</td>
+                  <td>{component.status}</td>
+                  <td>{component.updatedAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -29,7 +46,14 @@ function Home(props, context) {
 }
 
 Home.propTypes = {
-  data: PropTypes.object.isRequired,
+  components: React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      name: React.PropTypes.string,
+      description: React.PropTypes.string,
+      status: React.PropTypes.string,
+      updatedAt: React.PropTypes.string,
+    })
+  ),
 };
 Home.contextTypes = {
   setTitle: PropTypes.func.isRequired,
@@ -37,7 +61,7 @@ Home.contextTypes = {
 
 function stateToProps(state) {
   return {
-    data: state.home.data || {},
+    components: state.home.data.components || {},
   };
 }
 

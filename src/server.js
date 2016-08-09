@@ -196,10 +196,20 @@ models.sync().catch(err => console.error(err.stack)).then(() => {
   });
 
   cron.schedule('*/3 * * * * *', () => {
-    work();
-    io.sockets.emit('action', {
-      type: 'SOCKET_CONNECTED',
-      data: { now: new Date() },
+    work().then((components) => {
+      console.log(components);
+      io.sockets.emit('action', {
+        type: 'COMPONENTS_STATUS_UPDATED',
+        data: {
+          components: components.map(
+            c => ({
+              id: c.id,
+              name: c.name,
+              status: c.status,
+            })
+          ),
+        },
+      });
     });
   });
 

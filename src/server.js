@@ -188,14 +188,26 @@ models.sync().catch(err => console.error(err.stack)).then(() => {
   io.on('connection', (socket) => {
     socket.emit('action', {
       type: 'SOCKET_CONNECTED',
-      data: { now: new Date() },
+      data: {
+        components: [
+        ],
+      },
     });
   });
 
   setInterval(() => {
     io.sockets.emit('action', {
       type: 'SOCKET_CONNECTED',
-      data: { now: new Date() },
+      data: {
+        components: [
+          {
+            name: 'redash',
+            status: 'Success',
+            description: 'Redash',
+            updatedAt: (new Date()).toString(),
+          },
+        ],
+      },
     });
   }, 1000);
 

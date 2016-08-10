@@ -1,0 +1,14 @@
+.table {
+  width: 100%;
+}
+
+.tableTh {
+  border-bottom: 1px solid grey;
+  text-align: center;
+}
+
+.tableTd {
+  border-bottom: 1px solid #b5b5b5;
+  text-align: center;
+  padding: 0.5em;
+}

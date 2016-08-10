@@ -12,6 +12,10 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { connect } from 'react-redux';
 import s from './Home.css';
 
+import topologyImgUrl from './topology.png';
+
+import ComponentsList from './ComponentsList';
+
 const title = 'Overwatch';
 
 function Home(props, context) {
@@ -21,24 +25,10 @@ function Home(props, context) {
       <div className={s.container}>
         <h1 className={s.title}>Overwatch</h1>
         <div>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {props.components.map((component) => (
-                <tr key={component.name}>
-                  <td>{component.name}</td>
-                  <td>{JSON.stringify(component.status)}</td>
-                  <td>{component.updatedAt}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ComponentsList components={props.components} />
+        </div>
+        <div style={{textAlign: 'center', marginTop: '150px'}}>
+          <img src={topologyImgUrl} />
         </div>
       </div>
     </div>

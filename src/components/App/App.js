@@ -67,7 +67,11 @@ class App extends Component {
             <Header />
           </div>
           <div className={s.main}>
-            {this.props.children}
+            <div className={s.mainContent}>
+              <div>
+                {this.props.children}
+              </div>
+            </div>
           </div>
           <div className={s.footer}>
             <Footer />

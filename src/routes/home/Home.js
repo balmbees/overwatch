@@ -26,7 +26,7 @@ function Home(props, context) {
               <tr>
                 <th>Name</th>
                 <th>Status</th>
-                <th></th>
+                <th>Updated</th>
               </tr>
             </thead>
             <tbody>

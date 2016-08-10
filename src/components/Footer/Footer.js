@@ -20,8 +20,6 @@ function Footer() {
         <span className={s.spacer}>·</span>
         <Link className={s.link} to="/">Home</Link>
         <span className={s.spacer}>·</span>
-        <Link className={s.link} to="/about">About</Link>
-        <span className={s.spacer}>·</span>
         <Link className={s.link} to="/not-found">Not Found</Link>
       </div>
     </div>

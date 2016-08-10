@@ -40,14 +40,12 @@ function createFetchKnowingCookie({ cookie }) {
 }
 
 import socketIO from 'socket.io-client';
-import { port } from '../config';
 
 function createSocket() {
   if (process.env.BROWSER) {
     // Browser Sync can massup the port (3000 -> 3001) so...
     const parser = document.createElement('a');
     parser.href = window.location.toString();
-    parser.port = port;
     const socket = socketIO(parser.href); // eslint-disable-line
     return socket;
   }

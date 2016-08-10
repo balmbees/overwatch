@@ -19,6 +19,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import SocketIO from 'socket.io';
 import http from 'http';
+import cron from 'node-cron';
 
 import Html from './components/Html';
 import { ErrorPage } from './routes/error/ErrorPage';
@@ -34,6 +35,10 @@ import assets from './assets'; // eslint-disable-line import/no-unresolved
 import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import { port, auth } from './config';
+
+import { updateComponents } from './actions/home';
+
+import work from './worker';
 
 const app = express();
 
@@ -183,33 +188,13 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 /* eslint-disable no-console */
 models.sync().catch(err => console.error(err.stack)).then(() => {
   const server = new http.Server(app);
-
   const io = new SocketIO(server);
-  io.on('connection', (socket) => {
-    socket.emit('action', {
-      type: 'SOCKET_CONNECTED',
-      data: {
-        components: [
-        ],
-      },
+
+  cron.schedule('*/3 * * * * *', () => {
+    work().then((components) => {
+      io.sockets.emit('action', updateComponents(components));
     });
   });
-
-  setInterval(() => {
-    io.sockets.emit('action', {
-      type: 'SOCKET_CONNECTED',
-      data: {
-        components: [
-          {
-            name: 'redash',
-            status: 'Success',
-            description: 'Redash',
-            updatedAt: (new Date()).toString(),
-          },
-        ],
-      },
-    });
-  }, 1000);
 
   server.listen(port, () => {
     console.log(`The server is running at http://localhost:${port}/`);

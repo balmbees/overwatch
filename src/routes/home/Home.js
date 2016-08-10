@@ -31,9 +31,9 @@ function Home(props, context) {
             </thead>
             <tbody>
               {props.components.map((component) => (
-                <tr>
+                <tr key={component.name}>
                   <td>{component.name}</td>
-                  <td>{component.status}</td>
+                  <td>{JSON.stringify(component.status)}</td>
                   <td>{component.updatedAt}</td>
                 </tr>
               ))}
@@ -50,8 +50,7 @@ Home.propTypes = {
     React.PropTypes.shape({
       name: React.PropTypes.string,
       description: React.PropTypes.string,
-      status: React.PropTypes.string,
-      updatedAt: React.PropTypes.string,
+      status: React.PropTypes.object,
     })
   ),
 };

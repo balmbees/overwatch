@@ -10,7 +10,7 @@ export class GrapheneDB {
     this.url = url;
   }
 
-  cypher(q) {
+  cypher(q, params = undefined) {
     return new Promise((resolve, reject) => {
       request({
         uri: `${this.url}/db/data/transaction/commit`,
@@ -18,11 +18,12 @@ export class GrapheneDB {
         json: {
           statements: [{
             statement: q,
+            parameters: params,
           }],
         },
       }, (err, response) => {
         if (err || response.statusCode < 200 || response.statusCode > 200) {
-          reject({err, response});
+          reject({ err, response });
         } else {
           resolve(response);
         }
@@ -32,7 +33,7 @@ export class GrapheneDB {
 }
 
 export default class BaseModel {
-  constructor(id, settings) {
+  constructor(settings, id = undefined) {
     this.id = id;
     _.extend(this, settings);
   }
@@ -41,7 +42,7 @@ export default class BaseModel {
     return new Promise(resolve => {
       this.db().cypher(`MATCH (n:${label}) WHERE id(n)=${id} RETURN id(n), n`).then(resp => {
         const result = resp.body.results[0].data[0];
-        resolve(new this(result.row[0], result.row[1]));
+        resolve(new this(result.row[1], result.row[0]));
       });
     });
   }
@@ -50,7 +51,7 @@ export default class BaseModel {
     return new Promise(resolve => {
       this.db().cypher(`MATCH (n:${label}) RETURN id(n), n LIMIT ${limit}`).then(resp => {
         const result = resp.body.results[0].data;
-        resolve(result.map(r => new this(r.row[0], r.row[1])));
+        resolve(result.map(r => new this(r.row[1], r.row[0])));
       });
     });
   }

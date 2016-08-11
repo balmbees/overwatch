@@ -3,6 +3,7 @@
  */
 import { CloudWatch, Config } from 'aws-sdk';
 import request from 'request';
+import _ from 'lodash';
 
 import BaseModel from './base';
 import WatchResult from './watch_result';
@@ -17,12 +18,45 @@ export class Watcher extends BaseModel {
     return super.fetchAll(label);
   }
 
+  insert() {
+    if (!this.isValid()) {
+      return Promise.reject('Invalid watcher');
+    }
+
+    return BaseModel.db()
+      .cypher('CREATE (w:Watcher { props }) RETURN id(w), w',
+        { props: _.omit(this.serialize(), 'id') })
+      .then(resp => {
+        const r = resp.body.results[0].data[0].row;
+        return _.extend(r[1], { id: r[0] });
+      });
+  }
+
+  isValid() {
+    throw new Error('Not Implemented');
+  }
+
   watch() {
     throw new Error('Not Implemented');
   }
 }
 
 export class HttpWatcher extends Watcher {
+  constructor(settings, id = undefined) {
+    super(_.pick(settings, ['type', 'name', 'url']), id);
+  }
+
+  serialize() {
+    return _.pick(this, ['type', 'id', 'name', 'url']);
+  }
+
+  isValid() {
+    const objFields = Object.keys(this);
+    const val = _.reduce(['type', 'name', 'url'], (m, n) => (m & _.includes(objFields, n)), true);
+
+    return val;
+  }
+
   watch() {
     return new Promise((resolve) => {
       request(this.url, (error, response) => {
@@ -41,6 +75,23 @@ export class HttpWatcher extends Watcher {
 }
 
 export class CloudwatchAlarmWatcher extends Watcher {
+  constructor(settings, id = undefined) {
+    super(_.pick(settings,
+      ['type', 'name', 'awsAccessKeyId', 'awsSecretAccessKey', 'awsRegion', 'alarmName']), id);
+  }
+
+  serialize() {
+    return _.pick(this,
+      ['type', 'id', 'name', 'awsAccessKeyId', 'awsSecretAccessKey', 'awsRegion', 'alarmName']);
+  }
+
+  isValid() {
+    return _.reduce(Object.keys(this),
+      (m, n) => m & (n in ['type', 'name', 'awsAccessKeyId',
+        'awsSecretAccessKey', 'awsRegion', 'alarmName']),
+      true);
+  }
+
   watch() {
     return new Promise((resolve) => {
       const config = new Config({

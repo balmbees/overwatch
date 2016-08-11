@@ -4,7 +4,7 @@ import moment from 'moment';
 import {
   STATUS_SUCCESS,
   STATUS_ERROR
-} from '../../../worker/models/watch_result';
+} from '../../../watcher/models/watch_result';
 
 const STATUS_TO_COLOR_MAP = {};
 STATUS_TO_COLOR_MAP[STATUS_SUCCESS] = '#00de0e';

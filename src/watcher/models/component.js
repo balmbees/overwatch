@@ -23,6 +23,30 @@ export default class Component extends BaseModel {
     return super.fetchAll(label);
   }
 
+  static registerWatcher(componentId, watcherId) {
+    return BaseModel.db()
+      .cypher(`MATCH (c:Component), (w:Watcher)
+            WHERE id(c) = ${componentId} AND id(w) = ${watcherId}
+            CREATE (c)<-[:WATCH]-(w)
+            RETURN c`)
+      .then(resp => {
+        const result = resp.body.results[0].data[0];
+        return new this(result.row[1], result.row[0]);
+      });
+  }
+
+  static registerNotifier(componentId, notifierId) {
+    return BaseModel.db()
+      .cypher(`MATCH (c:Component), (n:Notifier)
+              WHERE id(c) = ${componentId} AND id(n) = ${notifierId}
+              CREATE (c)-[:NOTIFY]->(n)
+              RETURN c`)
+      .then(resp => {
+        const result = resp.body.results[0].data[0];
+        return new this(result.row[1], result.row[0]);
+      });
+  }
+
   serialize() {
     return _.pick(this, ['id', 'name', 'status']);
   }

@@ -16,12 +16,34 @@ export class Notifier extends BaseModel {
     return super.fetchAll(label);
   }
 
+  insert() {
+    if (!this.isValid()) {
+      return Promise.reject('Invalid watcher');
+    }
+
+    return BaseModel.db()
+      .cyper('CREATE (n:Notifier { props }) RETURN id(n), n',
+        { props: _.omit(this.serialize(), 'id') })
+      .then(resp => {
+        const r = resp.body.results[0].data[0].row;
+        return _.extend(r[1], { id: r[0] });
+      });
+  }
+
   notify(watchResult) {
     throw new Error(`Not Implemented : ${watchResult}`);
+  }
+
+  isValid() {
+    throw new Error('Not Implemented');
   }
 }
 
 export class SlackNotifier extends Notifier {
+  serialize() {
+    return _.pick(this, ['type', 'id', 'name', 'webhook_url']);
+  }
+
   notify(watchResult) {
     return new Promise((resolve, reject) => {
       request({
@@ -35,6 +57,15 @@ export class SlackNotifier extends Notifier {
         else resolve(response);
       });
     });
+  }
+
+
+  isValid() {
+    const objFields = Object.keys(this);
+    const val = _.reduce(['type', 'name', 'webhook_url'],
+      (m, n) => (m & _.includes(objFields, n)), true);
+
+    return val;
   }
 }
 

@@ -10,7 +10,7 @@ export const WatchersRouter = new Router();
 
 WatchersRouter.get('/', (req, res) => {
   Watcher.fetchAll()
-    .then(watchers => res.json(watchers.map(w => new watcherTypes[w.type](w).serialize())));
+    .then(watchers => res.json(watchers.map(w => new watcherTypes[w.type](w, w.id).serialize())));
 });
 
 WatchersRouter.post('/', (req, res) => {

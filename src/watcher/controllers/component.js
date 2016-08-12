@@ -1,10 +1,11 @@
 /**
  * Created by leehyeon on 8/10/16.
  */
-
+import _ from 'lodash';
 import { Router } from 'express';
 
 import Component from '../models/component';
+import { watcherTypes } from '../models/watcher';
 
 export const ComponentsRouter = new Router();
 
@@ -24,7 +25,18 @@ ComponentsRouter.post('/', (req, res) => {
   }
 
   new Component({ name: paramName }).insert()
-    .then(c => res.json(c), m => res.status(400).json({ message: m }));
+    .then(c => {
+      const notifierIds = req.body.notifierIds;
+      const watchers = req.body.watchers;
+      Promise.all(
+        watchers.filter(w => w.type in watcherTypes)
+          .map(w => new watcherTypes[w.type](w).insert())
+      ).then(watcherList => {
+        Promise.all(_.flatten(watcherList.map(w => Component.registerWatcher(c.id, w.id)),
+          notifierIds.map(nid => Component.registerNotifier(c.id, nid))))
+          .then(() => c.serialize(), m => res.status(400).json({ message: m }));
+      });
+    });
 });
 
 export const ComponentRouter = new Router();
@@ -34,7 +46,8 @@ ComponentRouter.post('/:componentId/watcher/:watcherId', (req, res) => {
   const watcherId = req.params.watcherId;
 
   Component.registerWatcher(componentId, watcherId)
-    .then(c => res.json(c.serialize()), m => res.status(400).json({ message: m }));
+    .then(c => Promise.all([c.getNotifiers(), c.getWatchers])
+      .then(() => res.json(c.serialize())), m => res.status(400).json({ message: m }));
 });
 
 
@@ -43,5 +56,6 @@ ComponentRouter.post('/:componentId/notifier/:notifierId', (req, res) => {
   const notifierId = req.params.notifierId;
 
   Component.registerNotifier(componentId, notifierId)
-    .then(c => res.json(c.serialize()), m => res.status(400).json({ message: m }));
+    .then(c => Promise.all([c.getNotifiers(), c.getWatchers])
+      .then(() => res.json(c.serialize())), m => res.status(400).json({ message: m }));
 });

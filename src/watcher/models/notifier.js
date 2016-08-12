@@ -1,6 +1,8 @@
 /**
  * Created by leehyeon on 8/9/16.
  */
+import _ from 'lodash';
+
 import request from 'request';
 import BaseModel from './base';
 import _ from 'lodash';
@@ -41,6 +43,10 @@ export class Notifier extends BaseModel {
 }
 
 export class SlackNotifier extends Notifier {
+  constructor(settings, id = undefined) {
+    super(_.pick(settings, ['type', 'name', 'webhook_url']), id);
+  }
+
   serialize() {
     return _.pick(this, ['type', 'id', 'name', 'webhook_url']);
   }

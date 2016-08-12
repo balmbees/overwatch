@@ -37,8 +37,9 @@ import { port, auth } from './config';
 import { updateComponents } from './actions/home';
 
 import work from './watcher';
-import { ComponentsRouter } from './watcher/controllers/component';
+import { ComponentsRouter, ComponentRouter } from './watcher/controllers/component';
 import { WatchersRouter } from './watcher/controllers/watcher';
+import { NotifiersRouter } from './watcher/controllers/notifier';
 
 const app = express();
 
@@ -80,7 +81,9 @@ app.use('/graphql', expressGraphQL(req => ({
 // Watcher api controller
 // -----------------------------------------------------------------------------
 app.use('/watcher/components', ComponentsRouter);
+app.use('/watcher/component', ComponentRouter);
 app.use('/watcher/watchers', WatchersRouter);
+app.use('/watcher/notifiers', NotifiersRouter);
 
 //
 // Register server-side rendering middleware

@@ -33,3 +33,22 @@ ComponentsRouter.post('/', (req, res) => {
   new Component({ name: paramName }).insert()
     .then(c => res.json(c), m => res.status(400).json({ message: m }));
 });
+
+export const ComponentRouter = new Router();
+
+ComponentRouter.post('/:componentId/watcher/:watcherId', (req, res) => {
+  const componentId = req.params.componentId;
+  const watcherId = req.params.watcherId;
+
+  Component.registerWatcher(componentId, watcherId)
+    .then(c => res.json(c.serialize()), m => res.status(400).json({ message: m }));
+});
+
+
+ComponentRouter.post('/:componentId/notifier/:notifierId', (req, res) => {
+  const componentId = req.params.componentId;
+  const notifierId = req.params.notifierId;
+
+  Component.registerNotifier(componentId, notifierId)
+    .then(c => res.json(c.serialize()), m => res.status(400).json({ message: m }));
+});

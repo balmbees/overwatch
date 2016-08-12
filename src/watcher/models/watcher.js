@@ -86,10 +86,12 @@ export class CloudwatchAlarmWatcher extends Watcher {
   }
 
   isValid() {
-    return _.reduce(Object.keys(this),
-      (m, n) => m & (n in ['type', 'name', 'awsAccessKeyId',
-        'awsSecretAccessKey', 'awsRegion', 'alarmName']),
-      true);
+    const objFields = Object.keys(this);
+    const val = _.reduce(['type', 'name', 'awsAccessKeyId',
+      'awsSecretAccessKey', 'awsRegion', 'alarmName'],
+      (m, n) => (m & _.includes(objFields, n)), true);
+
+    return val;
   }
 
   watch() {

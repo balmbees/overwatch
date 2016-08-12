@@ -20,6 +20,6 @@ WatchersRouter.post('/', (req, res) => {
     res.status(400).json({ message: 'required field missing' });
   }
 
-  new watcherTypes[req.body.type](req.body).insert()
+  new watcherTypes[paramType](req.body).insert()
     .then(w => res.json(w.serialize()), m => res.status(400).json({ message: m }));
 });

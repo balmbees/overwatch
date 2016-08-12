@@ -47,7 +47,7 @@ export class HttpWatcher extends Watcher {
   }
 
   serialize() {
-    return _.pick(this, ['type', 'id', 'name', 'url']);
+    return _.pick(this, ['type', 'id', 'name', 'url', 'result']);
   }
 
   isValid() {
@@ -61,14 +61,15 @@ export class HttpWatcher extends Watcher {
     return new Promise((resolve) => {
       request(this.url, (error, response) => {
         if (error || response.statusCode < 200 || response.statusCode > 299) {
-          resolve(WatchResult.error({
+          this.result = WatchResult.error({
             description: error.message,
-          }));
+          });
         } else {
-          resolve(WatchResult.success({
+          this.result = WatchResult.success({
             description: `Status: ${response.statusCode}`,
-          }));
+          });
         }
+        resolve(this.result);
       });
     });
   }
@@ -109,25 +110,26 @@ export class CloudwatchAlarmWatcher extends Watcher {
         ],
       }, (err, data) => {
         if (err) {
-          resolve(WatchResult.error({
+          this.result = WatchResult.error({
             description: err.message,
-          }));
+          });
         } else {
           const alarm = data.MetricAlarms[0];
           if (!alarm) {
-            resolve(WatchResult.error({
+            this.result = WatchResult.error({
               description: 'Alarm not exists.',
-            }));
+            });
           } else if (alarm.StateValue === 'ALARM') {
-            resolve(WatchResult.error({
+            this.result = WatchResult.error({
               description: alarm.StateReason,
-            }));
+            });
           } else {
-            resolve(WatchResult.success({
+            this.result = WatchResult.success({
               description: alarm.StateReason,
-            }));
+            });
           }
         }
+        resolve(this.result);
       });
     });
   }

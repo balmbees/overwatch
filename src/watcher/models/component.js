@@ -6,13 +6,15 @@ import _ from 'lodash';
 import BaseModel from './base';
 import { notifierPool, notifierTypes } from './notifier';
 import { watcherTypes } from './watcher';
-import STATUS_ERROR from './watch_result';
+import { STATUS_SUCCESS, STATUS_ERROR } from './watch_result';
 
 const label = 'Component';
 
 export default class Component extends BaseModel {
   constructor(settings, id = undefined) {
     super(_.pick(settings, ['name', 'status']), id);
+    this.notifiers = [];
+    this.watchers = [];
   }
 
   static fetchById(id) {
@@ -48,7 +50,7 @@ export default class Component extends BaseModel {
   }
 
   serialize() {
-    return _.pick(this, ['id', 'name', 'status']);
+    return _.pick(this, ['id', 'name', 'status', 'notifiers', 'watchers']);
   }
 
   insert() {
@@ -71,13 +73,14 @@ export default class Component extends BaseModel {
       const [watchers, notifiers] = argv;
       return Promise.all(watchers.map(w => w.watch()))
         .then(results => {
-          const watchResult =
-            results.find(r => (r.status === STATUS_ERROR)) || results[0];
-
-          this.status = watchResult;
-          notifiers.forEach(n => {
-            n.notify(watchResult).then();
-          });
+          const failedResults = results.filter(r => (r.status === STATUS_ERROR));
+          failedResults
+            .forEach(fr => {
+              notifiers.forEach(n => {
+                n.notify(fr).then();
+              });
+            });
+          this.status = failedResults.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
 
           return this.status;
         });
@@ -91,7 +94,7 @@ export default class Component extends BaseModel {
         WHERE id(c) = ${this.id} RETURN id(n), n
       `).then(resp => {
         const result = resp.body.results[0].data;
-        return result.map(r => {
+        this.notifiers = result.map(r => {
           const id = r.row[0];
           let notifier = notifierPool[id];
           if (!notifier) {
@@ -100,6 +103,8 @@ export default class Component extends BaseModel {
           }
           return notifier;
         });
+
+        return this.notifiers;
       });
   }
 
@@ -110,7 +115,9 @@ export default class Component extends BaseModel {
         WHERE id(c) = ${this.id} RETURN id(n), n
       `).then(resp => {
         const result = resp.body.results[0].data;
-        return result.map(r => new watcherTypes[r.row[1].type](r.row[1], r.row[0]));
+        this.watchers = result.map(r => new watcherTypes[r.row[1].type](r.row[1], r.row[0]));
+
+        return this.watchers;
       });
   }
 }

@@ -5,11 +5,7 @@ export function updateComponents(components) {
     type: UPDATE_COMPONENTS,
     data: {
       components: components.map(
-        c => ({
-          id: c.id,
-          name: c.name,
-          status: c.status,
-        })
+        c => c.serialize()
       ),
     },
   };

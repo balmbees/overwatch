@@ -3,6 +3,7 @@
  */
 
 
+export const STATUS_NONE = 'None';
 export const STATUS_ERROR = 'Error';
 export const STATUS_SUCCESS = 'Success';
 

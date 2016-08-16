@@ -10,14 +10,14 @@
 @import '../variables.css';
 
 :root {
-  --highlight-color: #FFC70E;
-  --highlight-color2: #F99E1A;
+  --highlight-color: #ffc70e;
+  --highlight-color2: #f99e1a;
 }
 
 .root {
-  background: #43484C;
-  color: #F99E1A;
-  border-bottom: 3px solid #FFC70E;
+  background: #43484c;
+  color: #f99e1a;
+  border-bottom: 3px solid #ffc70e;
 }
 
 .container {

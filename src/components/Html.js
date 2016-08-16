@@ -6,7 +6,7 @@ const htmlStyle = htmlStyleFile._getCss(); // eslint-disable-line
 
 function Html({ title, description, style, script, children, state }) {
   return (
-    <html className="no-js" lang="">
+    <html className="no-js" lang={"en"}>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />

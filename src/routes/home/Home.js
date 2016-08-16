@@ -27,8 +27,8 @@ function Home(props, context) {
         <div>
           <ComponentsList components={props.components} />
         </div>
-        <div style={{textAlign: 'center', marginTop: '150px'}}>
-          <img src={topologyImgUrl} />
+        <div style={{ textAlign: 'center', marginTop: '150px' }}>
+          <img alt="topology" src={topologyImgUrl} />
         </div>
       </div>
     </div>

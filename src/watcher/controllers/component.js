@@ -12,7 +12,7 @@ ComponentsRouter.get('/', (req, res) => {
   Component.fetchAll()
     .then(components => Promise.all(components.map(c =>
       Promise.all([c.getWatchers(), c.getNotifiers()])
-        .then(_ => c.serialize())
+        .then(() => c.serialize())
     ))).then(r => res.json(r));
 });
 

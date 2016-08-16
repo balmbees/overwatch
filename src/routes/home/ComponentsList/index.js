@@ -22,11 +22,15 @@ function ComponentStatus(props) {
           cx={size / 2}
           cy={size / 2}
           r={size / 2}
-          fill={STATUS_TO_COLOR_MAP[status]} />
+          fill={STATUS_TO_COLOR_MAP[status]}
+        />
       </svg>
     </div>
   );
 }
+ComponentStatus.propTypes = {
+  status: React.PropTypes.string.isRequired,
+};
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './index.css';

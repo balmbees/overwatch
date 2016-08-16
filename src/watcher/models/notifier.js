@@ -3,6 +3,7 @@
  */
 import request from 'request';
 import BaseModel from './base';
+import _ from 'lodash';
 
 export const notifierPool = {};
 

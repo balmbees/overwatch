@@ -10,6 +10,11 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+  addons:
+    code_climate:
+      repo_token: 4a4722ed39e5640a107058f772b33094e972abaf15d8b4b57a1ac03fed8f54bc
 script:
   - npm run lint
-  - npm run test
+  - npm run test:coverage
+after_script:
+  - codeclimate-test-reporter < coverage/lcov.info

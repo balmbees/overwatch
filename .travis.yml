@@ -12,4 +12,6 @@ addons:
       - g++-4.8
 script:
   - npm run lint
-  - npm run test
+  - npm run test:coverage
+after_script:
+  - cat coverage/lcov.info | coveralls

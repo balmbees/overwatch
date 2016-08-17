@@ -2,6 +2,8 @@
 
 Topology Based Monitoring Tool
 
+[![Build Status](https://travis-ci.org/balmbees/overwatch.svg?branch=master)](https://travis-ci.org/balmbees/overwatch)
+
 ## What's this for?
 
 At Vingle, we wanted really simple monitoring tool that shows big picture of our system

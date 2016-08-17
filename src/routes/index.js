@@ -13,6 +13,7 @@ import App from '../components/App';
 // Child routes
 import home from './home';
 import error from './error';
+import register from './register';
 
 export default {
 
@@ -22,6 +23,7 @@ export default {
   children: [
     home,
     error,
+    register,
   ],
 
   async action({ next, render, context }) {

@@ -1,8 +1,6 @@
 /**
  * Created by leehyeon on 8/9/16.
  */
-import _ from 'lodash';
-
 import request from 'request';
 import BaseModel from './base';
 import _ from 'lodash';

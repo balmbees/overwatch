@@ -4,6 +4,7 @@ Topology Based Monitoring Tool
 
 [![Build Status](https://travis-ci.org/balmbees/overwatch.svg?branch=master)](https://travis-ci.org/balmbees/overwatch)
 [![Code Climate](https://codeclimate.com/github/balmbees/overwatch/badges/gpa.svg)](https://codeclimate.com/github/balmbees/overwatch)
+[![Test Coverage](https://codeclimate.com/github/balmbees/overwatch/badges/coverage.svg)](https://codeclimate.com/github/balmbees/overwatch/coverage)
 
 ## What's this for?
 

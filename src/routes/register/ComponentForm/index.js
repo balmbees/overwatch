@@ -6,8 +6,8 @@ import React from 'react';
 import { Form, FormGroup, Col, ControlLabel,
   FormControl, Checkbox, ButtonGroup, Button } from 'react-bootstrap';
 import $ from 'jquery';
+import _ from 'lodash';
 
-import { WATCHER_SKELETON } from '../../../constants';
 import WatcherFormGroup from './WatcherFormGroup';
 
 class ComponentFrom extends React.Component {
@@ -36,17 +36,11 @@ class ComponentFrom extends React.Component {
     });
   }
 
-  handleChangeWatcherType(e, i) {
-    const oldFormData = this.state.formData;
-    oldFormData.watchers[i].type = e.target.value;
-
-    this.setState({
-      formData: oldFormData,
-    });
-  }
-
   handleOnClickAddWatcherButton() {
-    const newWatcher = Object.assign({}, WATCHER_SKELETON);
+    const newWatcher = Object.assign({}, {
+      name: '',
+      type: 'HttpWatcher',
+    });
     const oldFormData = this.state.formData;
     oldFormData.watchers.push(newWatcher);
 
@@ -55,9 +49,58 @@ class ComponentFrom extends React.Component {
     });
   }
 
+  handleChangeWatcher(idx, field, value) {
+    const oldFormData = this.state.formData;
+    oldFormData.watchers[idx][field] = value;
+
+    this.setState({
+      formData: oldFormData,
+    });
+  }
+
+  handleChangeData(field, value) {
+    const oldFormData = this.state.formData;
+    oldFormData[field] = value;
+
+    this.setState({
+      formData: oldFormData,
+    });
+  }
+
+  handleChangeNotifier(checked, notifierId) {
+    const oldFormData = this.state.formData;
+
+    if (checked) {
+      oldFormData.notifierIds.push(notifierId);
+    } else {
+      _.pull(oldFormData.notifierIds, notifierId);
+    }
+
+    this.setState({
+      formData: oldFormData,
+    });
+  }
+
+  handleSubmit() {
+    $.post('/watcher/components', this.state.formData, (r) => {
+      this.setState({
+        formData: {
+          name: '',
+          watchers: [
+            {
+              name: '',
+              type: 'HttpWatcher',
+            },
+          ],
+          notifierIds: [],
+        },
+      });
+    });
+  }
+
   render() {
     const { formData, notifiers } = this.state;
-    const watchers = formData.watchers;
+    const { watchers, notifierIds } = formData;
 
     const renderNotifierCheckbox = () => (
       <FormGroup>
@@ -68,6 +111,8 @@ class ComponentFrom extends React.Component {
             key={n.id}
             value={n.id}
             name="notifierIds"
+            onChange={(e) => this.handleChangeNotifier(e.target.checked, n.id)}
+            checked={n.id in notifierIds}
             inline
           >
             {n.name}
@@ -82,7 +127,12 @@ class ComponentFrom extends React.Component {
         <FormGroup controlId="componentName">
           <Col componentClass={ControlLabel} sm={2}>Component Name</Col>
           <Col sm={10}>
-            <FormControl type="text" value={formData.name} placeholder="Component name" />
+            <FormControl
+              type="text"
+              value={formData.name}
+              placeholder="Component name"
+              onChange={e => this.handleChangeData('name', e.target.value)}
+            />
           </Col>
         </FormGroup>
         {watchers.map((w, i) => (
@@ -90,7 +140,7 @@ class ComponentFrom extends React.Component {
             key={i}
             index={i}
             watcher={w}
-            onChangeType={(e) => this.handleChangeWatcherType(e, i)}
+            onChange={(field, value) => this.handleChangeWatcher(i, field, value)}
           />
         ))}
         <Col smOffset={2} sm={10}>
@@ -100,7 +150,13 @@ class ComponentFrom extends React.Component {
         </Col>
         {renderNotifierCheckbox()}
         <ButtonGroup vertical block>
-          <Button bsStyle="primary" bsSize="large">Submit</Button>
+          <Button
+            bsStyle="primary"
+            bsSize="large"
+            onClick={() => this.handleSubmit()}
+          >
+            Submit
+          </Button>
         </ButtonGroup>
       </Form>
     );

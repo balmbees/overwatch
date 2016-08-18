@@ -135,4 +135,27 @@ export class CloudwatchAlarmWatcher extends Watcher {
   }
 }
 
-export const watcherTypes = { HttpWatcher, CloudwatchAlarmWatcher };
+export class DummyWatcher extends Watcher {
+  constructor(settings, id = undefined) {
+    super(_.pick(settings, ['type', 'name']), id);
+    this.result = WatchResult.success();
+  }
+
+  serialize() {
+    return _.pick(this,
+      ['type', 'id', 'name']);
+  }
+
+  isValid() {
+    const objFields = Object.keys(this);
+    const val = _.reduce(['type', 'name'], (m, n) => (m & _.includes(objFields, n)), true);
+
+    return val;
+  }
+
+  watch() {
+    return this.result;
+  }
+}
+
+export const watcherTypes = { HttpWatcher, CloudwatchAlarmWatcher, DummyWatcher };

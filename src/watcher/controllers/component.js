@@ -34,7 +34,7 @@ ComponentsRouter.post('/', (req, res) => {
       ).then(watcherList => {
         Promise.all(_.flatten(watcherList.map(w => Component.registerWatcher(c.id, w.id)),
           notifierIds.map(nid => Component.registerNotifier(c.id, nid))))
-          .then(() => c.serialize(), m => res.status(400).json({ message: m }));
+          .then(() => res.json(c.serialize()), m => res.status(400).json({ message: m }));
       });
     });
 });

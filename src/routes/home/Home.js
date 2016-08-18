@@ -15,6 +15,7 @@ import s from './Home.css';
 import topologyImgUrl from './topology.png';
 
 import ComponentsList from './ComponentsList';
+import ComponentsGraph from './ComponentsGraph';
 
 const title = 'Overwatch';
 
@@ -25,7 +26,23 @@ function Home(props, context) {
       <div className={s.container}>
         <h1 className={s.title}>Overwatch</h1>
         <div>
-          <ComponentsList components={props.components} />
+          {
+            (() => {
+              if (props.components.length > 0) {
+                return (
+                  <div>
+                    <ComponentsGraph components={props.components} />
+                    <ComponentsList components={props.components} />
+                  </div>
+                );
+              }
+              return (
+                <div>
+                  Loading...
+                </div>
+              );
+            })()
+          }
         </div>
         <div style={{ textAlign: 'center', marginTop: '150px' }}>
           <img alt="topology" src={topologyImgUrl} />
@@ -36,13 +53,7 @@ function Home(props, context) {
 }
 
 Home.propTypes = {
-  components: React.PropTypes.arrayOf(
-    React.PropTypes.shape({
-      name: React.PropTypes.string,
-      description: React.PropTypes.string,
-      status: React.PropTypes.object,
-    })
-  ),
+  components: React.PropTypes.array,
 };
 Home.contextTypes = {
   setTitle: PropTypes.func.isRequired,

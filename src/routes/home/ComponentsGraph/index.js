@@ -53,7 +53,7 @@ class ComponentsGraph extends React.Component {
       svgHeight,
       nodes: null,
       links: null,
-      d3Nodes: {},
+      d3Nodefs: {},
     };
   }
 
@@ -97,8 +97,6 @@ class ComponentsGraph extends React.Component {
           .force('center', forceCenter);
 
       force.on('tick', () => {
-        console.log('tick', force.alpha());
-
         this.eachD3Nodes((node) => {
           Object.assign({
             x: Math.max(node.size, Math.min(this.state.svgWidth - node.size, node.x)),

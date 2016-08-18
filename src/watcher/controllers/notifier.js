@@ -4,9 +4,16 @@
 
 import { Router } from 'express';
 
-import { notifierTypes } from '../models/notifier';
+import { Notifier, notifierTypes } from '../models/notifier';
 
 export const NotifiersRouter = new Router();
+
+NotifiersRouter.get('/', (req, res) => {
+  Notifier.fetchAll()
+    .then(notifiers =>
+      res.json(notifiers.map(n => new notifierTypes[n.type](n, n.id).serialize()))
+    );
+});
 
 NotifiersRouter.post('/', (req, res) => {
   const paramType = req.body.type;

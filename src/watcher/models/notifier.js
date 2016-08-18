@@ -41,6 +41,10 @@ export class Notifier extends BaseModel {
 }
 
 export class SlackNotifier extends Notifier {
+  constructor(settings, id = undefined) {
+    super(_.pick(settings, ['type', 'name', 'webhook_url']), id);
+  }
+
   serialize() {
     return _.pick(this, ['type', 'id', 'name', 'webhook_url']);
   }

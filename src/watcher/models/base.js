@@ -10,7 +10,7 @@ export class GrapheneDB {
     this.url = url;
   }
 
-  cypher(q, params = undefined) {
+  cypher(q, params = undefined, contents = ['row']) {
     return new Promise((resolve, reject) => {
       request({
         uri: `${this.url}/db/data/transaction/commit`,
@@ -18,6 +18,7 @@ export class GrapheneDB {
         json: {
           statements: [{
             statement: q,
+            resultDataContents: contents,
             parameters: params,
           }],
         },

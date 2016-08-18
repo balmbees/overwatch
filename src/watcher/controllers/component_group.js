@@ -12,9 +12,9 @@ ComponentGroupsRouter.get('/', (req, res) => {
     .then(cgs => res.json(cgs.map(cg => cg.serialize())));
 });
 
-ComponentGroupsRouter.get('/', (req, res) => {
-  ComponentGroup.fetchAll()
-    .then(cgs => res.json(cgs.map(cg => cg.serialize())));
+ComponentGroupsRouter.get('/graph', (req, res) => {
+  ComponentGroup.fetchComponentGraph()
+    .then(graph => res.json(graph));
 });
 
 export const ComponentGroupRouter = new Router();

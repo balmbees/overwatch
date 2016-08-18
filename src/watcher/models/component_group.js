@@ -20,6 +20,30 @@ export default class ComponentGroup extends BaseModel {
     return super.fetchAll(label);
   }
 
+  static fetchComponentGraph() {
+    return BaseModel.db()
+      .cypher('MATCH p=(:ComponentGroup)-[:CONTAINS]-(:Component) return p', null, ['graph'])
+      .then(resp => {
+        const nodes = [];
+        let links = [];
+
+        resp.body.results[0].data.forEach(row => {
+          row.graph.nodes.forEach(node => {
+            if (_.findIndex(nodes, (n => n.id === node.id)) === -1) {
+              nodes.push({ id: node.id, label: node.labels[0], title: node.properties.name });
+            }
+          });
+          links = links.concat(row.graph.relationships.map(r => Object({
+            start: _.findIndex(nodes, (n => n.id === r.startNode)),
+            end: _.findIndex(nodes, (n => n.id === r.endNode)),
+            type: r.type,
+          })));
+        });
+
+        return { nodes, links };
+      });
+  }
+
   static registerComponent(componentGroupId, componentId) {
     return BaseModel.db()
       .cypher(`MATCH (cg:ComponentGroup), (c:Component)

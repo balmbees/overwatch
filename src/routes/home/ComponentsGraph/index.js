@@ -41,9 +41,6 @@ ComponentNode.propTypes = {
   d3Node: React.PropTypes.object,
 };
 
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './index.css';
-
 class ComponentsGraph extends React.Component {
   constructor(props) {
     super(props);
@@ -162,4 +159,4 @@ ComponentsGraph.propTypes = {
   components: React.PropTypes.array,
 };
 
-export default withStyles(s)(ComponentsGraph);
+export default ComponentsGraph;

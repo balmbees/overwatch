@@ -100,11 +100,13 @@ class ComponentsGraph extends React.Component {
           .force('center', forceCenter);
 
       force.on('tick', () => {
-        console.log("tick", force.alpha());
+        console.log('tick', force.alpha());
 
         this.eachD3Nodes((node) => {
-          node.x = Math.max(node.size, Math.min(this.state.svgWidth - node.size, node.x));
-          node.y = Math.max(node.size, Math.min(this.state.svgHeight - node.size, node.y));
+          Object.assign({
+            x: Math.max(node.size, Math.min(this.state.svgWidth - node.size, node.x)),
+            y: Math.max(node.size, Math.min(this.state.svgHeight - node.size, node.y)),
+          }, node);
         });
 
         this.forceUpdate();

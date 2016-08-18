@@ -35,7 +35,7 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-redux": "^4.4.5",
-    "bootstrap": "^3.3.7",
+    "react-bootstrap": "^0.30.2",
     "redux": "^3.4.0",
     "redux-socket.io": "^1.2.0",
     "redux-thunk": "^2.1.0",
@@ -120,7 +120,8 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-hot-middleware": "^2.10.0",
-    "webpack-middleware": "^1.5.1"
+    "webpack-middleware": "^1.5.1",
+    "jquery": "^3.1.0"
   },
   "babel": {
     "presets": [

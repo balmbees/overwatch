@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import WatcherFormGroup from './WatcherFormGroup';
 
-class ComponentFrom extends React.Component {
+class ComponentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -123,7 +123,7 @@ class ComponentFrom extends React.Component {
         <div>
           <div>Component Name</div>
           <div>
-            <div
+            <input
               type="text"
               value={formData.name}
               placeholder="Component name"
@@ -149,4 +149,4 @@ class ComponentFrom extends React.Component {
   }
 }
 
-export default ComponentFrom;
+export default ComponentForm;

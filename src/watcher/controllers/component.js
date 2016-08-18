@@ -32,9 +32,12 @@ ComponentsRouter.post('/', (req, res) => {
         watchers.filter(w => w.type in watcherTypes)
           .map(w => new watcherTypes[w.type](w).insert())
       ).then(watcherList => {
-        Promise.all(_.flatten(watcherList.map(w => Component.registerWatcher(c.id, w.id)),
-          notifierIds.map(nid => Component.registerNotifier(c.id, nid))))
-          .then(() => res.json(c.serialize()), m => res.status(400).json({ message: m }));
+        Promise.all(
+          _.flatten(
+            watcherList.map(w => Component.registerWatcher(c.id, w.id)),
+            notifierIds.map(nid => Component.registerNotifier(c.id, nid))
+          )
+        ).then(() => res.json(c.serialize()), m => res.status(400).json({ message: m }));
       });
     });
 });

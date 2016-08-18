@@ -53,7 +53,7 @@ class ComponentsGraph extends React.Component {
       svgHeight,
       nodes: null,
       links: null,
-      d3Nodefs: {},
+      d3Nodes: {},
     };
   }
 

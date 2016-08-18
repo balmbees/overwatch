@@ -31,7 +31,11 @@ function Home(props, context) {
               if (props.components.length > 0) {
                 return (
                   <div>
-                    <ComponentsGraph components={props.components} />
+                    <ComponentsGraph
+                      components={props.components}
+                      groups={props.groups}
+                      contains={props.contains}
+                    />
                     <ComponentsList components={props.components} />
                   </div>
                 );
@@ -54,6 +58,8 @@ function Home(props, context) {
 
 Home.propTypes = {
   components: React.PropTypes.array,
+  groups: React.PropTypes.array,
+  contains: React.PropTypes.array,
 };
 Home.contextTypes = {
   setTitle: PropTypes.func.isRequired,
@@ -61,7 +67,9 @@ Home.contextTypes = {
 
 function stateToProps(state) {
   return {
-    components: state.home.data.components || {},
+    components: state.home.data.components || [],
+    groups: state.home.data.groups || [],
+    contains: state.home.data.contains || [],
   };
 }
 

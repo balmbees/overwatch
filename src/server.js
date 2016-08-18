@@ -35,6 +35,7 @@ import { setRuntimeVariable } from './actions/runtime';
 import { port, auth } from './config';
 
 import { updateComponents } from './actions/home';
+import ComponentGroup from './watcher/models/component_group';
 
 import work from './watcher';
 import { ComponentsRouter, ComponentRouter } from './watcher/controllers/component';
@@ -187,10 +188,31 @@ models.sync().catch(err => console.error(err.stack)).then(() => {
   const server = new http.Server(app);
   const io = new SocketIO(server);
 
-  cron.schedule('*/3 * * * * *', () => {
-    work().then((components) => {
-      io.sockets.emit('action', updateComponents(components));
+  let latestResponse = null;
+  const fetch = () => {
+    Promise.all([
+      work(),
+      ComponentGroup.fetchAll(),
+      ComponentGroup.fetchComponentGraph(),
+    ]).then(([components, nodes, links]) => {
+      latestResponse = updateComponents(
+        components.map((c) => c.serialize()),
+        nodes.map(n => n.serialize()),
+        links,
+      );
+      io.sockets.emit('action', latestResponse);
+    }).catch((e) => {
+      console.log('Error : ', e);
     });
+  };
+
+  fetch();
+  cron.schedule('*/10 * * * * *', fetch);
+
+  io.on('connection', (socket) => {
+    if (latestResponse) {
+      socket.emit('action', latestResponse);
+    }
   });
 
   server.listen(port, () => {

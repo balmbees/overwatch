@@ -24,23 +24,11 @@ export default class ComponentGroup extends BaseModel {
     return BaseModel.db()
       .cypher('MATCH p=(:ComponentGroup)-[:CONTAINS]-(:Component) return p', null, ['graph'])
       .then(resp => {
-        const nodes = [];
-        let links = [];
-
-        resp.body.results[0].data.forEach(row => {
-          row.graph.nodes.forEach(node => {
-            if (_.findIndex(nodes, (n => n.id === node.id)) === -1) {
-              nodes.push({ id: node.id, label: node.labels[0], title: node.properties.name });
-            }
-          });
-          links = links.concat(row.graph.relationships.map(r => Object({
-            start: _.findIndex(nodes, (n => n.id === r.startNode)),
-            end: _.findIndex(nodes, (n => n.id === r.endNode)),
-            type: r.type,
-          })));
+        const links = resp.body.results[0].data.map(row => {
+          const r = row.graph.relationships[0];
+          return r;
         });
-
-        return { nodes, links };
+        return links;
       });
   }
 

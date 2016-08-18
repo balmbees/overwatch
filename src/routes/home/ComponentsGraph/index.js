@@ -43,7 +43,7 @@ ComponentNode.propTypes = {
 function ComponentGroup(props) {
   const { group, d3Node } = props;
   return (
-    <g>
+    <g opacity="0.3">
       <circle
         cx={d3Node.x}
         cy={d3Node.y}
@@ -75,7 +75,7 @@ function ContainsLink(props) {
         x2={d3Link.target.x}
         y2={d3Link.target.y}
         style={{
-          stroke: 'rgb(255,0,0)',
+          stroke: 'black',
           strokeWidth: 2,
         }}
       />
@@ -91,7 +91,7 @@ class ComponentsGraph extends React.Component {
     super(props);
 
     const svgWidth = 900;
-    const svgHeight = 400;
+    const svgHeight = 600;
 
     this.state = {
       svgWidth,
@@ -136,7 +136,7 @@ class ComponentsGraph extends React.Component {
           id: group.id,
           x: 0,
           y: 0,
-          size: 50,
+          size: 250,
           type: 'group',
         };
       }
@@ -157,7 +157,7 @@ class ComponentsGraph extends React.Component {
 
       const forceLink = d3.forceLink();
       forceLink.id(d => d.id);
-      forceLink.distance(50);
+      forceLink.distance(70);
 
       const links = contains.map(c => Object({
         source: Number(c.startNode),
@@ -245,10 +245,14 @@ class ComponentsGraph extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{ textAlign: 'center' }}>
         <svg
           width={this.state.svgWidth}
           height={this.state.svgHeight}
+          style={{
+            border: '1px solid black',
+            margin: '20px',
+          }}
         >
           {this.drawLinks()}
           {this.drawNodes()}

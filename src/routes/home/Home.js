@@ -24,7 +24,6 @@ function Home(props, context) {
   return (
     <div className={s.root}>
       <div className={s.container}>
-        <h1 className={s.title}>Overwatch</h1>
         <div>
           {
             (() => {

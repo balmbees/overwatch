@@ -2,4 +2,4 @@ jshint:
   enabled: false
 eslint:
   enabled: true
-
+  config_file: package.json

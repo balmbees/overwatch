@@ -133,9 +133,9 @@ class ComponentsList extends React.Component {
 ComponentsList.propTypes = {
   components: React.PropTypes.arrayOf(
     React.PropTypes.shape({
+      id: React.PropTypes.number,
       name: React.PropTypes.string,
       description: React.PropTypes.string,
-      status: React.PropTypes.object,
     })
   ),
 };

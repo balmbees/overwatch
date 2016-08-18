@@ -40,6 +40,7 @@ import work from './watcher';
 import { ComponentsRouter, ComponentRouter } from './watcher/controllers/component';
 import { WatchersRouter } from './watcher/controllers/watcher';
 import { NotifiersRouter } from './watcher/controllers/notifier';
+import { ComponentGroupsRouter } from './watcher/controllers/component_group';
 
 const app = express();
 
@@ -84,6 +85,7 @@ app.use('/watcher/components', ComponentsRouter);
 app.use('/watcher/component', ComponentRouter);
 app.use('/watcher/watchers', WatchersRouter);
 app.use('/watcher/notifiers', NotifiersRouter);
+app.use('/watcher/component_groups', ComponentGroupsRouter);
 
 //
 // Register server-side rendering middleware

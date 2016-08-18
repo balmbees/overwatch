@@ -3,8 +3,6 @@
  */
 
 import React from 'react';
-import { Form, FormGroup, Col, ControlLabel,
-  FormControl, Checkbox, ButtonGroup, Button } from 'react-bootstrap';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -37,12 +35,11 @@ class ComponentFrom extends React.Component {
   }
 
   handleOnClickAddWatcherButton() {
-    const newWatcher = Object.assign({}, {
+    const oldFormData = this.state.formData;
+    oldFormData.watchers.push({
       name: '',
       type: 'HttpWatcher',
     });
-    const oldFormData = this.state.formData;
-    oldFormData.watchers.push(newWatcher);
 
     this.setState({
       formData: oldFormData,
@@ -103,38 +100,37 @@ class ComponentFrom extends React.Component {
     const { watchers, notifierIds } = formData;
 
     const renderNotifierCheckbox = () => (
-      <FormGroup>
-        <Col componentClass={ControlLabel} sm={2}>Notifiers</Col>
-        <Col sm={10}>
+      <div>
+        <div>Notifiers</div>
+
         {notifiers.map((n) => (
-          <Checkbox
-            key={n.id}
-            value={n.id}
-            name="notifierIds"
-            onChange={(e) => this.handleChangeNotifier(e.target.checked, n.id)}
-            checked={n.id in notifierIds}
-            inline
-          >
-            {n.name}
-          </Checkbox>
-        ))}
-        </Col>
-      </FormGroup>
+          <div key={n.id}>
+            <input
+              type="checkbox"
+              value={n.id}
+              name="notifierIds"
+              onChange={(e) => this.handleChangeNotifier(e.target.checked, n.id)}
+              checked={n.id in notifierIds}
+            />
+            <label>{n.name}</label>
+          </div>
+          ))}
+      </div>
     );
 
     return (
-      <Form horizontal>
-        <FormGroup controlId="componentName">
-          <Col componentClass={ControlLabel} sm={2}>Component Name</Col>
-          <Col sm={10}>
-            <FormControl
+      <div>
+        <div>
+          <div>Component Name</div>
+          <div>
+            <div
               type="text"
               value={formData.name}
               placeholder="Component name"
               onChange={e => this.handleChangeData('name', e.target.value)}
             />
-          </Col>
-        </FormGroup>
+          </div>
+        </div>
         {watchers.map((w, i) => (
           <WatcherFormGroup
             key={i}
@@ -143,22 +139,12 @@ class ComponentFrom extends React.Component {
             onChange={(field, value) => this.handleChangeWatcher(i, field, value)}
           />
         ))}
-        <Col smOffset={2} sm={10}>
-          <ButtonGroup vertical block>
-            <Button onClick={() => this.handleOnClickAddWatcherButton()}>Add watcher</Button>
-          </ButtonGroup>
-        </Col>
+        <div>
+          <button onClick={() => this.handleOnClickAddWatcherButton()}>Add watcher</button>
+        </div>
         {renderNotifierCheckbox()}
-        <ButtonGroup vertical block>
-          <Button
-            bsStyle="primary"
-            bsSize="large"
-            onClick={() => this.handleSubmit()}
-          >
-            Submit
-          </Button>
-        </ButtonGroup>
-      </Form>
+        <button onClick={() => this.handleSubmit()}>Submit</button>
+      </div>
     );
   }
 }

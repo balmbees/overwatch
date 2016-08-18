@@ -12,7 +12,7 @@ export const ComponentsRouter = new Router();
 ComponentsRouter.get('/', (req, res) => {
   Component.fetchAll()
     .then(components => Promise.all(components.map(c =>
-      Promise.all([c.getWatchers(), c.getNotifiers()])
+      Promise.all([c.getWatchers(), c.getNotifiers(), c.getGroups()])
         .then(() => c.serialize())
     ))).then(r => res.json(r));
 });

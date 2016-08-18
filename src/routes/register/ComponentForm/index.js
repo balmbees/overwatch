@@ -82,7 +82,7 @@ class ComponentFrom extends React.Component {
   }
 
   handleSubmit() {
-    $.post('/watcher/components', this.state.formData, (r) => {
+    $.post('/watcher/components', this.state.formData, () => {
       this.setState({
         formData: {
           name: '',

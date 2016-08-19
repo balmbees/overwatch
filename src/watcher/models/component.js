@@ -41,8 +41,8 @@ export default class Component extends BaseModel {
     return BaseModel.db()
       .cypher(`MATCH (c:Component), (w:Watcher)
             WHERE id(c) = ${componentId} AND id(w) = ${watcherId}
-            CREATE (c)<-[:WATCH]-(w)
-            RETURN c`)
+            MERGE (c)<-[:WATCH]-(w)
+            RETURN id(c), c`)
       .then(resp => {
         const result = resp.body.results[0].data[0];
         return new this(result.row[1], result.row[0]);
@@ -53,8 +53,20 @@ export default class Component extends BaseModel {
     return BaseModel.db()
       .cypher(`MATCH (c:Component), (n:Notifier)
               WHERE id(c) = ${componentId} AND id(n) = ${notifierId}
-              CREATE (c)-[:NOTIFY]->(n)
-              RETURN c`)
+              MERGE (c)-[:NOTIFY]->(n)
+              RETURN id(c), c`)
+      .then(resp => {
+        const result = resp.body.results[0].data[0];
+        return new this(result.row[1], result.row[0]);
+      });
+  }
+
+  static deregisterNotifier(componentId, notifierId) {
+    return BaseModel.db()
+      .cypher(`MATCH (c:Component)-[r:NOTIFY]->(n:Notifier)
+              WHERE id(c) = ${componentId} AND id(n) = ${notifierId}
+              DELETE r
+              RETURN id(c), c`)
       .then(resp => {
         const result = resp.body.results[0].data[0];
         return new this(result.row[1], result.row[0]);
@@ -65,7 +77,7 @@ export default class Component extends BaseModel {
     return BaseModel.db()
       .cypher(`MATCH (c1:Component), (c2:Component)
               WHERE id(c1) = ${fromId} AND id(n2) = ${toId}
-              CREATE p=(c1)-[:DEPEND]->(c2)
+              MERGE p=(c1)-[:DEPEND]->(c2)
               RETURN p`)
       .then(resp => resp.body.results[0].data[0].row[0]);
   }

@@ -14,6 +14,7 @@ import App from '../components/App';
 import home from './home';
 import error from './error';
 import register from './register';
+import manage from './manage';
 
 export default {
 
@@ -24,6 +25,7 @@ export default {
     home,
     error,
     register,
+    manage,
   ],
 
   async action({ next, render, context }) {

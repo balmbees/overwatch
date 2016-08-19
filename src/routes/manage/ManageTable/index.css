@@ -1,0 +1,14 @@
+.manageComponentTbl {
+  margin: 20px auto;
+  width: 100%;
+}
+
+.manageComponentThdTh {
+  border-bottom: 1px solid #808080;
+  padding: 10px 0;
+}
+
+.manageComponentTbdTr {
+  text-align: center;
+  padding: 5px 0;
+}

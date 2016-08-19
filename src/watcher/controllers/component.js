@@ -68,6 +68,14 @@ ComponentRouter.post('/:componentId/notifier/:notifierId', (req, res) => {
       .then(() => res.json(c.serialize())), m => res.status(400).json({ message: m }));
 });
 
+ComponentRouter.delete('/:componentId/notifier/:notifierId', (req, res) => {
+  const { componentId, notifierId } = req.params;
+
+  Component.deregisterNotifier(componentId, notifierId)
+    .then(c => Promise.all([c.getNotifiers(), c.getWatchers])
+      .then(() => res.json(c.serialize())), m => res.status(400).json({ message: m }));
+});
+
 ComponentRouter.post('/:componentId/depends/:dependencyId', (req, res) => {
   const { componentId, dependencyId } = req.params;
 

@@ -68,11 +68,11 @@ ComponentGroup.propTypes = {
 const LINK_STYLE = {
   contain: {
     stroke: 'rgba(0, 0, 0, 0.3)',
-    strokeWidth: '10px',
+    strokeWidth: '5px',
   },
   depend: {
-    stroke: 'rgba(200, 130, 0, 1)',
-    strokeWidth: '20px',
+    stroke: 'rgba(255, 222, 0, 0.7)',
+    strokeWidth: '10px',
   },
 };
 
@@ -99,7 +99,7 @@ class ComponentsGraph extends React.Component {
     super(props);
 
     const svgWidth = 900;
-    const svgHeight = 600;
+    const svgHeight = 900;
 
     this.state = {
       svgWidth,
@@ -130,7 +130,7 @@ class ComponentsGraph extends React.Component {
           id: c.id,
           x: 0,
           y: 0,
-          size: 50,
+          size: 40,
           type: 'component',
         };
       }
@@ -157,7 +157,18 @@ class ComponentsGraph extends React.Component {
       const { svgWidth, svgHeight } = this.state;
 
       const forceManyBody = d3.forceManyBody();
-      forceManyBody.strength(-15);
+      // forceManyBody.strength((node) => {
+      //   return -30;
+      //   // switch (node.type) {
+      //   //   case 'component':
+      //   //     return -node.size * 0.2;
+      //   //   default:
+      //   //     break;
+      //   // }
+      //   // return null;
+      // });
+      forceManyBody.strength(-140);
+      forceManyBody.distanceMin(70);
 
       const forceCenter = d3.forceCenter();
       forceCenter.x(svgWidth / 2);
@@ -165,7 +176,26 @@ class ComponentsGraph extends React.Component {
 
       const forceLink = d3.forceLink();
       forceLink.id(d => d.id);
-      forceLink.distance(70);
+      // forceLink.distance((link) => {
+      //   switch (link.type) {
+      //     case 'contain':
+      //       return 150;
+      //     case 'depend':
+      //       return 200;
+      //     default:
+      //       return 0;
+      //   }
+      // });
+      forceLink.strength((link) => {
+        switch (link.type) {
+          case 'contain':
+            return 0.1;
+          case 'depend':
+            return 0.1;
+          default:
+            return 0;
+        }
+      });
 
       const containsLinks = contains.map(c => Object({
         source: Number(c.startNode),

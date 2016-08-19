@@ -29,18 +29,22 @@ ComponentsRouter.post('/', (req, res) => {
     .then(c => {
       const notifierIds = req.body.notifierIds;
       const watchers = req.body.watchers;
-      Promise.all(
+
+      return Promise.all(
         watchers.filter(w => w.type in watcherTypes)
           .map(w => new watcherTypes[w.type](w).insert())
-      ).then(watcherList => {
-        Promise.all(
+      ).then(
+        watcherList => Promise.all(
           _.flatten(
             watcherList.map(w => Component.registerWatcher(c.id, w.id)),
             notifierIds.map(nid => Component.registerNotifier(c.id, nid))
           )
-        ).then(() => res.json(c), m => res.status(400).json({ message: m }));
-      }, m => res.status(400).json({ message: m }));
-    }, m => res.status(400).json({ message: m }));
+        )
+      ).then(
+        () => res.json(c),
+        (e) => res.status(400).json({ message: e.message })
+      );
+    });
 });
 
 export const ComponentRouter = new Router();

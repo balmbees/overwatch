@@ -62,7 +62,7 @@ export class HttpWatcher extends Watcher {
       request(this.url, (error, response) => {
         if (error || response.statusCode < 200 || response.statusCode > 299) {
           this.result = WatchResult.error({
-            description: error.message,
+            description: error ? error.message : `Status: ${response.statusCode}`,
           });
         } else {
           this.result = WatchResult.success({

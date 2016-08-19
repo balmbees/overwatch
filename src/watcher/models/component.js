@@ -92,7 +92,7 @@ export default class Component extends BaseModel {
     }
     return BaseModel.db()
       .cypher('CREATE (c:Component { props }}) RETURN id(c), c',
-        { props: _.pick(this, ['name', 'description']), })
+        { props: _.pick(this, ['name', 'description']) })
       .then(resp => {
         const r = resp.body.results[0].data[0].row;
         return _.extend(r[1], { id: r[0] });

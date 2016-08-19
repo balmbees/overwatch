@@ -71,26 +71,28 @@ const LINK_STYLE = {
     strokeWidth: '5px',
   },
   depend: {
-    stroke: 'rgba(255, 222, 0, 0.7)',
-    strokeWidth: '10px',
+    stroke: '#bda85d',
+    strokeWidth: '3px',
   },
 };
 
-function ContainsLink(props) {
+function Link(props) {
   const { d3Link } = props;
   return (
     <g>
-      <line
-        x1={d3Link.source.x}
-        y1={d3Link.source.y}
-        x2={d3Link.target.x}
-        y2={d3Link.target.y}
-        style={LINK_STYLE[d3Link.type]}
+      <polyline
+        points={[
+          [d3Link.source.x, d3Link.source.y],
+          [(d3Link.target.x + d3Link.source.x) / 2, (d3Link.target.y + d3Link.source.y) / 2],
+          [d3Link.target.x, d3Link.target.y],
+        ].join(' ')}
+        markerMid="url(#Triangle)"
+        {...LINK_STYLE[d3Link.type]}
       />
     </g>
   );
 }
-ContainsLink.propTypes = {
+Link.propTypes = {
   d3Link: React.PropTypes.object,
 };
 
@@ -228,7 +230,7 @@ class ComponentsGraph extends React.Component {
     const links = [];
     _.values(this.state.d3Links).forEach((link) => {
       links.push(
-        <ContainsLink
+        <Link
           key={link.id}
           d3Link={link}
         />
@@ -280,6 +282,25 @@ class ComponentsGraph extends React.Component {
             margin: '20px',
           }}
         >
+          <defs>
+            <marker ref="marker" id="arrow">
+              <path d="M2,1 L2,10 L10,6 L2,2" style={{ fill: 'red' }} />
+            </marker>
+          </defs>
+          <defs>
+            <marker
+              id="Triangle"
+              viewBox="0 0 10 10"
+              refX="5"
+              refY="5"
+              markerWidth="4"
+              markerHeight="4"
+              orient="auto"
+              strokeWidth="5"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
           {this.drawLinks()}
           {this.drawNodes()}
         </svg>

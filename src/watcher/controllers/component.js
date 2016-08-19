@@ -12,9 +12,10 @@ export const ComponentsRouter = new Router();
 ComponentsRouter.get('/', (req, res) => {
   Component.fetchAll()
     .then(components => Promise.all(components.map(c =>
-      Promise.all([c.getWatchers(), c.getNotifiers(), c.getGroups()])
+      Promise.all([c.getWatchers(), c.getNotifiers()])
         .then(() => c.serialize())
-    ))).then(r => res.json(r));
+    ))).then(r => res.json(r))
+    .catch(m => res.status(400).json({ message: m }));
 });
 
 ComponentsRouter.post('/', (req, res) => {
@@ -37,9 +38,9 @@ ComponentsRouter.post('/', (req, res) => {
             watcherList.map(w => Component.registerWatcher(c.id, w.id)),
             notifierIds.map(nid => Component.registerNotifier(c.id, nid))
           )
-        ).then(() => res.json(c.serialize()), m => res.status(400).json({ message: m }));
-      });
-    });
+        ).then(() => res.json(c), m => res.status(400).json({ message: m }));
+      }, m => res.status(400).json({ message: m }));
+    }, m => res.status(400).json({ message: m }));
 });
 
 export const ComponentRouter = new Router();

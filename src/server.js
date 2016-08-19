@@ -12,8 +12,6 @@ import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import expressJwt from 'express-jwt';
-import expressGraphQL from 'express-graphql';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import SocketIO from 'socket.io';
@@ -25,8 +23,6 @@ import { ErrorPage } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.css';
 import UniversalRouter from 'universal-router';
 import PrettyError from 'pretty-error';
-import models from './data/models';
-import schema from './data/schema';
 import routes from './routes';
 import createHistory from './core/createHistory';
 import assets from './assets'; // eslint-disable-line import/no-unresolved
@@ -60,25 +56,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-//
-// Authentication
-// -----------------------------------------------------------------------------
-app.use(expressJwt({
-  secret: auth.jwt.secret,
-  credentialsRequired: false,
-  getToken: req => req.cookies.id_token,
-}));
-
-//
-// Register API middleware
-// -----------------------------------------------------------------------------
-app.use('/graphql', expressGraphQL(req => ({
-  schema,
-  graphiql: true,
-  rootValue: { request: req },
-  pretty: process.env.NODE_ENV !== 'production',
-})));
 
 //
 // Watcher api controller
@@ -185,41 +162,39 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 // Launch the server
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
-models.sync().catch(err => console.error(err.stack)).then(() => {
-  const server = new http.Server(app);
-  const io = new SocketIO(server);
+const server = new http.Server(app);
+const io = new SocketIO(server);
 
-  let latestResponse = null;
-  const fetch = () => {
-    Promise.all([
-      work(),
-      ComponentGroup.fetchAll(),
-      ComponentGroup.fetchComponentGraph(),
-      Component.fetchComponentDependencies(),
-    ]).then(([components, nodes, links, depends]) => {
-      latestResponse = updateComponents(
-        components.map((c) => c.serialize()),
-        nodes.map(n => n.serialize()),
-        links,
-        depends,
-      );
-      io.sockets.emit('action', latestResponse);
-    }).catch((e) => {
-      console.log('Error : ', e);
-    });
-  };
-
-  fetch();
-  cron.schedule('*/10 * * * * *', fetch);
-
-  io.on('connection', (socket) => {
-    if (latestResponse) {
-      socket.emit('action', latestResponse);
-    }
+let latestResponse = null;
+const fetch = () => {
+  Promise.all([
+    work(),
+    ComponentGroup.fetchAll(),
+    ComponentGroup.fetchComponentGraph(),
+    Component.fetchComponentDependencies(),
+  ]).then(([components, nodes, links, depends]) => {
+    latestResponse = updateComponents(
+      components.map((c) => c.serialize()),
+      nodes.map(n => n.serialize()),
+      links,
+      depends,
+    );
+    io.sockets.emit('action', latestResponse);
+  }).catch((e) => {
+    console.log('Error : ', e);
   });
+};
 
-  server.listen(port, () => {
-    console.log(`The server is running at http://localhost:${port}/`);
-  });
+fetch();
+cron.schedule('*/10 * * * * *', fetch);
+
+io.on('connection', (socket) => {
+  if (latestResponse) {
+    socket.emit('action', latestResponse);
+  }
+});
+
+server.listen(port, () => {
+  console.log(`The server is running at http://localhost:${port}/`);
 });
 /* eslint-enable no-console */

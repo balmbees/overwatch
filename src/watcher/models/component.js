@@ -74,12 +74,16 @@ export default class Component extends BaseModel {
       return Promise.all(watchers.map(w => w.watch()))
         .then(results => {
           const failedResults = results.filter(r => (r.status === STATUS_ERROR));
-          failedResults
-            .forEach(fr => {
-              notifiers.forEach(n => {
-                n.notify(fr).then();
+          if (process.env.NODE_ENV === 'production') {
+            failedResults
+              .forEach(fr => {
+                notifiers.forEach(n => {
+                  n.notify(fr).then();
+                });
               });
-            });
+          } else {
+            console.log(`notify ${failedResults}`); // eslint-disable-line
+          }
           this.status = failedResults.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
 
           return this.status;

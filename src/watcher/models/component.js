@@ -12,7 +12,7 @@ const label = 'Component';
 
 export default class Component extends BaseModel {
   constructor(settings, id = undefined) {
-    super(_.pick(settings, ['name', 'status']), id);
+    super(_.pick(settings, ['name', 'description', 'status']), id);
     this.notifiers = [];
     this.watchers = [];
   }
@@ -83,7 +83,7 @@ export default class Component extends BaseModel {
   }
 
   serialize() {
-    return _.pick(this, ['id', 'name', 'status', 'notifiers', 'watchers']);
+    return _.pick(this, ['id', 'name', 'status', 'description', 'notifiers', 'watchers']);
   }
 
   insert() {
@@ -91,7 +91,8 @@ export default class Component extends BaseModel {
       return Promise.reject('required field missing');
     }
     return BaseModel.db()
-      .cypher(`CREATE (c:Component {name: '${this.name}'}) RETURN id(c), c`)
+      .cypher('CREATE (c:Component { props }}) RETURN id(c), c',
+        { props: _.pick(this, ['name', 'description']), })
       .then(resp => {
         const r = resp.body.results[0].data[0].row;
         return _.extend(r[1], { id: r[0] });

@@ -15,7 +15,7 @@ STATUS_TO_COLOR_MAP[STATUS_ERROR] = '#ff3800';
 
 function ComponentNode(props) {
   const { component, d3Node } = props;
-  const status = component.watchers[0].result.status;
+  const status = component.status;
   return (
     <g>
       <circle
@@ -65,6 +65,17 @@ ComponentGroup.propTypes = {
   d3Node: React.PropTypes.object,
 };
 
+const LINK_STYLE = {
+  contain: {
+    stroke: 'rgba(0, 0, 0, 0.3)',
+    strokeWidth: '10px',
+  },
+  depend: {
+    stroke: 'rgba(200, 130, 0, 1)',
+    strokeWidth: '20px',
+  },
+};
+
 function ContainsLink(props) {
   const { d3Link } = props;
   return (
@@ -74,10 +85,7 @@ function ContainsLink(props) {
         y1={d3Link.source.y}
         x2={d3Link.target.x}
         y2={d3Link.target.y}
-        style={{
-          stroke: 'black',
-          strokeWidth: 2,
-        }}
+        style={LINK_STYLE[d3Link.type]}
       />
     </g>
   );
@@ -111,7 +119,7 @@ class ComponentsGraph extends React.Component {
     this.initD3Nodes(nextProps);
   }
 
-  initD3Nodes({ components, groups, contains }) {
+  initD3Nodes({ components, groups, contains, depends }) {
     const { d3Nodes } = this.state;
     const originalSize = _.values(d3Nodes).length;
 
@@ -159,13 +167,21 @@ class ComponentsGraph extends React.Component {
       forceLink.id(d => d.id);
       forceLink.distance(70);
 
-      const links = contains.map(c => Object({
+      const containsLinks = contains.map(c => Object({
         source: Number(c.startNode),
         target: Number(c.endNode),
-        type: 'link',
+        type: 'contain',
         id: c.id,
       }));
 
+      const dependsLinks = depends.map(c => Object({
+        source: Number(c.startNode),
+        target: Number(c.endNode),
+        type: 'depend',
+        id: c.id,
+      }));
+
+      const links = containsLinks.concat(dependsLinks);
       forceLink.links(links);
 
       const force =
@@ -179,7 +195,7 @@ class ComponentsGraph extends React.Component {
       force.on('tick', () => {
         this.eachD3Nodes((node) => {
           Object.assign({
-            x: Math.max(node.size, Math.min(this.state.svgWidth - node.size, node.x)),
+            x: Math.max(node.size * 2, Math.min(this.state.svgWidth - node.size, node.x)),
             y: Math.max(node.size, Math.min(this.state.svgHeight - node.size, node.y)),
           }, node);
         });
@@ -265,6 +281,7 @@ ComponentsGraph.propTypes = {
   components: React.PropTypes.array,
   groups: React.PropTypes.array,
   contains: React.PropTypes.array,
+  depends: React.PropTypes.array,
 };
 
 export default ComponentsGraph;

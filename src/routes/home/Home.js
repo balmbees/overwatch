@@ -34,6 +34,7 @@ function Home(props, context) {
                       components={props.components}
                       groups={props.groups}
                       contains={props.contains}
+                      depends={props.depends}
                     />
                     <ComponentsList components={props.components} />
                   </div>
@@ -59,6 +60,7 @@ Home.propTypes = {
   components: React.PropTypes.array,
   groups: React.PropTypes.array,
   contains: React.PropTypes.array,
+  depends: React.PropTypes.array,
 };
 Home.contextTypes = {
   setTitle: PropTypes.func.isRequired,
@@ -69,6 +71,7 @@ function stateToProps(state) {
     components: state.home.data.components || [],
     groups: state.home.data.groups || [],
     contains: state.home.data.contains || [],
+    depends: state.home.data.depends || [],
   };
 }
 

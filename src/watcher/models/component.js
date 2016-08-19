@@ -25,6 +25,18 @@ export default class Component extends BaseModel {
     return super.fetchAll(label);
   }
 
+  static fetchComponentDependencies() {
+    return BaseModel.db()
+      .cypher('MATCH p=(:Component)-[:DEPEND]->(:Component) return p', null, ['graph'])
+      .then(resp => {
+        const depends = resp.body.results[0].data.map(row => {
+          const r = row.graph.relationships[0];
+          return r;
+        });
+        return depends;
+      });
+  }
+
   static registerWatcher(componentId, watcherId) {
     return BaseModel.db()
       .cypher(`MATCH (c:Component), (w:Watcher)
@@ -82,7 +94,10 @@ export default class Component extends BaseModel {
                 });
               });
           } else {
-            console.log(`notify ${failedResults}`); // eslint-disable-line
+            failedResults
+              .forEach(fr => {
+                console.log(`notify failed watches ${fr}`); // eslint-disable-line
+              });
           }
           this.status = failedResults.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
 

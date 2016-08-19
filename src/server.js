@@ -36,6 +36,7 @@ import { port, auth } from './config';
 
 import { updateComponents } from './actions/home';
 import ComponentGroup from './watcher/models/component_group';
+import Component from './watcher/models/component';
 
 import work from './watcher';
 import { ComponentsRouter, ComponentRouter } from './watcher/controllers/component';
@@ -194,11 +195,13 @@ models.sync().catch(err => console.error(err.stack)).then(() => {
       work(),
       ComponentGroup.fetchAll(),
       ComponentGroup.fetchComponentGraph(),
-    ]).then(([components, nodes, links]) => {
+      Component.fetchComponentDependencies(),
+    ]).then(([components, nodes, links, depends]) => {
       latestResponse = updateComponents(
         components.map((c) => c.serialize()),
         nodes.map(n => n.serialize()),
         links,
+        depends,
       );
       io.sockets.emit('action', latestResponse);
     }).catch((e) => {

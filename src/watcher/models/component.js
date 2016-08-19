@@ -61,6 +61,15 @@ export default class Component extends BaseModel {
       });
   }
 
+  static registerDependency(fromId, toId) {
+    return BaseModel.db()
+      .cypher(`MATCH (c1:Component), (c2:Component)
+              WHERE id(c1) = ${fromId} AND id(n2) = ${toId}
+              CREATE p=(c1)-[:DEPEND]->(c2)
+              RETURN p`)
+      .then(resp => resp.body.results[0].data[0].row[0]);
+  }
+
   serialize() {
     return _.pick(this, ['id', 'name', 'status', 'notifiers', 'watchers']);
   }

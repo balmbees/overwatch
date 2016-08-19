@@ -63,3 +63,10 @@ ComponentRouter.post('/:componentId/notifier/:notifierId', (req, res) => {
     .then(c => Promise.all([c.getNotifiers(), c.getWatchers])
       .then(() => res.json(c.serialize())), m => res.status(400).json({ message: m }));
 });
+
+ComponentRouter.post('/:componentId/depends/:dependencyId', (req, res) => {
+  const { componentId, dependencyId } = req.params;
+
+  Component.registerDependency(componentId, dependencyId)
+    .then(p => res.json(p), m => res.status(400).json({ message: m }));
+});

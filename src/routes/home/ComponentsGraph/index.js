@@ -99,7 +99,7 @@ class ComponentsGraph extends React.Component {
     super(props);
 
     const svgWidth = 900;
-    const svgHeight = 900;
+    const svgHeight = 600;
 
     this.state = {
       svgWidth,
@@ -157,16 +157,6 @@ class ComponentsGraph extends React.Component {
       const { svgWidth, svgHeight } = this.state;
 
       const forceManyBody = d3.forceManyBody();
-      // forceManyBody.strength((node) => {
-      //   return -30;
-      //   // switch (node.type) {
-      //   //   case 'component':
-      //   //     return -node.size * 0.2;
-      //   //   default:
-      //   //     break;
-      //   // }
-      //   // return null;
-      // });
       forceManyBody.strength(-140);
       forceManyBody.distanceMin(70);
 
@@ -176,16 +166,6 @@ class ComponentsGraph extends React.Component {
 
       const forceLink = d3.forceLink();
       forceLink.id(d => d.id);
-      // forceLink.distance((link) => {
-      //   switch (link.type) {
-      //     case 'contain':
-      //       return 150;
-      //     case 'depend':
-      //       return 200;
-      //     default:
-      //       return 0;
-      //   }
-      // });
       forceLink.strength((link) => {
         switch (link.type) {
           case 'contain':

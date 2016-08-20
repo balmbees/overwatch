@@ -204,10 +204,10 @@ class ComponentsGraph extends React.Component {
 
       force.on('tick', () => {
         this.eachD3Nodes((node) => {
-          Object.assign({
+          Object.assign(node, {
             x: Math.max(node.size * 2, Math.min(this.state.svgWidth - node.size, node.x)),
             y: Math.max(node.size, Math.min(this.state.svgHeight - node.size, node.y)),
-          }, node);
+          });
         });
 
         this.forceUpdate();

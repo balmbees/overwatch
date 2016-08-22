@@ -24,7 +24,7 @@ export class GrapheneDB {
         },
       }, (err, response) => {
         if (err || response.statusCode < 200 || response.statusCode > 200) {
-          reject({ err, response });
+          reject(err);
         } else {
           resolve(response);
         }
@@ -61,4 +61,3 @@ export default class BaseModel {
     return new GrapheneDB(process.env.GRAPHENEDB_URL);
   }
 }
-

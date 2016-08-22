@@ -8,11 +8,11 @@
  */
 
 import React from 'react';
-import Home from './Home';
+import Home, { TYPES } from './Home';
 
 export default {
   path: '/',
-  action() {
-    return <Home />;
+  action({ query }) {
+    return <Home type={query.type || TYPES.GRAPH} />;
   },
 };

@@ -83,7 +83,7 @@ class ComponentsGraph extends React.Component {
     }
   }
 
-  initD3Nodes({ components, groups, contains, depends }) {
+  initD3Nodes({ components, depends }) {
     if (!this.d3s) {
       const forceManyBody = d3.forceManyBody();
       forceManyBody.strength(-140);

@@ -58,25 +58,30 @@ class ComponentsGraph extends React.Component {
         });
 
         d3.select(this.svgRef)
-            .call(d3.drag()
-                .container(this.svgRef)
-                .subject(() =>
-                  d3s.force.find(d3.event.x, d3.event.y)
-                )
-                .on('start', () => {
-                  if (!d3.event.active) d3s.force.alphaTarget(0.3).restart();
-                  d3.event.subject.fx = d3.event.subject.x;
-                  d3.event.subject.fy = d3.event.subject.y;
-                })
-                .on('drag', () => {
-                  d3.event.subject.fx = d3.event.x;
-                  d3.event.subject.fy = d3.event.y;
-                })
-                .on('end', () => {
-                  if (!d3.event.active) d3s.force.alphaTarget(0);
-                  d3.event.subject.fx = d3.event.x;
-                  d3.event.subject.fy = d3.event.y;
-                }));
+          .call(
+            d3.drag()
+              .container(this.svgRef)
+              .subject(() =>
+                d3s.force.find(d3.event.x, d3.event.y)
+              )
+              .on('start', () => {
+                if (!d3.event.active) d3s.force.alphaTarget(0.3).restart();
+                d3.event.subject.fx = d3.event.subject.x;
+                d3.event.subject.fy = d3.event.subject.y;
+              })
+              .on('drag', () => {
+                d3.event.subject.fx = d3.event.x;
+                d3.event.subject.fy = d3.event.y;
+              })
+              .on('end', () => {
+                if (!d3.event.active) d3s.force.alphaTarget(0);
+                d3.event.subject.fx = null;
+                d3.event.subject.fy = null;
+              })
+          ).on('click', () => {
+            const node = d3s.force.find(d3.event.offsetX, d3.event.offsetY);
+            node.open = !!!node.open;
+          });
 
         d3s.force.restart();
       }
@@ -96,9 +101,9 @@ class ComponentsGraph extends React.Component {
       forceLink.strength((link) => {
         switch (link.type) {
           case 'contain':
-            return 0.1;
+            return 0.12;
           case 'depend':
-            return 0.1;
+            return 0.12;
           default:
             return 0;
         }
@@ -248,13 +253,8 @@ class ComponentsGraph extends React.Component {
           }}
         >
           <defs>
-            <marker ref="marker" id="arrow">
-              <path d="M2,1 L2,10 L10,6 L2,2" style={{ fill: 'red' }} />
-            </marker>
-          </defs>
-          <defs>
             <marker
-              id="Triangle"
+              id="arrowMarker"
               viewBox="0 0 10 10"
               refX="5"
               refY="5"

@@ -21,7 +21,7 @@ function ComponentLink(props) {
           [(d3Link.target.x + d3Link.source.x) / 2, (d3Link.target.y + d3Link.source.y) / 2],
           [d3Link.target.x, d3Link.target.y],
         ].join(' ')}
-        markerMid="url(#Triangle)"
+        markerMid="url(#arrowMarker)"
         {...LINK_STYLE[d3Link.type]}
       />
     </g>

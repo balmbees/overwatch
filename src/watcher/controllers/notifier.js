@@ -19,5 +19,5 @@ NotifiersRouter.post('/', (req, res) => {
   }
 
   new notifierTypes[paramType](req.body).insert()
-    .then(n => res.json(n.serialize()), m => res.status(400).json({ message: m }));
+    .then(n => res.json(n), m => res.status(400).json({ message: m }));
 });

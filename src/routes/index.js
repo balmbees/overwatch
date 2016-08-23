@@ -15,6 +15,7 @@ import home from './home';
 import error from './error';
 import register from './register';
 import manage from './manage';
+import notifier from './notifier';
 
 export default {
 
@@ -26,6 +27,7 @@ export default {
     error,
     register,
     manage,
+    notifier,
   ],
 
   async action({ next, render, context }) {

@@ -4,6 +4,7 @@
 import request from 'request';
 import BaseModel from './base';
 import _ from 'lodash';
+import { SNS, Config } from 'aws-sdk';
 
 export const notifierPool = {};
 
@@ -23,7 +24,7 @@ export class Notifier extends BaseModel {
     }
 
     return BaseModel.db()
-      .cyper('CREATE (n:Notifier { props }) RETURN id(n), n',
+      .cypher('CREATE (n:Notifier { props }) RETURN id(n), n',
         { props: _.omit(this.serialize(), 'id') })
       .then(resp => {
         const r = resp.body.results[0].data[0].row;
@@ -37,6 +38,10 @@ export class Notifier extends BaseModel {
 
   isValid() {
     throw new Error('Not Implemented');
+  }
+
+  message({ component, watcher, watchResult }) {
+    return `${component.name} - ${watcher.name} : *${watchResult.status}* ${watchResult.description}` // eslint-disable-line
   }
 }
 
@@ -64,10 +69,6 @@ export class SlackNotifier extends Notifier {
     });
   }
 
-  message({ component, watcher, watchResult }) {
-    return `${component.name} - ${watcher.name} : *${watchResult.status}* ${watchResult.description}` // eslint-disable-line
-  }
-
   isValid() {
     const objFields = Object.keys(this);
     const val = _.reduce(['type', 'name', 'webhook_url'],
@@ -77,4 +78,44 @@ export class SlackNotifier extends Notifier {
   }
 }
 
-export const notifierTypes = { SlackNotifier };
+export class AwsSnsNotifier extends Notifier {
+  constructor(settings, id = undefined) {
+    super(_.pick(settings, ['type', 'name', 'awsAccessKeyId',
+      'awsSecretAccessKey', 'awsRegion', 'targetArn']), id);
+  }
+
+  serialize() {
+    return _.pick(this, ['type', 'id', 'name', 'awsAccessKeyId',
+      'awsSecretAccessKey', 'awsRegion', 'targetArn']);
+  }
+
+  notify({ component, watcher, watchResult }) {
+    return new Promise((resolve, reject) => {
+      const config = new Config({
+        accessKeyId: this.awsAccessKeyId,
+        secretAccessKey: this.awsSecretAccessKey,
+        region: this.awsRegion,
+      });
+      const sns = new SNS(config);
+
+      sns.publish({
+        Message: this.message({ component, watcher, watchResult }),
+        TargetArn: this.targetArn,
+      }, (err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+  }
+
+  isValid() {
+    const objFields = Object.keys(this);
+    const val = _.reduce(['type', 'name', 'awsAccessKeyId',
+        'awsSecretAccessKey', 'awsRegion', 'targetArn'],
+      (m, n) => (m & _.includes(objFields, n)), true);
+
+    return val;
+  }
+}
+
+export const notifierTypes = { SlackNotifier, AwsSnsNotifier };

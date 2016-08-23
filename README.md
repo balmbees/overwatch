@@ -24,16 +24,25 @@ we originally thought that would be really helpful to
 4. Put detailed monitoring / tracking tool links in one place (Sentry, NewRelic...)
 
 ## Concepts
-# Notifiers
+
+## Watchers
 Currently, we supports
-1. SlackNotifier
-2. SnsNotifier (AWS SNS)
+- HTTPWatcher
+- CloudwatchAlarmWatcher
+- DummyWatcher
+
+## Notifiers
+Currently, we supports
+- SlackNotifier
+- SnsNotifier (AWS SNS)
 
 ## Road Map
 
 1. Build basic Component / Service Monitoring Tool
   - Support AWS CloudWatch based monitoring
   - Support Slack Notification Adapter
+2. Build service status history feature
+3. Build login feature (With Google Account)  
 
 this project used skeleton of https://github.com/kriasoft/react-starter-kit
 and inspired by great monitoring tool project such as https://github.com/arachnys/cabot about status / alert structure,

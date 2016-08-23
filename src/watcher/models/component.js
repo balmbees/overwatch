@@ -1,6 +1,3 @@
-/**
- * Created by leehyeon on 8/9/16.
- */
 import _ from 'lodash';
 
 import BaseModel from './base';
@@ -83,7 +80,15 @@ export default class Component extends BaseModel {
   }
 
   serialize() {
-    return _.pick(this, ['id', 'name', 'status', 'description', 'notifiers', 'watchers']);
+    return _.pick(this, [
+      'id',
+      'name',
+      'status',
+      'description',
+      'notifiers',
+      'watchers',
+      'statusChanged',
+    ]);
   }
 
   insert() {
@@ -113,29 +118,51 @@ export default class Component extends BaseModel {
         ))
         .then(results => {
           const failedWatchers = results.filter(r => (r[1].status === STATUS_ERROR));
-          this.status = failedWatchers.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
+          const newStatus = failedWatchers.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
 
-          if (process.env.NODE_ENV === 'production') {
-            return Promise.all(
-              failedWatchers.map(([watcher, watchResult]) => {
-                const notifyPromises = notifiers.map(n =>
-                  n.notify({
-                    component: this,
-                    watcher,
-                    watchResult,
-                  })
-                );
-                return Promise.all(notifyPromises);
-              })
-            );
-          } else { // eslint-disable-line
-            failedWatchers
-              .forEach(fr => {
-                console.log(`notify failed watches ${fr}`); // eslint-disable-line
-              });
+          let promise = null;
 
-            return Promise.resolve();
+          if (newStatus !== this.status) {
+            this.status = newStatus;
+            this.statusChanged = true;
+
+            promise =
+              BaseModel.db()
+                .cypher(`
+                  MATCH (n)
+                  WHERE id(n)=${this.id}
+                  SET n.status='${this.status}'
+                  RETURN id(n)
+                `);
+          } else {
+            this.statusChanged = false;
+
+            promise = Promise.resolve();
           }
+
+          return promise.then(() => {
+            if (process.env.NODE_ENV === 'production') {
+              return Promise.all(
+                failedWatchers.map(([watcher, watchResult]) => {
+                  const notifyPromises = notifiers.map(n =>
+                    n.notify({
+                      component: this,
+                      watcher,
+                      watchResult,
+                    })
+                  );
+                  return Promise.all(notifyPromises);
+                })
+              );
+            } else { // eslint-disable-line
+              failedWatchers
+                .forEach(fr => {
+                  console.log(`notify failed watches ${JSON.stringify(fr)}`); // eslint-disable-line
+                });
+
+              return Promise.resolve();
+            }
+          });
         })
     );
   }

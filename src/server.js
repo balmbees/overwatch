@@ -172,7 +172,12 @@ const fetch = () => {
     ComponentGroup.fetchAll(),
     ComponentGroup.fetchComponentGraph(),
     Component.fetchComponentDependencies(),
-  ]).then(([components, nodes, links, depends]) => {
+  ]).then(([
+    components,
+    nodes,
+    links,
+    depends,
+  ]) => {
     latestResponse = updateComponents(
       components.map((c) => c.serialize()),
       nodes.map(n => n.serialize()),

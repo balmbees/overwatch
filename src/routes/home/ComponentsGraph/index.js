@@ -1,47 +1,39 @@
 import React from 'react';
+import _ from 'lodash';
 import $ from 'jquery';
 
 import D3ForceLayout from './D3ForceLayout';
 import ComponentNode from './ComponentNode';
-import ComponentGroup from './ComponentGroup';
 import ComponentLink from './ComponentLink';
 
 class ComponentsGraph extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+
     this.state = {
       forceLayout: new D3ForceLayout({
         renderCallback: () => {
           this.forceUpdate();
         },
-        containerDOM: this.svgRef,
       }),
     };
+  }
 
+  componentDidMount() {
     const { components, depends } = this.props;
     const { forceLayout } = this.state;
 
+    forceLayout.containerDOM = this.svgRef;
+
     forceLayout.addNodes(
-      components.map((c) => ({
-        id: c.id,
-        x: 0,
-        y: 0,
-        size: 40,
-        type: 'component',
-        data: c,
-      }))
+      components.map(c => this._componentToNode(c))
     );
 
     forceLayout.addLinks(
-      depends.map(c => ({
-        source: Number(c.startNode),
-        target: Number(c.endNode),
-        type: 'depend',
-        id: c.id,
-        data: c,
-      }))
+      depends.map(l => this._dependToLink(l))
     );
 
-    this.handleResizeHandler = () => {
+    this.resizeHandler = () => {
       if (this.svgRef) {
         const svgWidth = $(this.svgRef).width();
         const svgHeight = $(this.svgRef).height();
@@ -52,16 +44,52 @@ class ComponentsGraph extends React.Component {
         };
       }
     };
-    window.addEventListener('resize', this.handleResizeHandler);
-    this.handleResizeHandler();
+    window.addEventListener('resize', this.resizeHandler);
+    this.resizeHandler();
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   this.initD3Nodes(nextProps);
-  // }
+  componentWillReceiveProps(nextProps) {
+    const n = nextProps;
+    const o = this.props;
+
+    // If Component Created Or Deleted, we can't really handle it now
+    // (and it's pretty rare occation i would say)
+    if (n.components.length !== o.components.length) {
+      location.reload();
+    }
+    // Same with links
+    if (n.depends.length !== o.depends.length) {
+      location.reload();
+    }
+
+    this.state.forceLayout.updateNodes(
+      _.filter(n.components, (component) => component.statusChanged)
+       .map((component) => this._componentToNode(component))
+    );
+    this.forceUpdate();
+  }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResizeHandler);
+    window.removeEventListener('resize', this.resizeHandler);
+  }
+
+  _componentToNode(c) {
+    return {
+      id: c.id,
+      size: 40,
+      type: 'component',
+      data: c,
+    };
+  }
+
+  _dependToLink(l) {
+    return {
+      source: Number(l.startNode),
+      target: Number(l.endNode),
+      type: 'depend',
+      id: l.id,
+      data: l,
+    };
   }
 
   drawLinks() {

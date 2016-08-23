@@ -1,13 +1,8 @@
 import * as d3 from 'd3';
+import _ from 'lodash';
 
 export default class D3ForceLayout {
-  constructor({
-    renderCallback,
-    containerDOM,
-  }) {
-    this.renderCallback = renderCallback;
-    this.containerDOM = containerDOM;
-
+  constructor({ renderCallback }) {
     const forceSimulation = d3.forceSimulation();
     this.forceSimulation = forceSimulation;
 
@@ -38,8 +33,8 @@ export default class D3ForceLayout {
     forceSimulation.force('forceLink', forceLink);
     forceSimulation.force('forceCenter', forceCenter);
 
-    //
-    this.bindEventToContainerDom();
+    // setter
+    this.renderCallback = renderCallback;
   }
 
   get nodes() {
@@ -56,21 +51,44 @@ export default class D3ForceLayout {
     this.forceSimulation.nodes(nodes);
   }
 
+  updateNodes(changedNodes) {
+    const oldNodes = this.nodes;
+
+    changedNodes.forEach((newNode) => {
+      const oldNode = _.find(oldNodes, (n) => n.id === newNode.id);
+      if (oldNode) {
+        Object.assign(oldNode, newNode);
+      } else {
+        throw new Error(`node ${newNode} is changed but coudln't find it`);
+      }
+    });
+  }
+
   addLinks(newLinks) {
     const links = this.forceLink.links();
     links.push(...newLinks);
     this.forceLink.links(links);
   }
 
-  on(eventName, callback) {
-    this.eventCallbacks[eventName] = callback;
-  }
-
   static EVENTS = {
     NODE_CLICK: 'node.click',
   };
 
-  bindEventToContainerDom() {
+  set containerDOM(containerDOM) {
+    this._containerDOM = containerDOM;
+
+    this._bindEventToContainerDom();
+  }
+
+  get containerDOM() {
+    return this._containerDOM;
+  }
+
+  on(eventName, callback) {
+    this.eventCallbacks[eventName] = callback;
+  }
+
+  _bindEventToContainerDom() {
     this.eventCallbacks = {};
 
     d3.select(this.containerDOM)

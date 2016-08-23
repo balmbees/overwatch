@@ -1,0 +1,132 @@
+import * as d3 from 'd3';
+
+export default class D3ForceLayout {
+  constructor({
+    renderCallback,
+    containerDOM,
+  }) {
+    this.renderCallback = renderCallback;
+    this.containerDOM = containerDOM;
+
+    const forceSimulation = d3.forceSimulation();
+    this.forceSimulation = forceSimulation;
+
+    const forceManyBody = d3.forceManyBody();
+    forceManyBody.strength(-140);
+    forceManyBody.distanceMin(70);
+    this.forceManyBody = forceManyBody;
+
+    const forceCenter = d3.forceCenter();
+    this.forceCenter = forceCenter;
+
+    const forceLink = d3.forceLink();
+    forceLink.id(d => d.id);
+    forceLink.strength((link) => {
+      switch (link.type) {
+        case 'contain':
+          return 0.12;
+        case 'depend':
+          return 0.12;
+        default:
+          return 0;
+      }
+    });
+    this.forceLink = forceLink;
+
+    // Connect Forces
+    forceSimulation.force('forceManyBody', forceManyBody);
+    forceSimulation.force('forceLink', forceLink);
+    forceSimulation.force('forceCenter', forceCenter);
+
+    //
+    this.bindEventToContainerDom();
+  }
+
+  get nodes() {
+    return this.forceSimulation.nodes();
+  }
+
+  get links() {
+    return this.forceLink.links();
+  }
+
+  addNodes(newNodes) {
+    const nodes = this.forceSimulation.nodes();
+    nodes.push(...newNodes);
+    this.forceSimulation.nodes(nodes);
+  }
+
+  addLinks(newLinks) {
+    const links = this.forceLink.links();
+    links.push(...newLinks);
+    this.forceLink.links(links);
+  }
+
+  on(eventName, callback) {
+    this.eventCallbacks[eventName] = callback;
+  }
+
+  static EVENTS = {
+    NODE_CLICK: 'node.click',
+  };
+
+  bindEventToContainerDom() {
+    this.eventCallbacks = {};
+
+    d3.select(this.containerDOM)
+      .call(
+        d3.drag()
+          .container(this.containerDOM)
+          .subject(() =>
+            this.forceSimulation.find(
+              d3.event.x,
+              d3.event.y
+            )
+          )
+          .on('start', () => {
+            if (!d3.event.active) this.forceSimulation.alphaTarget(0.3).restart();
+            d3.event.subject.fx = d3.event.subject.x;
+            d3.event.subject.fy = d3.event.subject.y;
+          })
+          .on('drag', () => {
+            d3.event.subject.fx = d3.event.x;
+            d3.event.subject.fy = d3.event.y;
+          })
+          .on('end', () => {
+            if (!d3.event.active) this.forceSimulation.alphaTarget(0);
+            d3.event.subject.fx = null;
+            d3.event.subject.fy = null;
+          })
+      ).on('click', () => {
+        const node = this.forceSimulation.find(d3.event.offsetX, d3.event.offsetY);
+        this.eventCallbacks[D3ForceLayout.EVENTS.NODE_CLICK](node);
+      });
+  }
+
+  set forceSimulationSize(size) {
+    this._forceSimulationSize = size;
+
+    // Update Force Center
+    this.forceCenter.x(size.width * 0.5);
+    this.forceCenter.y(size.height * 0.5);
+
+    // Update Bounding Box
+    this.forceSimulation.on('tick.boundsForce', () => {
+      this.nodes.forEach((node) => {
+        Object.assign(node, {
+          x: Math.max(0, Math.min(size.width - 0, node.x)),
+          y: Math.max(0, Math.min(size.height - 0, node.y)),
+        });
+      });
+
+      this.renderCallback();
+    });
+
+    // Restart
+    this.forceSimulation.restart();
+  }
+
+  get forceSimulationSize() {
+    return this._forceSimulationSize;
+  }
+}

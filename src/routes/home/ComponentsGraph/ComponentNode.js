@@ -11,20 +11,21 @@ STATUS_TO_COLOR_MAP[STATUS_SUCCESS] = '#00de0e';
 STATUS_TO_COLOR_MAP[STATUS_ERROR] = '#ff3800';
 
 function ComponentNode(props) {
-  const { component, d3Node } = props;
+  const { node } = props;
+  const component = node.data;
   const status = component.status;
   return (
     <g>
       <circle
-        cx={d3Node.x}
-        cy={d3Node.y}
-        r={d3Node.size / 2}
+        cx={node.x}
+        cy={node.y}
+        r={node.size / 2}
         fill={STATUS_TO_COLOR_MAP[status]}
       />
       <text
         textAnchor="middle"
-        x={d3Node.x}
-        y={d3Node.y - d3Node.size / 2 - 5}
+        x={node.x}
+        y={node.y - node.size / 2 - 5}
       >
         {component.name}
       </text>
@@ -33,8 +34,7 @@ function ComponentNode(props) {
 }
 
 ComponentNode.propTypes = {
-  component: React.PropTypes.object,
-  d3Node: React.PropTypes.object,
+  node: React.PropTypes.object,
 };
 
 export default ComponentNode;

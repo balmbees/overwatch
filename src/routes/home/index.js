@@ -1,18 +1,25 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
 import Home, { TYPES } from './Home';
 
 export default {
   path: '/',
-  action({ query }) { // eslint-disable-line
-    return <Home type={query.type || TYPES.GRAPH} />;
+  async action({ next, render, context, query }) { // eslint-disable-line
+    const component = await next();
+    if (component === undefined) return component;
+    return (
+      <Home type={query.type || TYPES.GRAPH}>
+        {component}
+      </Home>
+    );
   },
+  children: [
+    {
+      path: '/',
+      action: () => (<h1>Posts</h1>),
+    },
+    {
+      path: '/:id',
+      action: (context) => (<h1>Post #{context.params.id}</h1>),
+    },
+  ],
 };

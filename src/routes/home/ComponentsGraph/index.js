@@ -136,30 +136,31 @@ class ComponentsGraph extends React.Component {
       newD3Nodes[c.id] = d3Node;
     });
 
-    groups.forEach((group) => {
-      let d3Node = d3Nodes[group.id];
-      if (!d3Node) {
-        d3Node = {
-          id: group.id,
-          x: 0,
-          y: 0,
-          size: 250,
-          type: 'group',
-        };
-      }
-      newD3Nodes[group.id] = d3Node;
-    });
+    // groups.forEach((group) => {
+    //   let d3Node = d3Nodes[group.id];
+    //   if (!d3Node) {
+    //     d3Node = {
+    //       id: group.id,
+    //       x: 0,
+    //       y: 0,
+    //       size: 250,
+    //       type: 'group',
+    //     };
+    //   }
+    //   newD3Nodes[group.id] = d3Node;
+    // });
 
     this.state.d3Nodes = newD3Nodes;
     this.d3s.force.nodes(_.values(this.state.d3Nodes));
 
     // Links
-    const containsLinks = contains.map(c => Object({
-      source: Number(c.startNode),
-      target: Number(c.endNode),
-      type: 'contain',
-      id: c.id,
-    }));
+    // const containsLinks = contains.map(c => Object({
+    //   source: Number(c.startNode),
+    //   target: Number(c.endNode),
+    //   type: 'contain',
+    //   id: c.id,
+    // }));
+    const containsLinks = [];
 
     const dependsLinks = depends.map(c => Object({
       source: Number(c.startNode),

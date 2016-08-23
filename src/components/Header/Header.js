@@ -23,6 +23,13 @@ function Header() {
           <img src={logoUrl} width="38" height="38" alt="React" />
           <span className={s.brandTxt}>Vingle Overwatch</span>
         </Link>
+
+        <Link className={s.homeMenuText} to="/?type=graph">
+          <span>Graph</span>
+        </Link>
+        <Link className={s.homeMenuText} to="/?type=list">
+          <span>List</span>
+        </Link>
       </div>
     </header>
   );

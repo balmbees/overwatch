@@ -40,3 +40,21 @@
   float: right;
   margin-top: 6px;
 }
+
+.homeMenuText {
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.homeMenuText,
+.homeMenuText:visited {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.homeMenuText:active {
+  color: rgb(255, 179, 10);
+}
+
+.homeMenuText:hover {
+  color: rgba(255, 255, 255, 1);
+}

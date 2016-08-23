@@ -1,7 +1,3 @@
-/**
- * Created by leehyeon on 8/11/16.
- */
-
 import { Router } from 'express';
 
 import { Notifier, notifierTypes } from '../models/notifier';

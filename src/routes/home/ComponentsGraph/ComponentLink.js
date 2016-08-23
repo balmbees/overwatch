@@ -6,8 +6,8 @@ const LINK_STYLE = {
     strokeWidth: '5px',
   },
   depend: {
-    stroke: 'rgba(255, 222, 0, 0.7)',
-    strokeWidth: '10px',
+    stroke: '#bda85d',
+    strokeWidth: '3px',
   },
 };
 
@@ -15,12 +15,14 @@ function ComponentLink(props) {
   const { d3Link } = props;
   return (
     <g>
-      <line
-        x1={d3Link.source.x}
-        y1={d3Link.source.y}
-        x2={d3Link.target.x}
-        y2={d3Link.target.y}
-        style={LINK_STYLE[d3Link.type]}
+      <polyline
+        points={[
+          [d3Link.source.x, d3Link.source.y],
+          [(d3Link.target.x + d3Link.source.x) / 2, (d3Link.target.y + d3Link.source.y) / 2],
+          [d3Link.target.x, d3Link.target.y],
+        ].join(' ')}
+        markerMid="url(#Triangle)"
+        {...LINK_STYLE[d3Link.type]}
       />
     </g>
   );

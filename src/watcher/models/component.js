@@ -103,29 +103,41 @@ export default class Component extends BaseModel {
     return Promise.all([
       this.getWatchers(),
       this.getNotifiers(),
-    ]).then((argv) => {
-      const [watchers, notifiers] = argv;
-      return Promise.all(watchers.map(w => w.watch()))
+    ]).then(([watchers, notifiers]) =>
+      Promise
+        .all(watchers.map(w =>
+          Promise.all([
+            Promise.resolve(w),
+            w.watch(),
+          ])
+        ))
         .then(results => {
-          const failedResults = results.filter(r => (r.status === STATUS_ERROR));
+          const failedWatchers = results.filter(r => (r[1].status === STATUS_ERROR));
+          this.status = failedWatchers.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
+
           if (process.env.NODE_ENV === 'production') {
-            failedResults
-              .forEach(fr => {
-                notifiers.forEach(n => {
-                  n.notify(fr).then();
-                });
-              });
-          } else {
-            failedResults
+            return Promise.all(
+              failedWatchers.map(([watcher, watchResult]) => {
+                const notifyPromises = notifiers.map(n =>
+                  n.notify({
+                    component: this,
+                    watcher,
+                    watchResult,
+                  })
+                );
+                return Promise.all(notifyPromises);
+              })
+            );
+          } else { // eslint-disable-line
+            failedWatchers
               .forEach(fr => {
                 console.log(`notify failed watches ${fr}`); // eslint-disable-line
               });
-          }
-          this.status = failedResults.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
 
-          return this.status;
-        });
-    });
+            return Promise.resolve();
+          }
+        })
+    );
   }
 
   getNotifiers() {

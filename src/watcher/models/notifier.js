@@ -31,8 +31,8 @@ export class Notifier extends BaseModel {
       });
   }
 
-  notify(watchResult) {
-    throw new Error(`Not Implemented : ${watchResult}`);
+  notify({ component, watcher, watchResult }) {
+    throw new Error(`Not Implemented : ${component}, ${watcher}, ${watchResult}`);
   }
 
   isValid() {
@@ -49,13 +49,13 @@ export class SlackNotifier extends Notifier {
     return _.pick(this, ['type', 'id', 'name', 'webhook_url']);
   }
 
-  notify(watchResult) {
+  notify({ component, watcher, watchResult }) {
     return new Promise((resolve, reject) => {
       request({
         uri: this.webhook_url,
         method: 'POST',
         json: {
-          text: watchResult.getMessage(),
+          text: this.message({ component, watcher, watchResult }),
         },
       }, (err, response) => {
         if (err) reject(err);
@@ -64,6 +64,9 @@ export class SlackNotifier extends Notifier {
     });
   }
 
+  message({ component, watcher, watchResult }) {
+    return `${component.name} - ${watcher.name} : *${watchResult.status}* ${watchResult.description}` // eslint-disable-line
+  }
 
   isValid() {
     const objFields = Object.keys(this);

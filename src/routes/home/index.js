@@ -12,7 +12,7 @@ import Home, { TYPES } from './Home';
 
 export default {
   path: '/',
-  action({ query }) {
+  action({ query }) { // eslint-disable-line
     return <Home type={query.type || TYPES.GRAPH} />;
   },
 };

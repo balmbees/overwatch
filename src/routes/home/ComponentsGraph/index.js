@@ -57,6 +57,27 @@ class ComponentsGraph extends React.Component {
           this.forceUpdate();
         });
 
+        d3.select(this.svgRef)
+            .call(d3.drag()
+                .container(this.svgRef)
+                .subject(() =>
+                  d3s.force.find(d3.event.x, d3.event.y)
+                )
+                .on('start', () => {
+                  if (!d3.event.active) d3s.force.alphaTarget(0.3).restart();
+                  d3.event.subject.fx = d3.event.subject.x;
+                  d3.event.subject.fy = d3.event.subject.y;
+                })
+                .on('drag', () => {
+                  d3.event.subject.fx = d3.event.x;
+                  d3.event.subject.fy = d3.event.y;
+                })
+                .on('end', () => {
+                  if (!d3.event.active) d3s.force.alphaTarget(0);
+                  d3.event.subject.fx = d3.event.x;
+                  d3.event.subject.fy = d3.event.y;
+                }));
+
         d3s.force.restart();
       }
     }
@@ -225,6 +246,25 @@ class ComponentsGraph extends React.Component {
             boxSizing: 'border-box',
           }}
         >
+          <defs>
+            <marker ref="marker" id="arrow">
+              <path d="M2,1 L2,10 L10,6 L2,2" style={{ fill: 'red' }} />
+            </marker>
+          </defs>
+          <defs>
+            <marker
+              id="Triangle"
+              viewBox="0 0 10 10"
+              refX="5"
+              refY="5"
+              markerWidth="4"
+              markerHeight="4"
+              orient="auto"
+              strokeWidth="5"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
           {this.drawLinks()}
           {this.drawNodes()}
         </svg>

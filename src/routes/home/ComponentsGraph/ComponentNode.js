@@ -17,10 +17,13 @@ function ComponentNode(props) {
   return (
     <g>
       <circle
-        cx={node.x}
-        cy={node.y}
-        r={node.size / 2}
-        fill={STATUS_TO_COLOR_MAP[status]}
+        style={{
+          fill: STATUS_TO_COLOR_MAP[status],
+          cx: node.x,
+          cy: node.y,
+          r: node.size * 0.5,
+          transition: 'fill 0.8s cubic-bezier(0.46, -0.6, 0.46, 2.6)',
+        }}
       />
       <text
         textAnchor="middle"

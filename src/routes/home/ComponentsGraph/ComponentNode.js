@@ -25,6 +25,30 @@ function ComponentNode(props) {
           transition: 'fill 0.8s cubic-bezier(0.46, -0.6, 0.46, 2.6)',
         }}
       />
+      <circle
+        style={{
+          fill: STATUS_TO_COLOR_MAP[status],
+          cx: node.x,
+          cy: node.y,
+        }}
+      >
+        <animate
+          attributeType="CSS"
+          attributeName="opacity"
+          dur="1s"
+          values="0 ; 0.4 ; 0"
+          keyTimes="0 ; 0.1 ; 1"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeType="CSS"
+          attributeName="r"
+          dur="1s"
+          values={[1, 1.4, 1].map((s) => s * node.size * 0.8).join('; ')}
+          keyTimes="0 ; 0.1 ; 1"
+          repeatCount="indefinite"
+        />
+      </circle>
       <text
         textAnchor="middle"
         x={node.x}

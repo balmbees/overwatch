@@ -4,7 +4,7 @@
 
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import ComponentForm from './ComponentForm';
+import Form from '../../components/Form/Form';
 
 import s from './Register.css';
 
@@ -21,7 +21,7 @@ class Register extends React.Component {
   render() {
     return (
       <div className={s.registerBody}>
-        <ComponentForm />
+        <Form label={'Component'} />
       </div>
     );
   }

@@ -148,6 +148,10 @@
       "browser": true
     },
     "rules": {
+      "no-underscore-dangle": [
+        "error",
+        { "allowAfterThis": true }
+      ],
       "no-confusing-arrow": 0,
       "react/jsx-quotes": 0,
       "jsx-quotes": [

@@ -12,23 +12,23 @@ const LINK_STYLE = {
 };
 
 function ComponentLink(props) {
-  const { d3Link } = props;
+  const { link } = props;
   return (
     <g>
       <polyline
         points={[
-          [d3Link.source.x, d3Link.source.y],
-          [(d3Link.target.x + d3Link.source.x) / 2, (d3Link.target.y + d3Link.source.y) / 2],
-          [d3Link.target.x, d3Link.target.y],
+          [link.source.x, link.source.y],
+          [(link.target.x + link.source.x) / 2, (link.target.y + link.source.y) / 2],
+          [link.target.x, link.target.y],
         ].join(' ')}
         markerMid="url(#arrowMarker)"
-        {...LINK_STYLE[d3Link.type]}
+        {...LINK_STYLE[link.type]}
       />
     </g>
   );
 }
 ComponentLink.propTypes = {
-  d3Link: React.PropTypes.object,
+  link: React.PropTypes.object,
 };
 
 export default ComponentLink;

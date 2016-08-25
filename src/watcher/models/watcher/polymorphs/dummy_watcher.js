@@ -21,6 +21,12 @@ export default class DummyWatcher extends Watcher {
   }
 
   watch() {
+    if (process.env.NODE_ENV === 'development') {
+      this.result = _.sample([
+        WatchResult.success(),
+        WatchResult.error(),
+      ]);
+    }
     return this.result;
   }
 }

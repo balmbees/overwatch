@@ -3,23 +3,34 @@
  */
 import React from 'react';
 
-export default function HttpWatcherForm({ name, url }) {
+export default function HttpWatcherForm({ data, handleChangeField }) {
   return (
     <div>
       <label>name</label><br />
-      <input type="text" name="name" value={name} /><br /><br />
+      <input
+        type="text"
+        value={data.name}
+        onChange={e => handleChangeField('name', e)}
+      /><br /><br />
       <label>url</label><br />
-      <input type="url" name="url" value={url} /><br /><br />
+      <input
+        type="url"
+        name="url"
+        value={data.url}
+        onChange={e => handleChangeField('url', e)}
+      /><br /><br />
     </div>
   );
 }
 
 HttpWatcherForm.propTypes = {
-  name: React.PropTypes.string,
-  url: React.PropTypes.string,
+  data: React.PropTypes.object,
+  handleChangeField: React.PropTypes.func,
 };
 
 HttpWatcherForm.defaultProps = {
-  name: '',
-  url: '',
+  data: {
+    name: '',
+    url: '',
+  },
 };

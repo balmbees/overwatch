@@ -96,7 +96,7 @@ export default class Component extends BaseModel {
       return Promise.reject('required field missing');
     }
     return BaseModel.db()
-      .cypher('CREATE (c:Component { props }}) RETURN id(c), c',
+      .cypher('CREATE (c:Component { props }) RETURN id(c), c',
         { props: _.pick(this, ['name', 'description']) })
       .then(resp => {
         const r = resp.body.results[0].data[0].row;

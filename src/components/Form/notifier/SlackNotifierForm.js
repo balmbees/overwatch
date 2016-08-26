@@ -3,23 +3,35 @@
  */
 import React from 'react';
 
-export default function SlackNotifier({ name, webhookUrl }) {
+export default function SlackNotifier({ data, handleChangeField }) {
+  const { name, webhookUrl } = data;
   return (
     <div>
-      <label>name</label>
-      <input type="text" name="name" value={name} />
-      <label>webhookUrl</label>
-      <input type="text" name="webhookUrl" value={webhookUrl} />
+      <label>name</label><br />
+      <input
+        type="text"
+        value={name}
+        onChange={e => handleChangeField('name', e)}
+      /><br /><br />
+      <label>webhookUrl</label><br />
+      <input
+        type="text"
+        value={webhookUrl}
+        onChange={e => handleChangeField('webhookUrl', e)}
+      /><br /><br />
     </div>
   );
 }
 
 SlackNotifier.propTypes = {
-  name: React.PropTypes.string,
-  webhookUrl: React.PropTypes.string,
+  data: React.PropTypes.object,
+  handleChangeField: React.PropTypes.func,
 };
 
 SlackNotifier.defaultProps = {
-  name: '',
-  webhookUrl: '',
+  data: {
+    type: 'SlackNotifier',
+    name: '',
+    webhookUrl: '',
+  },
 };

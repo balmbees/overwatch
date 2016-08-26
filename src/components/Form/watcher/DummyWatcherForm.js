@@ -3,19 +3,26 @@
  */
 import React from 'react';
 
-export default function DummyWatcherForm({ name }) {
+export default function DummyWatcherForm({ data, handleChangeField }) {
   return (
     <div>
       <label>name</label><br />
-      <input type="text" name="name" value={name} /><br /><br />
+      <input
+        type="text"
+        value={data.name}
+        onChange={e => handleChangeField('name', e)}
+      /><br /><br />
     </div>
   );
 }
 
 DummyWatcherForm.propTypes = {
-  name: React.PropTypes.string,
+  data: React.PropTypes.object,
+  handleChangeField: React.PropTypes.func,
 };
 
 DummyWatcherForm.defaultProps = {
-  name: '',
+  data: {
+    name: '',
+  },
 };

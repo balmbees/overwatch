@@ -6,32 +6,25 @@ import React from 'react';
 import SlackNotifierForm from './SlackNotifierForm';
 import AwsSnsNotifierForm from './AwsSnsNotifierForm';
 
-export default function NotifierForm({ data }) {
+export default function NotifierForm({ data, handleChangeField }) {
   const { type } = data;
+
   switch (type) {
-    case 'SlackNotifier':
-      return (
-        <SlackNotifierForm name={data.name} webhookUrl={data.webhook_url} />
-      );
     case 'AwsSnsNotifier':
       return (
-        <AwsSnsNotifierForm
-          name={data.name}
-          awsAccessKeyId={data.awsAccessKeyId}
-          awsSecretAccessKey={data.awsSecretAccessKey}
-          awsRegion={data.awsRegion}
-          targetArn={data.targetArn}
-        />
+        <AwsSnsNotifierForm data={data} handleChangeField={handleChangeField} />
       );
+    case 'SlackNotifier':
     default:
       return (
-        <div>Invalid type.</div>
+        <SlackNotifierForm data={data} handleChangeField={handleChangeField} />
       );
   }
 }
 
 NotifierForm.propTypes = {
   data: React.PropTypes.object,
+  handleChangeField: React.PropTypes.func,
 };
 
 NotifierForm.defaultProps = {

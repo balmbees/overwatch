@@ -3,41 +3,55 @@
  */
 import React from 'react';
 
-export default function AwsSnsNotifierForm({
-  name,
-  awsAccessKeyId,
-  awsSecretAccessKey,
-  awsRegion,
-  targetArn,
-}) {
+export default function AwsSnsNotifierForm({ data, handleChangeField }) {
   return (
     <div>
-      <label>name</label>
-      <input type="text" name="name" value={name} />
-      <label>awsAccessKeyId</label>
-      <input type="text" name="awsAccessKeyId" value={awsAccessKeyId} />
-      <label>awsSecretAccessKey</label>
-      <input type="text" name="awsSecretAccessKey" value={awsSecretAccessKey} />
-      <label>awsRegion</label>
-      <input type="text" name="awsRegion" value={awsRegion} />
-      <label>targetArn</label>
-      <input type="text" name="targetArn" value={targetArn} />
+      <label>name</label><br />
+      <input
+        type="text"
+        value={data.name}
+        onChange={e => handleChangeField('name', e)}
+      /><br /><br />
+      <label>awsAccessKeyId</label><br />
+      <input
+        type="text"
+        value={data.awsAccessKeyId}
+        onChange={e => handleChangeField('awsAccessKeyId', e)}
+      /><br /><br />
+      <label>awsSecretAccessKey</label><br />
+      <input
+        type="text"
+        value={data.awsSecretAccessKey}
+        onChange={e => handleChangeField('awsSecretAccessKey', e)}
+      /><br /><br />
+      <label>awsRegion</label><br />
+      <input
+        type="text"
+        value={data.awsRegion}
+        onChange={e => handleChangeField('awsRegion', e)}
+      /><br /><br />
+      <label>targetArn</label><br />
+      <input
+        type="text"
+        value={data.targetArn}
+        onChange={e => handleChangeField('targetArn', e)}
+      /><br /><br />
     </div>
   );
 }
 
 AwsSnsNotifierForm.propTypes = {
-  name: React.PropTypes.string,
-  awsAccessKeyId: React.PropTypes.string,
-  awsSecretAccessKey: React.PropTypes.string,
-  awsRegion: React.PropTypes.string,
-  targetArn: React.PropTypes.string,
+  data: React.PropTypes.object,
+  handleChangeField: React.PropTypes.func,
 };
 
 AwsSnsNotifierForm.defaultProps = {
-  name: '',
-  awsAccessKeyId: '',
-  awsSecretAccessKey: '',
-  awsRegion: 'us-east-1',
-  targetArn: '',
+  data: {
+    type: 'AwsSnsNotifier',
+    name: '',
+    awsAccessKeyId: '',
+    awsSecretAccessKey: '',
+    awsRegion: 'us-east-1',
+    targetArn: '',
+  },
 };

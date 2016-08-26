@@ -6,39 +6,29 @@ import HttpWatcherForm from './HttpWatcherForm';
 import CloudwatchAlarmWatcherForm from './CloudwatchAlarmWatcherForm';
 import DummyWatcherForm from './DummyWatcherForm';
 
-export default function WatcherForm({ data }) {
+export default function WatcherForm({ data, handleChangeField }) {
   const { type } = data;
+
   switch (type) {
-    case 'HttpWatcher':
-      return (
-        <HttpWatcherForm
-          name={data.name}
-          url={data.url}
-        />
-      );
     case 'CloudwatchAlarmWatcher':
       return (
-        <CloudwatchAlarmWatcherForm
-          name={data.name}
-          awsAccessKeyId={data.awsAccessKeyId}
-          awsSecretAccessKey={data.awsSecretAccessKey}
-          awsRegion={data.awsRegion}
-          alarmNam={data.alarmName}
-        />
+        <CloudwatchAlarmWatcherForm data={data} handleChangeField={handleChangeField} />
+      );
+    case 'HttpWatcher':
+      return (
+        <HttpWatcherForm data={data} handleChangeField={handleChangeField} />
       );
     case 'DummyWatcher':
-      return (
-        <DummyWatcherForm name={data.name} />
-      );
     default:
       return (
-        <div>Invalid type.</div>
+        <DummyWatcherForm data={data} handleChangeField={handleChangeField} />
       );
   }
 }
 
 WatcherForm.propTypes = {
   data: React.PropTypes.object,
+  handleChangeField: React.PropTypes.func,
 };
 
 WatcherForm.defaultProps = {
@@ -47,4 +37,3 @@ WatcherForm.defaultProps = {
     type: 'HttpWatcher',
   },
 };
-

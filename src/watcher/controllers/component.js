@@ -25,10 +25,10 @@ ComponentsRouter.post('/', (req, res) => {
     res.status(400).json({ message: 'required field missing' });
   }
 
-  new Component({ name: paramName }).insert()
+  new Component({ name: paramName, description: (req.body.description || '') }).insert()
     .then(c => {
-      const notifierIds = req.body.notifierIds;
-      const watchers = req.body.watchers;
+      const notifierIds = req.body.notifierIds || [];
+      const watchers = req.body.watchers || [];
 
       return Promise.all(
         watchers.filter(w => w.type in watcherTypes)

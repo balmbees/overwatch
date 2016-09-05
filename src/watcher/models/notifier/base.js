@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import BaseModel from '../base';
+import { STATUS_SUCCESS } from '../watch_result';
 
 const label = 'Notifier';
 
@@ -36,6 +37,9 @@ export default class Notifier extends BaseModel {
   }
 
   message({ component, watcher, watchResult }) {
+    if (component.status === STATUS_SUCCESS) {
+      return `${component.name} back to normal status!`;
+    }
     return `${component.name} - ${watcher.name} : *${watchResult.status}* ${watchResult.description}` // eslint-disable-line
   }
 }

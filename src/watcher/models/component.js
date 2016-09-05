@@ -143,18 +143,27 @@ export default class Component extends BaseModel {
           return promise.then(() => {
             if (this.statusChanged) {
               if (process.env.NODE_ENV === 'production') {
-                return Promise.all(
-                  failedWatchers.map(([watcher, watchResult]) => {
-                    const notifyPromises = notifiers.map(n =>
-                      n.notify({
-                        component: this,
-                        watcher,
-                        watchResult,
-                      })
-                    );
-                    return Promise.all(notifyPromises);
-                  })
-                );
+                if (this.status === STATUS_SUCCESS) {
+                  return Promise.all(
+                    notifiers.map(n =>
+                    n.notify({
+                      component: this,
+                    }))
+                  );
+                } else { // eslint-disable-line
+                  return Promise.all(
+                    failedWatchers.map(([watcher, watchResult]) => {
+                      const notifyPromises = notifiers.map(n =>
+                        n.notify({
+                          component: this,
+                          watcher,
+                          watchResult,
+                        })
+                      );
+                      return Promise.all(notifyPromises);
+                    })
+                  );
+                }
               } else { // eslint-disable-line
                 failedWatchers
                   .forEach(fr => {

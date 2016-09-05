@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import BaseModel from '../base';
-import { STATUS_SUCCESS } from "../watch_result";
+import { STATUS_SUCCESS } from '../watch_result';
 
 const label = 'Notifier';
 

@@ -21,7 +21,7 @@ export default class D3ForceLayout {
         case 'contain':
           return 0.12;
         case 'depend':
-          return 0.12;
+          return 0.10;
         default:
           return 0;
       }

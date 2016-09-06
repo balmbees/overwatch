@@ -15,6 +15,7 @@ describe('CloudwatchAlarmWatcher', () => {
     it('should build config from model', () => {
       watcher.awsRegion = 'test-region';
       watcher.awsAccessKeyId = 'test-key-id';
+      watcher.awsSecretAccessKey = 'test-secret-key';
 
       const config = watcher._cloudwatchConfig(); // eslint-disable-line
       expect(config.region).to.eq('test-region');
@@ -24,6 +25,7 @@ describe('CloudwatchAlarmWatcher', () => {
     it('should build config from default if model values are empty', () => {
       watcher.awsRegion = null;
       watcher.awsAccessKeyId = null;
+      watcher.awsSecretAccessKey = null;
 
       pmock.env({
         CLOUDWATCH_WATCHER_AWS_REGION: 'test-region',

@@ -131,9 +131,10 @@ export default class D3ForceLayout {
     // Update Bounding Box
     this.forceSimulation.on('tick.boundsForce', () => {
       this.nodes.forEach((node) => {
+        const padding = 50;
         Object.assign(node, {
-          x: Math.max(0, Math.min(size.width - 0, node.x)),
-          y: Math.max(0, Math.min(size.height - 0, node.y)),
+          x: Math.max(padding, Math.min(size.width - padding, node.x)),
+          y: Math.max(padding, Math.min(size.height - padding, node.y)),
         });
       });
 

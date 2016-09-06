@@ -17,8 +17,7 @@ export default class CloudwatchAlarmWatcher extends Watcher {
 
   isValid() {
     const objFields = Object.keys(this);
-    const val = _.reduce(['type', 'name', 'awsAccessKeyId',
-      'awsSecretAccessKey', 'awsRegion', 'alarmName'],
+    const val = _.reduce(['type', 'name', 'alarmName'],
       (m, n) => (m & _.includes(objFields, n)), true);
 
     return val;
@@ -27,9 +26,15 @@ export default class CloudwatchAlarmWatcher extends Watcher {
   watch() {
     return new Promise((resolve) => {
       const config = new Config({
-        accessKeyId: this.awsAccessKeyId,
-        secretAccessKey: this.awsSecretAccessKey,
-        region: this.awsRegion,
+        accessKeyId: (
+          this.awsAccessKeyId || process.env.CLOUDWATCH_ALA_WATCHER_AWS_ACCESS_KEY_ID
+        ),
+        secretAccessKey: (
+          this.awsSecretAccessKey || process.env.CLOUDWATCH_ALA_WATCHER_AWS_SECRET_ACCESS_KEY
+        ),
+        region: (
+          this.awsRegion || process.env.CLOUDWATCH_ALA_WATCHER_AWS_REGION
+        ),
       });
       const cloudwatch = new CloudWatch(config);
 

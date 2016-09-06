@@ -88,6 +88,7 @@
     "gaze": "^1.0.0",
     "git-repository": "^0.1.4",
     "glob": "^7.0.3",
+    "jquery": "^3.1.0",
     "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",
     "mocha": "^2.5.3",
@@ -95,6 +96,7 @@
     "nyc": "^8.1.0",
     "pixrem": "^3.0.1",
     "pleeease-filters": "^3.0.0",
+    "pmock": "^0.2.3",
     "postcss": "^5.0.21",
     "postcss-calc": "^5.2.1",
     "postcss-color-function": "^2.0.1",
@@ -120,8 +122,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-hot-middleware": "^2.10.0",
-    "webpack-middleware": "^1.5.1",
-    "jquery": "^3.1.0"
+    "webpack-middleware": "^1.5.1"
   },
   "babel": {
     "presets": [
@@ -150,7 +151,9 @@
     "rules": {
       "no-underscore-dangle": [
         "error",
-        { "allowAfterThis": true }
+        {
+          "allowAfterThis": true
+        }
       ],
       "no-confusing-arrow": 0,
       "react/jsx-quotes": 0,

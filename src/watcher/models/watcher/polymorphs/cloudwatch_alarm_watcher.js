@@ -26,13 +26,13 @@ export default class CloudwatchAlarmWatcher extends Watcher {
   _cloudwatchConfig() {
     const config = new Config({
       accessKeyId: (
-        this.awsAccessKeyId || process.env.CLOUDWATCH_ALA_WATCHER_AWS_ACCESS_KEY_ID
+        this.awsAccessKeyId || process.env.CLOUDWATCH_WATCHER_AWS_ACCESS_KEY_ID
       ),
       secretAccessKey: (
-        this.awsSecretAccessKey || process.env.CLOUDWATCH_ALA_WATCHER_AWS_SECRET_ACCESS_KEY
+        this.awsSecretAccessKey || process.env.CLOUDWATCH_WATCHER_AWS_SECRET_ACCESS_KEY
       ),
       region: (
-        this.awsRegion || process.env.CLOUDWATCH_ALA_WATCHER_AWS_REGION
+        this.awsRegion || process.env.CLOUDWATCH_WATCHER_AWS_REGION
       ),
     });
     return config;

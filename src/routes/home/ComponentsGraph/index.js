@@ -33,6 +33,12 @@ class ComponentsGraph extends React.Component {
       depends.map(l => this._dependToLink(l))
     );
 
+    forceLayout.on(D3ForceLayout.EVENTS.NODE_CLICK, (node) => {
+      Object.assign(node.data, {
+        selected: !!!node.data.selected,
+      });
+    });
+
     this.resizeHandler = () => {
       if (this.svgRef) {
         const svgWidth = $(this.svgRef).width();

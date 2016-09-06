@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import _ from 'lodash';
+import $ from 'jquery';
 
 export default class D3ForceLayout {
   constructor({ renderCallback }) {
@@ -115,10 +116,20 @@ export default class D3ForceLayout {
             d3.event.subject.fx = null;
             d3.event.subject.fy = null;
           })
-      ).on('click', () => {
-        const node = this.forceSimulation.find(d3.event.offsetX, d3.event.offsetY);
-        this.eventCallbacks[D3ForceLayout.EVENTS.NODE_CLICK](node);
-      });
+      );
+
+    const that = this;
+    $(this.containerDOM).click(function onclick(event) {
+      const elm = $(this);
+      const x = event.pageX - elm.offset().left;
+      const y = event.pageY - elm.offset().top;
+
+      const node = that.forceSimulation.find(x, y);
+      node.fx = x;
+      node.fy = y;
+
+      that.eventCallbacks[D3ForceLayout.EVENTS.NODE_CLICK](node);
+    });
   }
 
   set forceSimulationSize(size) {

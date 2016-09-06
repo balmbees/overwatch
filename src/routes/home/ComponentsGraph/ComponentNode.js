@@ -15,12 +15,10 @@ function ComponentNode(props) {
   const component = node.data;
   const status = component.status;
   return (
-    <g>
+    <g transform={`translate(${node.x}, ${node.y}) scale(${component.selected ? 1.5 : 1})`}>
       <circle
         style={{
           fill: STATUS_TO_COLOR_MAP[status],
-          cx: node.x,
-          cy: node.y,
           r: node.size * 0.5,
           transition: 'fill 0.8s cubic-bezier(0.46, -0.6, 0.46, 2.6)',
         }}
@@ -28,8 +26,6 @@ function ComponentNode(props) {
       <circle
         style={{
           fill: STATUS_TO_COLOR_MAP[status],
-          cx: node.x,
-          cy: node.y,
         }}
       >
         <animate
@@ -51,8 +47,8 @@ function ComponentNode(props) {
       </circle>
       <text
         textAnchor="middle"
-        x={node.x}
-        y={node.y - node.size / 2 - 5}
+        x={0}
+        y={- node.size / 2 - 5}
       >
         {component.name}
       </text>

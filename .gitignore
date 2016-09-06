@@ -12,3 +12,4 @@ dist/
 coverage/
 .nyc_output/
 .env
+.envrc

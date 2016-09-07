@@ -58,6 +58,7 @@ export default class BaseModel {
   }
 
   static db() {
-    return new GrapheneDB(process.env.GRAPHENEDB_URL);
+    const url = process.env.GRAPHENEDB_URL || 'http://localhost:7474';
+    return new GrapheneDB(url);
   }
 }

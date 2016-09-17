@@ -34,7 +34,7 @@ import { updateComponents } from './actions/home';
 import ComponentGroup from './watcher/models/component_group';
 import Component from './watcher/models/component';
 
-import work from './watcher';
+import ComponentUpdater from './watcher/services/component_updater';
 import { ComponentsRouter, ComponentRouter } from './watcher/controllers/component';
 import { WatchersRouter } from './watcher/controllers/watcher';
 import { NotifiersRouter } from './watcher/controllers/notifier';
@@ -166,9 +166,11 @@ const server = new http.Server(app);
 const io = new SocketIO(server);
 
 let latestResponse = null;
+let componentUpdater = new ComponentUpdater();
 const fetch = () => {
+
   Promise.all([
-    work(),
+    componentUpdater.updateAll(),
     ComponentGroup.fetchAll(),
     ComponentGroup.fetchComponentGraph(),
     Component.fetchComponentDependencies(),

@@ -33,6 +33,16 @@ export class GrapheneDB {
   }
 }
 
+export function jsonSchemaModel(schema) {
+  return function decorator(target) {
+    Object.defineProperty(
+      target,
+      'schema',
+      { value: schema }
+    );
+  };
+}
+
 export default class BaseModel {
   constructor(settings, id = undefined) {
     this.id = id;

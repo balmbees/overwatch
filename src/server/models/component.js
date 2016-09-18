@@ -1,14 +1,16 @@
 import _ from 'lodash';
 
-import BaseModel from './base';
+import BaseModel, { jsonSchemaModel } from './base';
+
 import { notifierPool, notifierTypes } from './notifier';
 import { watcherTypes } from './watcher';
 import { STATUS_SUCCESS, STATUS_ERROR } from './watch_result';
 import schema from './component_schema.json';
 
-const label = 'Component';
-
+@jsonSchemaModel(require('./component_schema')) // eslint-disable-line
 export default class Component extends BaseModel {
+  static label = 'Component'
+
   constructor(settings, id = undefined) {
     super(_.pick(settings, ['name', 'description', 'status']), id);
     this.notifiers = [];
@@ -20,11 +22,11 @@ export default class Component extends BaseModel {
   }
 
   static fetchById(id) {
-    return super.fetchById(id, label);
+    return super.fetchById(id, this.label);
   }
 
   static fetchAll() {
-    return super.fetchAll(label);
+    return super.fetchAll(this.label);
   }
 
   static fetchComponentDependencies() {

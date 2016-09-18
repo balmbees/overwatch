@@ -190,7 +190,7 @@ const fetch = () => {
     );
     io.sockets.emit('action', latestResponse);
   }).catch((e) => {
-    console.log('Error : ', e);
+    console.log('Error : ', e, e.stack);
   });
 };
 

@@ -4,17 +4,10 @@ import { CloudWatch, Config } from 'aws-sdk';
 import WatchResult from '../../watch_result';
 import Watcher from '../base';
 
+import { jsonSchemaModel } from '../../base';
+
+@jsonSchemaModel(require('./cloudwatch_alarm_watcher_schema')) // eslint-disable-line
 class CloudwatchAlarmWatcher extends Watcher {
-  constructor(settings, id = undefined) {
-    super(_.pick(settings,
-      ['type', 'name', 'awsAccessKeyId', 'awsSecretAccessKey', 'awsRegion', 'alarmName']), id);
-  }
-
-  serialize() {
-    return _.pick(this,
-      ['type', 'id', 'name', 'awsAccessKeyId', 'awsSecretAccessKey', 'awsRegion', 'alarmName']);
-  }
-
   isValid() {
     const objFields = Object.keys(this);
     const val = _.reduce(['type', 'name', 'alarmName'],

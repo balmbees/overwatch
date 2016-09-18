@@ -5,6 +5,11 @@
     "name"
   ],
   "properties": {
+    "type": {
+      "type": "string",
+      "title": "watcher type. not editable",
+      "default": "CloudwatchAlarmWatcher"
+    },
     "name": {
       "type": "string",
       "title": "name",

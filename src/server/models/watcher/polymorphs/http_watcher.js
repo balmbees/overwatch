@@ -1,25 +1,12 @@
-import _ from 'lodash';
 import request from 'request';
 
-import WatchResult from '../../watch_result';
 import Watcher from '../base';
+import WatchResult from '../../watch_result';
 
+import { jsonSchemaModel } from '../../base';
+
+@jsonSchemaModel(require('./http_watcher_schema')) // eslint-disable-line
 export default class HttpWatcher extends Watcher {
-  constructor(settings, id = undefined) {
-    super(_.pick(settings, ['type', 'name', 'url']), id);
-  }
-
-  serialize() {
-    return _.pick(this, ['type', 'id', 'name', 'url', 'result']);
-  }
-
-  isValid() {
-    const objFields = Object.keys(this);
-    const val = _.reduce(['type', 'name', 'url'], (m, n) => (m & _.includes(objFields, n)), true);
-
-    return val;
-  }
-
   watch() {
     return new Promise((resolve) => {
       request(this.url, (error, response) => {

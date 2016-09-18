@@ -1,0 +1,19 @@
+{
+  "title": "Watcher",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "title": "watcher type. not editable",
+      "default": "DummyWatcher"
+    },
+    "name": {
+      "type": "string",
+      "title": "name",
+      "description": "name of the component"
+    }
+  }
+}

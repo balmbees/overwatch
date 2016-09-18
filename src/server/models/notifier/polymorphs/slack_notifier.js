@@ -1,17 +1,11 @@
-import _ from 'lodash';
 import request from 'request';
 
 import Notifier from '../base';
 
+import { jsonSchemaModel } from '../../base';
+
+@jsonSchemaModel(require('./slack_notifier_schema')) // eslint-disable-line
 export default class SlackNotifier extends Notifier {
-  constructor(settings, id = undefined) {
-    super(_.pick(settings, ['type', 'name', 'webhookUrl']), id);
-  }
-
-  serialize() {
-    return _.pick(this, ['type', 'id', 'name', 'webhookUrl']);
-  }
-
   notify({ component, watcher, watchResult }) {
     return new Promise((resolve, reject) => {
       request({
@@ -25,13 +19,5 @@ export default class SlackNotifier extends Notifier {
         else resolve(response);
       });
     });
-  }
-
-  isValid() {
-    const objFields = Object.keys(this);
-    const val = _.reduce(['type', 'name', 'webhookUrl'],
-      (m, n) => (m & _.includes(objFields, n)), true);
-
-    return val;
   }
 }

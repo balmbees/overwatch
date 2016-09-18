@@ -1,19 +1,11 @@
-import _ from 'lodash';
 import { SNS, Config } from 'aws-sdk';
 
 import Notifier from '../base';
 
+import { jsonSchemaModel } from '../../base';
+
+@jsonSchemaModel(require('./aws_sns_notifier_schema')) // eslint-disable-line
 export default class AwsSnsNotifier extends Notifier {
-  constructor(settings, id = undefined) {
-    super(_.pick(settings, ['type', 'name', 'awsAccessKeyId',
-      'awsSecretAccessKey', 'awsRegion', 'targetArn']), id);
-  }
-
-  serialize() {
-    return _.pick(this, ['type', 'id', 'name', 'awsAccessKeyId',
-      'awsSecretAccessKey', 'awsRegion', 'targetArn']);
-  }
-
   notify({ component, watcher, watchResult }) {
     return new Promise((resolve, reject) => {
       const config = new Config({
@@ -31,14 +23,5 @@ export default class AwsSnsNotifier extends Notifier {
         else resolve(data);
       });
     });
-  }
-
-  isValid() {
-    const objFields = Object.keys(this);
-    const val = _.reduce(['type', 'name', 'awsAccessKeyId',
-        'awsSecretAccessKey', 'awsRegion', 'targetArn'],
-      (m, n) => (m & _.includes(objFields, n)), true);
-
-    return val;
   }
 }

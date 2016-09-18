@@ -1,15 +1,9 @@
 import { Router } from 'express';
-import seraph from 'seraph';
-import URL from 'url';
+import DB from '../services/db';
 
 const cypherRouter = new Router();
-const url = URL.parse(process.env.GRAPHENEDB_URL);
-const dbConnection = seraph({
-  server: `${url.protocol}//${url.host}`,
-  user: url.auth.split(':')[0],
-  pass: url.auth.split(':')[1],
-});
 
+const dbConnection = DB.connect();
 cypherRouter.post('/', (req, res) => {
   const body = req.body;
   const node = body.node;

@@ -5,7 +5,34 @@ import { STATUS_SUCCESS } from '../watch_result';
 
 const label = 'Notifier';
 
+import { Validator } from 'jsonschema';
+
 export default class Notifier extends BaseModel {
+  constructor(settings, id = undefined) {
+    super();
+    this.id = id;
+    Object.assign(
+      this,
+      _.pick(
+        settings,
+        Object.keys(this.constructor.schema.properties).concat([
+        ])
+      )
+    );
+  }
+
+  serialize() {
+    return _.pick(this, Object.keys(this.constructor.schema.properties).concat([
+      'id',
+    ]));
+  }
+
+  isValid() {
+    const validator = new Validator();
+    const result = validator.validate(this, this.constructor.schema, { throwError: true });
+    return result.valid;
+  }
+
   static fetchById(id) {
     return super.fetchById(id, label);
   }
@@ -30,10 +57,6 @@ export default class Notifier extends BaseModel {
 
   notify({ component, watcher, watchResult }) {
     throw new Error(`Not Implemented : ${component}, ${watcher}, ${watchResult}`);
-  }
-
-  isValid() {
-    throw new Error('Not Implemented');
   }
 
   message({ component, watcher, watchResult }) {

@@ -60,4 +60,8 @@ export default class BaseModel {
   static db() {
     return new GrapheneDB(process.env.GRAPHENEDB_URL);
   }
+
+  static schema() {
+    console.log(__filename, __dirname);
+  }
 }

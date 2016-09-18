@@ -4,7 +4,7 @@ import { CloudWatch, Config } from 'aws-sdk';
 import WatchResult from '../../watch_result';
 import Watcher from '../base';
 
-export default class CloudwatchAlarmWatcher extends Watcher {
+class CloudwatchAlarmWatcher extends Watcher {
   constructor(settings, id = undefined) {
     super(_.pick(settings,
       ['type', 'name', 'awsAccessKeyId', 'awsSecretAccessKey', 'awsRegion', 'alarmName']), id);
@@ -71,3 +71,5 @@ export default class CloudwatchAlarmWatcher extends Watcher {
     });
   }
 }
+
+export default CloudwatchAlarmWatcher;

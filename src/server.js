@@ -31,14 +31,16 @@ import { setRuntimeVariable } from './actions/runtime';
 import { port } from './config';
 
 import { updateComponents } from './actions/home';
-import ComponentGroup from './watcher/models/component_group';
-import Component from './watcher/models/component';
+import ComponentGroup from './server/models/component_group';
+import Component from './server/models/component';
 
-import ComponentUpdater from './watcher/services/component_updater';
-import { ComponentsRouter, ComponentRouter } from './watcher/controllers/component';
-import { WatchersRouter } from './watcher/controllers/watcher';
-import { NotifiersRouter } from './watcher/controllers/notifier';
-import { ComponentGroupsRouter } from './watcher/controllers/component_group';
+import ComponentUpdater from './server/services/component_updater';
+import { ComponentsRouter, ComponentRouter } from './server/controllers/component';
+import { WatchersRouter } from './server/controllers/watcher';
+import { NotifiersRouter } from './server/controllers/notifier';
+import { ComponentGroupsRouter } from './server/controllers/component_group';
+
+import CypherRouter from './server/controllers/cypher';
 
 const app = express();
 
@@ -60,6 +62,7 @@ app.use(bodyParser.json());
 //
 // Watcher api controller
 // -----------------------------------------------------------------------------
+app.use('/api/cypher', CypherRouter);
 app.use('/watcher/components', ComponentsRouter);
 app.use('/watcher/component', ComponentRouter);
 app.use('/watcher/watchers', WatchersRouter);
@@ -166,9 +169,8 @@ const server = new http.Server(app);
 const io = new SocketIO(server);
 
 let latestResponse = null;
-let componentUpdater = new ComponentUpdater();
+const componentUpdater = new ComponentUpdater();
 const fetch = () => {
-
   Promise.all([
     componentUpdater.updateAll(),
     ComponentGroup.fetchAll(),

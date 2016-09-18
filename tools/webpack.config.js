@@ -65,6 +65,7 @@ const config = {
           ],
           plugins: [
             'transform-runtime',
+            'transform-decorators-legacy',
             ...DEBUG ? [] : [
               'transform-react-remove-prop-types',
               'transform-react-constant-elements',

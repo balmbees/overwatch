@@ -3,16 +3,11 @@
  */
 import React from 'react';
 
-import ComponentForm from './component/ComponentForm';
 import WatcherForm from './watcher/WatcherForm';
 import NotifierForm from './notifier/NotifierForm';
 
 export default function Form({ label, data }) {
   switch (label) {
-    case 'Component':
-      return (
-        <ComponentForm data={data} />
-      );
     case 'Watcher':
       return (
         <WatcherForm data={data} />

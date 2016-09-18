@@ -4,6 +4,7 @@ import BaseModel from './base';
 import { notifierPool, notifierTypes } from './notifier';
 import { watcherTypes } from './watcher';
 import { STATUS_SUCCESS, STATUS_ERROR } from './watch_result';
+import schema from './component_schema.json';
 
 const label = 'Component';
 
@@ -12,6 +13,10 @@ export default class Component extends BaseModel {
     super(_.pick(settings, ['name', 'description', 'status']), id);
     this.notifiers = [];
     this.watchers = [];
+  }
+
+  static schema() {
+    return schema;
   }
 
   static fetchById(id) {

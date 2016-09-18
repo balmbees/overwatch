@@ -3,6 +3,7 @@ import _ from 'lodash';
 import BaseModel from '../base';
 
 const label = 'Watcher';
+
 export default class Watcher extends BaseModel {
   static fetchById(id) {
     return super.fetchById(id, label);

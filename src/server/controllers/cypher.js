@@ -18,4 +18,30 @@ cypherRouter.post('/', (req, res) => {
   });
 });
 
+cypherRouter.get('/read', (req, res) => {
+  const id = JSON.parse(req.query.id);
+  dbConnection.read(id, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
+
+
+cypherRouter.get('/find', (req, res) => {
+  const predicate = JSON.parse(req.query.predicate || '{}');
+  const label = req.query.label;
+  dbConnection.find(predicate, label, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+    } else {
+      res.status(200).json({
+        data: result,
+      });
+    }
+  });
+});
+
 export default cypherRouter;

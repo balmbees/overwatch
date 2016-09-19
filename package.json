@@ -37,6 +37,7 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-jsonschema-form": "^0.40.0",
+    "react-modal": "^1.4.0",
     "react-redux": "^4.4.5",
     "redux": "^3.4.0",
     "redux-socket.io": "^1.2.0",

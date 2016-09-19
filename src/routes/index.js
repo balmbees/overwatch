@@ -13,9 +13,6 @@ import App from '../components/App';
 // Child routes
 import home from './home';
 import error from './error';
-import register from './register';
-import manage from './manage';
-import notifier from './notifier';
 
 export default {
 
@@ -25,9 +22,6 @@ export default {
   children: [
     home,
     error,
-    register,
-    manage,
-    notifier,
   ],
 
   async action({ next, render, context }) {

@@ -17,10 +17,6 @@ function Footer() {
     <div className={s.root}>
       <div className={s.container}>
         <span className={s.text}>© Vingle Inc</span>
-        <span className={s.spacer}>·</span>
-        <Link className={s.link} to="/">Home</Link>
-        <span className={s.spacer}>·</span>
-        <Link className={s.link} to="/not-found">Not Found</Link>
       </div>
     </div>
   );

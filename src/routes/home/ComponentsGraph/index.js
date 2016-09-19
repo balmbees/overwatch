@@ -2,9 +2,15 @@ import React from 'react';
 import _ from 'lodash';
 import $ from 'jquery';
 
+import Modal from 'react-modal';
+
 import D3ForceLayout from './D3ForceLayout';
 import ComponentNode from './ComponentNode';
 import ComponentLink from './ComponentLink';
+
+
+import Form from 'react-jsonschema-form';
+import ComponentSchema from '../../../server/models/component_schema.json';
 
 class ComponentsGraph extends React.Component {
   constructor(props) {
@@ -36,6 +42,10 @@ class ComponentsGraph extends React.Component {
     forceLayout.on(D3ForceLayout.EVENTS.NODE_CLICK, (node) => {
       Object.assign(node.data, {
         selected: !!!node.data.selected,
+      });
+
+      this.setState({
+        editingNode: node,
       });
     });
 
@@ -83,7 +93,7 @@ class ComponentsGraph extends React.Component {
     return {
       id: c.id,
       size: 40,
-      type: 'component',
+      type: 'Component',
       data: c,
     };
   }
@@ -152,6 +162,51 @@ class ComponentsGraph extends React.Component {
           {this.drawLinks()}
           {this.drawNodes()}
         </svg>
+        <Modal
+          isOpen={!!this.state.editingNode}
+        >
+          <h1>Modal Content</h1>
+          <p>Etc.</p>
+          <div>{JSON.stringify(this.state.editingNode)}</div>
+          <Form
+            schema={ComponentSchema}
+            formData={(this.state.editingNode || {}).data}
+            onSubmit={
+              (data) => $.post('/api/cypher/save', {
+                node: {
+                  label: ComponentSchema.title,
+                  data: data.formData,
+                },
+              }, (res) => {
+                console.log(res);
+              })
+            }
+          />
+          <button
+            onClick={() => {
+              $.post('/api/cypher/delete', {
+                node: {
+                  id: this.state.editingNode.id,
+                },
+              }, () => {
+                this.setState({
+                  editingNode: null,
+                });
+              });
+            }}
+          >
+            Delete
+          </button>
+          <button
+            onClick={() => {
+              this.setState({
+                editingNode: null,
+              });
+            }}
+          >
+            Close
+          </button>
+        </Modal>
       </div>
     );
   }

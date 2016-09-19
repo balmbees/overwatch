@@ -5,11 +5,11 @@ const cypherRouter = new Router();
 
 const dbConnection = DB.connect();
 
-cypherRouter.post('/', (req, res) => {
+cypherRouter.post('/save', (req, res) => {
   const body = req.body;
   const node = body.node;
 
-  dbConnection.save(node.data, node.label, (err, result) => {
+  dbConnection.save(node.data, (err, result) => {
     if (err) {
       res.status(400).json({ error: err.message });
     } else {
@@ -29,6 +29,18 @@ cypherRouter.get('/read', (req, res) => {
   });
 });
 
+cypherRouter.post('/delete', (req, res) => {
+  const body = req.body;
+  const node = body.node;
+
+  dbConnection.delete(node, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
 
 cypherRouter.get('/find', (req, res) => {
   const predicate = JSON.parse(req.query.predicate || '{}');

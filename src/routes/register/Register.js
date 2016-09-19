@@ -63,6 +63,8 @@ export default function register() {
     <div>
       <ComponentForm />
       <CloudwatchAlarmWatcherForm />
+      <DummyWatcherForm />
+      <HttpWatcherForm />
     </div>
   );
 }

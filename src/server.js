@@ -35,10 +35,6 @@ import ComponentGroup from './server/models/component_group';
 import Component from './server/models/component';
 
 import ComponentUpdater from './server/services/component_updater';
-import { WatchersRouter } from './server/controllers/watcher';
-import { NotifiersRouter } from './server/controllers/notifier';
-import { ComponentGroupsRouter } from './server/controllers/component_group';
-
 import CypherRouter from './server/controllers/cypher';
 
 const app = express();
@@ -62,9 +58,6 @@ app.use(bodyParser.json());
 // Watcher api controller
 // -----------------------------------------------------------------------------
 app.use('/api/cypher', CypherRouter);
-app.use('/watcher/watchers', WatchersRouter);
-app.use('/watcher/notifiers', NotifiersRouter);
-app.use('/watcher/component_groups', ComponentGroupsRouter);
 
 //
 // Register server-side rendering middleware

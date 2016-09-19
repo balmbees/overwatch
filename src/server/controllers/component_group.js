@@ -8,27 +8,8 @@ import ComponentGroup from '../models/component_group';
 export const ComponentGroupsRouter = new Router();
 
 ComponentGroupsRouter.get('/', (req, res) => {
-  ComponentGroup.fetchAll()
+  ComponentGroup.findAll()
     .then(cgs => res.json(cgs.map(cg => cg.serialize())));
 });
 
-ComponentGroupsRouter.get('/graph', (req, res) => {
-  ComponentGroup.fetchComponentGraph()
-    .then(graph => res.json(graph));
-});
-
 export const ComponentGroupRouter = new Router();
-
-ComponentGroupRouter.post('/:componentGroupId/component/:componentId', (req, res) => {
-  const { componentGroupId, componentId } = req.params;
-
-  ComponentGroup.registerComponent(componentGroupId, componentId)
-    .then(cg => res.json(cg.serialize()), m => res.status(400).json({ message: m }));
-});
-
-ComponentGroupRouter.delete('/:componentGroupId/component/:componentId', (req, res) => {
-  const { componentGroupId, componentId } = req.params;
-
-  ComponentGroup.deregisterComponent(componentGroupId, componentId)
-    .then(cg => res.json(cg.serialize()), m => res.status(400).json({ message: m }));
-});

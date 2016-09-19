@@ -9,7 +9,7 @@ import { watcherTypes, Watcher } from '../models/watcher';
 export const WatchersRouter = new Router();
 
 WatchersRouter.get('/', (req, res) => {
-  Watcher.fetchAll()
+  Watcher.findAll()
     .then(watchers => res.json(watchers.map(w => new watcherTypes[w.type](w, w.id).serialize())));
 });
 

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { CloudWatch, Config } from 'aws-sdk';
 
 import WatchResult from '../../watch_result';
@@ -8,14 +7,6 @@ import { jsonSchemaModel } from '../../base';
 
 @jsonSchemaModel(require('./cloudwatch_alarm_watcher_schema')) // eslint-disable-line
 class CloudwatchAlarmWatcher extends Watcher {
-  isValid() {
-    const objFields = Object.keys(this);
-    const val = _.reduce(['type', 'name', 'alarmName'],
-      (m, n) => (m & _.includes(objFields, n)), true);
-
-    return val;
-  }
-
   _cloudwatchConfig() {
     const config = new Config({
       accessKeyId: (

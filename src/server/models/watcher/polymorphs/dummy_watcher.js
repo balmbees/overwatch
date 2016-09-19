@@ -8,6 +8,7 @@ import WatchResult from '../../watch_result';
 export default class DummyWatcher extends Watcher {
   watch() {
     this.result = WatchResult.success('Dummy checking success');
+
     return Promise.resolve(this.result);
   }
 }

@@ -1,7 +1,3 @@
-/**
- * Created by leehyeon on 8/9/16.
- */
-
 import request from 'request';
 import _ from 'underscore';
 
@@ -33,45 +29,80 @@ export class GrapheneDB {
   }
 }
 
-export function jsonSchemaModel(schema) {
-  return function decorator(target) {
+import DB from '../services/db';
+
+export function Model(jsonSchema) {
+  const model = DB.createModel(jsonSchema.title);
+  return model;
+}
+
+export function jsonSchemaModel(jsonSchema) {
+  return function decorator(targetClass) {
     Object.defineProperty(
-      target,
+      targetClass,
       'schema',
-      { value: schema }
+      { value: jsonSchema }
+    );
+
+    const model = DB.createModel(jsonSchema.title);
+    Object.defineProperty(
+      targetClass,
+      'model',
+      { value: model }
     );
   };
 }
 
+import { Validator } from 'jsonschema';
+
 export default class BaseModel {
-  constructor(settings, id = undefined) {
-    this.id = id;
-    _.extend(this, settings);
+  constructor(settings) {
+    Object.assign(
+      this,
+      _.pick(
+        settings,
+        Object.keys(this.constructor.schema.properties).concat([
+          'id',
+        ])
+      )
+    );
   }
 
-  static fetchById(id, label) {
-    return new Promise(resolve => {
-      this.db().cypher(`MATCH (n:${label}) WHERE id(n)=${id} RETURN id(n), n`).then(resp => {
-        const result = resp.body.results[0].data[0];
-        resolve(new this(result.row[1], result.row[0]));
+  serialize() {
+    return _.pick(this, Object.keys(this.constructor.schema.properties).concat([
+      'id',
+    ]));
+  }
+
+  isValid() {
+    const validator = new Validator();
+    const result = validator.validate(this, this.constructor.schema, { throwError: true });
+    return result.valid;
+  }
+
+  get __model() {
+    return this.constructor.model;
+  }
+
+  save() {
+    return new Promise((resolve, reject) => {
+      this.__model.save(this.serialize(), (err, saved) => {
+        if (err) reject(err);
+        else resolve(saved);
       });
     });
   }
 
-  static fetchAll(label, limit = 30) {
-    return new Promise(resolve => {
-      this.db().cypher(`MATCH (n:${label}) RETURN id(n), n LIMIT ${limit}`).then(resp => {
-        const result = resp.body.results[0].data;
-        resolve(result.map(r => new this(r.row[1], r.row[0])));
+  static findAll(options = {}) {
+    return new Promise((resolve, reject) => {
+      this.model.findAll(options, (err, results) => {
+        if (err) reject(err);
+        else resolve(results.map(r => new this(r)));
       });
     });
   }
 
   static db() {
     return new GrapheneDB(process.env.GRAPHENEDB_URL);
-  }
-
-  static schema() {
-    console.log(__filename, __dirname);
   }
 }

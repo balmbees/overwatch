@@ -5,7 +5,7 @@ import { Notifier, notifierTypes } from '../models/notifier';
 export const NotifiersRouter = new Router();
 
 NotifiersRouter.get('/', (req, res) => {
-  Notifier.fetchAll()
+  Notifier.findAll()
     .then(notifiers =>
       res.json(notifiers.map(n => new notifierTypes[n.type](n, n.id).serialize()))
     );

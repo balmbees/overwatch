@@ -35,7 +35,6 @@ import ComponentGroup from './server/models/component_group';
 import Component from './server/models/component';
 
 import ComponentUpdater from './server/services/component_updater';
-import { ComponentsRouter, ComponentRouter } from './server/controllers/component';
 import { WatchersRouter } from './server/controllers/watcher';
 import { NotifiersRouter } from './server/controllers/notifier';
 import { ComponentGroupsRouter } from './server/controllers/component_group';
@@ -63,8 +62,6 @@ app.use(bodyParser.json());
 // Watcher api controller
 // -----------------------------------------------------------------------------
 app.use('/api/cypher', CypherRouter);
-app.use('/watcher/components', ComponentsRouter);
-app.use('/watcher/component', ComponentRouter);
 app.use('/watcher/watchers', WatchersRouter);
 app.use('/watcher/notifiers', NotifiersRouter);
 app.use('/watcher/component_groups', ComponentGroupsRouter);
@@ -173,8 +170,8 @@ const componentUpdater = new ComponentUpdater();
 const fetch = () => {
   Promise.all([
     componentUpdater.updateAll(),
-    ComponentGroup.fetchAll(),
-    ComponentGroup.fetchComponentGraph(),
+    ComponentGroup.findAll(),
+    Promise.resolve([]),
     Component.fetchComponentDependencies(),
   ]).then(([
     components,

@@ -168,20 +168,31 @@ class ComponentsGraph extends React.Component {
           <h1>Modal Content</h1>
           <p>Etc.</p>
           <div>{JSON.stringify(this.state.editingNode)}</div>
-          <Form
-            schema={ComponentSchema}
-            formData={(this.state.editingNode || {}).data}
-            onSubmit={
-              (data) => $.post('/api/cypher/save', {
-                node: {
-                  label: ComponentSchema.title,
-                  data: data.formData,
-                },
-              }, (res) => {
-                console.log(res);
-              })
-            }
-          />
+          {
+            (() => {
+              if (this.state.editingNode) {
+                return (
+                  <Form
+                    schema={ComponentSchema}
+                    uiSchema={{ status: { 'ui:widget': 'hidden' } }}
+                    formData={this.state.editingNode.data}
+                    onChange={(data) => {
+                      this.state.editingNode.data = data.formData;
+                    }}
+                    onSubmit={
+                      (data) => $.post('/api/cypher/save', {
+                        node: {
+                          label: ComponentSchema.title,
+                          data: data.formData,
+                        },
+                      }, (res) => {
+                        console.log(res);
+                      })
+                    }
+                  />);
+              }
+            })()
+          }
           <button
             onClick={() => {
               $.post('/api/cypher/delete', {

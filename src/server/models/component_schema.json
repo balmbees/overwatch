@@ -19,7 +19,7 @@
     "status": {
       "type": "string",
       "title": "Status",
-      "description": "Summarized tatus of component"
+      "description": "Summarized status of component"
     }
   }
 }

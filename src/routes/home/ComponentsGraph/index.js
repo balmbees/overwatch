@@ -165,16 +165,18 @@ class ComponentsGraph extends React.Component {
         <Modal
           isOpen={!!this.state.editingNode}
         >
-          <h1>Modal Content</h1>
-          <p>Etc.</p>
-          <div>{JSON.stringify(this.state.editingNode)}</div>
           {
             (() => {
               if (this.state.editingNode) {
                 return (
                   <Form
                     schema={ComponentSchema}
-                    uiSchema={{ status: { 'ui:widget': 'hidden' } }}
+                    uiSchema={{
+                      status: { 'ui:widget': 'hidden' },
+                      description: {
+                        'ui:widget': 'textarea',
+                      },
+                    }}
                     formData={this.state.editingNode.data}
                     onChange={(data) => {
                       this.state.editingNode.data = data.formData;

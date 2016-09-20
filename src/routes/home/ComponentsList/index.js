@@ -5,7 +5,7 @@ import {
   STATUS_NONE,
   STATUS_SUCCESS,
   STATUS_ERROR,
-} from '../../../watcher/models/watch_result';
+} from '../../../server/models/watch_result';
 
 const STATUS_TO_COLOR_MAP = {};
 STATUS_TO_COLOR_MAP[STATUS_NONE] = '#111111';

@@ -1,0 +1,35 @@
+{
+  "title": "Watcher",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "title": "watcher type. not editable",
+      "default": "CloudwatchAlarmWatcher"
+    },
+    "name": {
+      "type": "string",
+      "title": "name",
+      "description": "name of the component"
+    },
+    "awsAccessKeyId": {
+      "type": "string",
+      "title": "AWS AccessKeyId"
+    },
+    "awsSecretAccessKey": {
+      "type": "string",
+      "title": "AWS AccessKeySecret"
+    },
+    "awsRegion": {
+      "type": "string",
+      "title": "AWS Region"
+    },
+    "alarmName": {
+      "type": "string",
+      "title": "AWS AlarmName"
+    }
+  }
+}

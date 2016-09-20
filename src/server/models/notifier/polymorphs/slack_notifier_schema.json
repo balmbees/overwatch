@@ -1,0 +1,24 @@
+{
+  "title": "Notifier",
+  "type": "object",
+  "required": [
+    "name",
+    "webhookUrl"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "title": "watcher type. not editable",
+      "default": "CloudwatchAlarmWatcher"
+    },
+    "name": {
+      "type": "string",
+      "title": "name",
+      "description": "name of the component"
+    },
+    "webhookUrl": {
+      "type": "string",
+      "title": "Slack Webhook URL"
+    }
+  }
+}

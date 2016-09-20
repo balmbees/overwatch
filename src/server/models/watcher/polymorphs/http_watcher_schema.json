@@ -1,0 +1,24 @@
+{
+  "title": "Watcher",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "title": "watcher type. not editable",
+      "default": "HttpWatcher"
+    },
+    "name": {
+      "type": "string",
+      "title": "name",
+      "description": "name of the component"
+    },
+    "url": {
+      "type": "string",
+      "title": "name",
+      "description": "full url (http://example.com) to watch"
+    }
+  }
+}

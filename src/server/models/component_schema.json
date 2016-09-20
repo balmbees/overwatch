@@ -1,0 +1,25 @@
+{
+  "title": "Component",
+  "type": "object",
+  "required": [
+    "name",
+    "description"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "name of the component"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "description": "description of the component"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "description": "Summarized status of component"
+    }
+  }
+}

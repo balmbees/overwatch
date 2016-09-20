@@ -1,0 +1,14 @@
+{
+  "title": "ComponentGroup",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "name of the component group"
+    }
+  }
+}

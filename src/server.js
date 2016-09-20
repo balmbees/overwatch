@@ -31,14 +31,11 @@ import { setRuntimeVariable } from './actions/runtime';
 import { port } from './config';
 
 import { updateComponents } from './actions/home';
-import ComponentGroup from './watcher/models/component_group';
-import Component from './watcher/models/component';
+import ComponentGroup from './server/models/component_group';
+import Component from './server/models/component';
 
-import work from './watcher';
-import { ComponentsRouter, ComponentRouter } from './watcher/controllers/component';
-import { WatchersRouter } from './watcher/controllers/watcher';
-import { NotifiersRouter } from './watcher/controllers/notifier';
-import { ComponentGroupsRouter } from './watcher/controllers/component_group';
+import ComponentUpdater from './server/services/component_updater';
+import CypherRouter from './server/controllers/cypher';
 
 const app = express();
 
@@ -60,11 +57,7 @@ app.use(bodyParser.json());
 //
 // Watcher api controller
 // -----------------------------------------------------------------------------
-app.use('/watcher/components', ComponentsRouter);
-app.use('/watcher/component', ComponentRouter);
-app.use('/watcher/watchers', WatchersRouter);
-app.use('/watcher/notifiers', NotifiersRouter);
-app.use('/watcher/component_groups', ComponentGroupsRouter);
+app.use('/api/cypher', CypherRouter);
 
 //
 // Register server-side rendering middleware
@@ -166,11 +159,12 @@ const server = new http.Server(app);
 const io = new SocketIO(server);
 
 let latestResponse = null;
+const componentUpdater = new ComponentUpdater();
 const fetch = () => {
   Promise.all([
-    work(),
-    ComponentGroup.fetchAll(),
-    ComponentGroup.fetchComponentGraph(),
+    componentUpdater.updateAll(),
+    ComponentGroup.findAll(),
+    Promise.resolve([]),
     Component.fetchComponentDependencies(),
   ]).then(([
     components,
@@ -186,7 +180,7 @@ const fetch = () => {
     );
     io.sockets.emit('action', latestResponse);
   }).catch((e) => {
-    console.log('Error : ', e);
+    console.log('Error : ', e, e.stack);
   });
 };
 

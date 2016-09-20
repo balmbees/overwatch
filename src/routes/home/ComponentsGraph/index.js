@@ -6,6 +6,8 @@ import D3ForceLayout from './D3ForceLayout';
 import ComponentNode from './ComponentNode';
 import ComponentLink from './ComponentLink';
 
+import ComponentFormModal from './ComponentFormModal';
+
 class ComponentsGraph extends React.Component {
   constructor(props) {
     super(props);
@@ -36,6 +38,10 @@ class ComponentsGraph extends React.Component {
     forceLayout.on(D3ForceLayout.EVENTS.NODE_CLICK, (node) => {
       Object.assign(node.data, {
         selected: !!!node.data.selected,
+      });
+
+      this.setState({
+        editingNode: node,
       });
     });
 
@@ -83,7 +89,7 @@ class ComponentsGraph extends React.Component {
     return {
       id: c.id,
       size: 40,
-      type: 'component',
+      type: 'Component',
       data: c,
     };
   }
@@ -152,6 +158,10 @@ class ComponentsGraph extends React.Component {
           {this.drawLinks()}
           {this.drawNodes()}
         </svg>
+        <ComponentFormModal
+          component={this.state.editingNode}
+          close={() => this.setState({ editingNode: null })}
+        />
       </div>
     );
   }

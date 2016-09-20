@@ -16,6 +16,12 @@ function Html({ title, description, style, script, children, state }) {
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
         <style id="global_css" dangerouslySetInnerHTML={{ __html: htmlStyle }} />
         <style id="css" dangerouslySetInnerHTML={{ __html: style }} />
+        <link
+          rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>
         <div

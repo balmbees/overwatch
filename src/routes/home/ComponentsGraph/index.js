@@ -164,37 +164,65 @@ class ComponentsGraph extends React.Component {
         </svg>
         <Modal
           isOpen={!!this.state.editingNode}
+          style={{
+            overlay: {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            },
+            content: {
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              backgroundColor: 'transparent',
+              WebkitOverflowScrolling: 'touch',
+            },
+          }}
         >
-          {
-            (() => {
-              if (this.state.editingNode) {
-                return (
-                  <Form
-                    schema={ComponentSchema}
-                    uiSchema={{
-                      status: { 'ui:widget': 'hidden' },
-                      description: {
-                        'ui:widget': 'textarea',
-                      },
-                    }}
-                    formData={this.state.editingNode.data}
-                    onChange={(data) => {
-                      this.state.editingNode.data = data.formData;
-                    }}
-                    onSubmit={
-                      (data) => $.post('/api/cypher/save', {
-                        node: {
-                          label: ComponentSchema.title,
-                          data: data.formData,
+          <div
+            style={{
+              display: 'inline-block',
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '4px',
+            }}
+          >
+            {
+              (() => {
+                if (this.state.editingNode) {
+                  return (
+                    <Form
+                      schema={ComponentSchema}
+                      uiSchema={{
+                        status: { 'ui:widget': 'hidden' },
+                        description: {
+                          'ui:widget': 'textarea',
                         },
-                      }, (res) => {
-                        console.log(res);
-                      })
-                    }
-                  />);
-              }
-            })()
-          }
+                      }}
+                      formData={this.state.editingNode.data}
+                      onChange={(data) => {
+                        this.state.editingNode.data = data.formData;
+                      }}
+                      onSubmit={
+                        (data) => $.post('/api/cypher/save', {
+                          node: {
+                            label: ComponentSchema.title,
+                            data: data.formData,
+                          },
+                        }, (res) => {
+                          console.log(res);
+                        })
+                      }
+                    />);
+                }
+              })()
+            }
+          </div>
           <button
             onClick={() => {
               $.post('/api/cypher/delete', {

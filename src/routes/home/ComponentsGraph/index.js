@@ -5,7 +5,6 @@ import $ from 'jquery';
 import D3ForceLayout from './D3ForceLayout';
 import ComponentNode from './ComponentNode';
 import ComponentLink from './ComponentLink';
-
 import ComponentFormModal from './ComponentFormModal';
 
 class ComponentsGraph extends React.Component {
@@ -34,16 +33,6 @@ class ComponentsGraph extends React.Component {
     forceLayout.addLinks(
       depends.map(l => this._dependToLink(l))
     );
-
-    forceLayout.on(D3ForceLayout.EVENTS.NODE_CLICK, (node) => {
-      Object.assign(node.data, {
-        selected: !!!node.data.selected,
-      });
-
-      this.setState({
-        editingNode: node,
-      });
-    });
 
     this.resizeHandler = () => {
       if (this.svgRef) {
@@ -118,6 +107,7 @@ class ComponentsGraph extends React.Component {
       <ComponentNode
         key={node.id}
         node={node}
+        onClick={() => this.setState({ editingNode: node })}
       />
     ));
   }

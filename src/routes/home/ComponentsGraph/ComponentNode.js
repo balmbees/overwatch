@@ -11,7 +11,7 @@ STATUS_TO_COLOR_MAP[STATUS_SUCCESS] = '#00de0e';
 STATUS_TO_COLOR_MAP[STATUS_ERROR] = '#ff3800';
 
 function ComponentNode(props) {
-  const { node } = props;
+  const { node, onClick } = props;
   const component = node.data;
   const status = component.status;
   return (
@@ -22,11 +22,13 @@ function ComponentNode(props) {
           r: node.size * 0.5,
           transition: 'fill 0.8s cubic-bezier(0.46, -0.6, 0.46, 2.6)',
         }}
+        onClick={onClick}
       />
       <circle
         style={{
           fill: STATUS_TO_COLOR_MAP[status],
         }}
+        onClick={onClick}
       >
         <animate
           attributeType="CSS"
@@ -58,6 +60,7 @@ function ComponentNode(props) {
 
 ComponentNode.propTypes = {
   node: React.PropTypes.object,
+  onClick: React.PropTypes.func,
 };
 
 export default ComponentNode;

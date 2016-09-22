@@ -9,7 +9,7 @@ cypherRouter.post('/save', (req, res) => {
   const body = req.body;
   const node = body.node;
 
-  dbConnection.save(node.data, (err, result) => {
+  dbConnection.save(node.data, node.label, (err, result) => {
     if (err) {
       res.status(400).json({ error: err.message });
     } else {

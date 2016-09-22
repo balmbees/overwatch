@@ -38,7 +38,7 @@ class ComponentFormModal extends React.Component {
         label: componentSchema.title,
         data: data.formData,
       },
-    }, () => {
+    }, (/* result */) => {
       this.props.close();
     });
   }

@@ -173,7 +173,12 @@ const fetch = () => {
     depends,
   ]) => {
     latestResponse = updateComponents(
-      components.map((c) => c.serialize()),
+      components.map((c) =>
+        Object.assign(
+          c.serialize(),
+          { watchers: c.watchers.map(w => Object.assign(w.serialize(), { result: w.result })) }
+        )
+      ),
       nodes.map(n => n.serialize()),
       links,
       depends,

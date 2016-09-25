@@ -4,7 +4,7 @@ import Form from 'react-jsonschema-form';
 import moment from 'moment';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './ComponentFormModal.css';
+import s from './ComponentModal.css';
 
 import componentSchema from '../../../server/models/component_schema.json';
 import ComponentStatus from '../ComponentsList/ComponentStatus';
@@ -18,14 +18,19 @@ const modalStyle = {
     left: 0,
     right: 0,
     bottom: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   content: {
-    position: 'absolute',
-    top: '200px',
-    left: '20%',
-    right: '20%',
+    position: 'static',
+    top: 'auto',
+    left: 'auto',
+    right: 'auto',
     bottom: 'auto',
+    maxWidth: '90%',
+    width: '600px',
     WebkitOverflowScrolling: 'touch',
   },
 };
@@ -39,12 +44,22 @@ const uiSchema = {
 
 const formatCreatedAt = (createdAt) => moment(createdAt).fromNow();
 
-class ComponentFormModal extends React.Component {
+const MODES = {
+  SHOW: 'SHOW',
+  EDIT: 'EDIT',
+};
+
+class ComponentModal extends React.Component {
+  static propTypes = {
+    component: React.PropTypes.object,
+    close: React.PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
-      mode: 'SHOW',
+      mode: MODES.SHOW,
     };
   }
 
@@ -55,7 +70,7 @@ class ComponentFormModal extends React.Component {
         data: data.formData,
       },
     }, (/* result */) => {
-      this.setState({ mode: 'SHOW' });
+      this.setState({ mode: MODES.SHOW });
     });
   }
 
@@ -79,7 +94,7 @@ class ComponentFormModal extends React.Component {
     let form = null;
 
     if (component) {
-      if (this.state.mode === 'SHOW') {
+      if (this.state.mode === MODES.SHOW) {
         form = (
           <div>
             <h1>
@@ -87,16 +102,28 @@ class ComponentFormModal extends React.Component {
               &nbsp;
               <button
                 className="btn btn-xs btn-default"
-                onClick={() => this.setState({ mode: 'EDIT' })}
+                onClick={() => this.setState({ mode: MODES.EDIT })}
               >
                 <span className="glyphicon glyphicon-edit" />
               </button>
             </h1>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: component.data.description || '<small>Need Description</small>',
-              }}
-            />
+            <p>
+              {(() => {
+                if (component.data.description) {
+                  return (
+                    <p
+                      className="lead"
+                      dangerouslySetInnerHTML={{
+                        __html: component.data.description,
+                      }}
+                    />
+                  );
+                }
+                return (
+                  <small>Need Description</small>
+                );
+              })()}
+            </p>
             <table className="table table-bordered">
               <thead>
                 <tr>
@@ -108,6 +135,8 @@ class ComponentFormModal extends React.Component {
                   </th>
                   <th className={s.tableTh}>
                     Updated
+                  </th>
+                  <th className={s.tableTh}>
                   </th>
                 </tr>
               </thead>
@@ -124,13 +153,21 @@ class ComponentFormModal extends React.Component {
                     <td className={s.tableTd}>
                       {formatCreatedAt(w.status)}
                     </td>
+                    <td className={s.tableTd}>
+                      <button
+                        className="btn btn-sm btn-default"
+                        onClick={() => alert(JSON.stringify(w))}
+                      >
+                        <span className="glyphicon glyphicon-edit" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         );
-      } else if (this.state.mode === 'EDIT') {
+      } else if (this.state.mode === MODES.EDIT) {
         form = (
           <Form
             schema={componentSchema}
@@ -148,7 +185,7 @@ class ComponentFormModal extends React.Component {
             <button
               className="btn btn-default"
               type="button"
-              onClick={() => this.setState({ mode: 'SHOW' })}
+              onClick={() => this.setState({ mode: MODES.SHOW })}
             >
               Close
             </button>
@@ -167,7 +204,7 @@ class ComponentFormModal extends React.Component {
     return (
       <Modal
         isOpen={!!component}
-        onAfterOpen={() => this.setState({ mode: 'SHOW' })}
+        onAfterOpen={() => this.setState({ mode: MODES.SHOW })}
         style={modalStyle}
         onRequestClose={() => this.props.close()}
       >
@@ -177,10 +214,4 @@ class ComponentFormModal extends React.Component {
   }
 }
 
-
-ComponentFormModal.propTypes = {
-  component: React.PropTypes.object,
-  close: React.PropTypes.func.isRequired,
-};
-
-export default withStyles(s)(ComponentFormModal);
+export default withStyles(s)(ComponentModal);

@@ -5,7 +5,7 @@ import $ from 'jquery';
 import D3ForceLayout from './D3ForceLayout';
 import ComponentNode from './ComponentNode';
 import ComponentLink from './ComponentLink';
-import ComponentFormModal from './ComponentFormModal';
+import ComponentModal from './ComponentModal';
 
 class ComponentsGraph extends React.Component {
   constructor(props) {
@@ -148,7 +148,7 @@ class ComponentsGraph extends React.Component {
           {this.drawLinks()}
           {this.drawNodes()}
         </svg>
-        <ComponentFormModal
+        <ComponentModal
           component={this.state.editingNode}
           close={() => this.setState({ editingNode: null })}
         />

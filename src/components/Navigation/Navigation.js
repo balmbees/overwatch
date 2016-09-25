@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import cx from 'classnames';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Navigation.css';
-import ComponentFormModal from '../../routes/home/ComponentsGraph/ComponentFormModal';
+import ComponentModal from '../../routes/home/ComponentsGraph/ComponentModal';
 
 class Navigation extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class Navigation extends React.Component {
         >
           <span className="glyphicon glyphicon-plus" />
           Component
-          <ComponentFormModal
+          <ComponentModal
             component={this.state.editingNode}
             close={() => this.setState({ editingNode: null })}
           />

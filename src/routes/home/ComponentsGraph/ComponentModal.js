@@ -44,7 +44,7 @@ const uiSchema = {
 
 const formatCreatedAt = (createdAt) => moment(createdAt).fromNow();
 
-const MODES = {
+export const MODES = {
   SHOW: 'SHOW',
   EDIT: 'EDIT',
 };
@@ -53,14 +53,18 @@ class ComponentModal extends React.Component {
   static propTypes = {
     component: React.PropTypes.object,
     close: React.PropTypes.func.isRequired,
+    initialMode: React.PropTypes.string,
   };
 
   constructor(props) {
     super(props);
+    this.state = {};
+  }
 
-    this.state = {
-      mode: MODES.SHOW,
-    };
+  __onAfterOpen() {
+    this.setState({
+      mode: this.props.initialMode || MODES.SHOW,
+    });
   }
 
   __submit(data) {
@@ -204,7 +208,7 @@ class ComponentModal extends React.Component {
     return (
       <Modal
         isOpen={!!component}
-        onAfterOpen={() => this.setState({ mode: MODES.SHOW })}
+        onAfterOpen={() => this.__onAfterOpen()}
         style={modalStyle}
         onRequestClose={() => this.props.close()}
       >

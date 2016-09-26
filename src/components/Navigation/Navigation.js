@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import cx from 'classnames';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Navigation.css';
-import ComponentModal from '../../routes/home/ComponentsGraph/ComponentModal';
+import ComponentModal, { MODES } from '../../routes/home/ComponentsGraph/ComponentModal';
 
 class Navigation extends React.Component {
   constructor(props) {
@@ -15,13 +15,20 @@ class Navigation extends React.Component {
       <div className={cx(s.root, className)} role="navigation">
         <button
           className="btn btn-default"
-          onClick={() => this.setState({ editingNode: {} })}
+          onClick={() => this.setState({
+            editingNode: {
+              data: {
+                watchers: [],
+              }
+            }
+          })}
         >
           <span className="glyphicon glyphicon-plus" />
           Component
           <ComponentModal
             component={this.state.editingNode}
             close={() => this.setState({ editingNode: null })}
+            initialMode={MODES.EDIT}
           />
         </button>
       </div>

@@ -7,3 +7,7 @@ export function redirect(descriptor) {
 export function navigate(descriptor) {
   return (dispatch, _, { history }) => history.push(descriptor);
 }
+
+export function goBack() {
+  return (dispatch, _, { history }) => history.goBack();
+}

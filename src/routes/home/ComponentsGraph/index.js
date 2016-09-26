@@ -1,11 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { navigate } from '../../../actions/route';
+
 import _ from 'lodash';
 import $ from 'jquery';
 
 import D3ForceLayout from './D3ForceLayout';
 import ComponentNode from './ComponentNode';
 import ComponentLink from './ComponentLink';
-import ComponentModal from './ComponentModal';
 
 class ComponentsGraph extends React.Component {
   constructor(props) {
@@ -107,7 +109,7 @@ class ComponentsGraph extends React.Component {
       <ComponentNode
         key={node.id}
         node={node}
-        onClick={() => this.setState({ editingNode: node })}
+        onClick={() => this.props.navigate(`/components/${node.id}`)}
       />
     ));
   }
@@ -148,10 +150,6 @@ class ComponentsGraph extends React.Component {
           {this.drawLinks()}
           {this.drawNodes()}
         </svg>
-        <ComponentModal
-          component={this.state.editingNode}
-          close={() => this.setState({ editingNode: null })}
-        />
       </div>
     );
   }
@@ -161,6 +159,8 @@ ComponentsGraph.propTypes = {
   groups: React.PropTypes.array,
   contains: React.PropTypes.array,
   depends: React.PropTypes.array,
+  // Actions
+  navigate: React.PropTypes.func,
 };
 
-export default ComponentsGraph;
+export default connect(null, { navigate })(ComponentsGraph);

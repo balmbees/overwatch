@@ -111,7 +111,7 @@ class ComponentModal extends React.Component {
                 <span className="glyphicon glyphicon-edit" />
               </button>
             </h1>
-            <p>
+            <div>
               {(() => {
                 if (component.data.description) {
                   return (
@@ -127,7 +127,7 @@ class ComponentModal extends React.Component {
                   <small>Need Description</small>
                 );
               })()}
-            </p>
+            </div>
             <table className="table table-bordered">
               <thead>
                 <tr>

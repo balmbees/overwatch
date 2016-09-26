@@ -18,6 +18,9 @@ function Home(props, context) {
   context.setTitle(title);
   return (
     <div className={s.root}>
+      <div>
+        {props.children}
+      </div>
       <div className={s.container}>
         {
           (() => {

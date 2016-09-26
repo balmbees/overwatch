@@ -46,6 +46,7 @@ function createSocket() {
     // Browser Sync can massup the port (3000 -> 3001) so...
     const parser = document.createElement('a');
     parser.href = window.location.toString();
+    parser.pathname = '/'; // Socket IO is listening to root
     const socket = socketIO(parser.href); // eslint-disable-line
     return socket;
   }

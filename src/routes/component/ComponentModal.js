@@ -6,8 +6,8 @@ import moment from 'moment';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './ComponentModal.css';
 
-import componentSchema from '../../../server/models/component_schema.json';
-import ComponentStatus from '../ComponentsList/ComponentStatus';
+import componentSchema from '../../server/models/component_schema.json';
+import ComponentStatus from '../home/ComponentsList/ComponentStatus';
 
 import $ from 'jquery';
 
@@ -73,7 +73,8 @@ class ComponentModal extends React.Component {
         label: componentSchema.title,
         data: data.formData,
       },
-    }, (/* result */) => {
+    }, (result) => {
+      this.props.component.data = result;
       this.setState({ mode: MODES.SHOW });
     });
   }
@@ -81,15 +82,11 @@ class ComponentModal extends React.Component {
   __delete() {
     $.post('/api/cypher/delete', {
       node: {
-        id: this.props.component.id,
+        id: this.props.component.data.id,
       },
     }, () => {
       this.props.close();
     });
-  }
-
-  __close() {
-    this.props.close();
   }
 
   render() {
@@ -151,8 +148,8 @@ class ComponentModal extends React.Component {
                       <b>{w.name}</b>
                     </td>
                     <td className={s.tableTd}>
-                      <ComponentStatus status={w.result.status} />
-                      <small>{w.result.description}</small>
+                      <ComponentStatus status={(w.result || {}).status} />
+                      <small>{(w.result || {}).description}</small>
                     </td>
                     <td className={s.tableTd}>
                       {formatCreatedAt(w.status)}

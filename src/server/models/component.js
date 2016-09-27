@@ -5,33 +5,19 @@ import { Watcher, fromArray as watcherFromArray } from './watcher';
 import { STATUS_SUCCESS, STATUS_ERROR } from './watch_result';
 import { FirehoseLogger } from '../utils/firehose_logger';
 
-@jsonSchemaModel(require('./component_schema')) // eslint-disable-line
-export default class Component extends BaseModel {
+@jsonSchemaModel(require('./component_schema'), (model) => { // eslint-disable-line
+  model.compose(Watcher.model, 'watchers', 'WATCH', {
+    many: true,
+  });
+  model.compose(Notifier.model, 'notifiers', 'NOTIFY', {
+    many: true,
+  });
+})
+class Component extends BaseModel {
   constructor(options) {
     super(options);
-
-    this.notifiers = notifierFromArray(options.notifiers);
-    this.watchers = watcherFromArray(options.watchers);
-  }
-
-  static findAll(options) {
-    Object.assign(options, {
-      include: {
-        watchers: {
-          model: Watcher.model,
-          rel: 'WATCH',
-          direction: 'in',
-          many: true,
-        },
-        notifiers: {
-          model: Notifier.model,
-          rel: 'NOTIFY',
-          direction: 'out',
-          many: true,
-        },
-      },
-    });
-    return super.findAll(options);
+    this.notifiers = notifierFromArray(options.notifiers || []);
+    this.watchers = watcherFromArray(options.watchers || []);
   }
 
   static fetchComponentDependencies() {
@@ -164,3 +150,5 @@ export default class Component extends BaseModel {
       });
   }
 }
+
+export default Component;

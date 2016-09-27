@@ -1,25 +1,20 @@
 import React from 'react';
-import ComponentModal, { MODES } from '../home/ComponentsGraph/ComponentModal';
 
-import $ from 'jquery';
+import create from './create';
+import show from './show';
 
 export default {
-  path: '/components/:id',
-  async action({ params }) { // eslint-disable-line
-    const node = await new Promise((resolve, reject) => {
-      $.getJSON('/api/cypher/read', {
-        id: params.id,
-      })
-      .done(resolve)
-      .fail(reject);
-    });
-
+  path: '/components',
+  children: [
+    create,
+    show,
+  ],
+  async action({ next }) { // eslint-disable-line
+    const component = await next();
     return (
-      <ComponentModal
-        component={{ data: node }}
-        close={() => goBack()}
-        initialMode={MODES.EDIT}
-      />
+      <div>
+        {component}
+      </div>
     );
   },
 };

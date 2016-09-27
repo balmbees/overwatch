@@ -156,14 +156,29 @@ class ComponentModal extends React.Component {
                     </td>
                     <td className={s.tableTd}>
                       <button
-                        className="btn btn-sm btn-default"
+                        className="btn btn-xs btn-primary"
                         onClick={() => alert(JSON.stringify(w))}
                       >
                         <span className="glyphicon glyphicon-edit" />
                       </button>
+                      <button
+                        className="btn btn-xs btn-danger"
+                        onClick={() => alert(JSON.stringify(w))}
+                      >
+                        <span className="glyphicon glyphicon-trash" />
+                      </button>
                     </td>
                   </tr>
                 ))}
+
+                {component.data.watchers.map(w => (
+                  <tr key={`${w.name}-Edit`}>
+                    <td>
+
+                    </td>
+                  </tr>
+                ))}
+
               </tbody>
             </table>
           </div>

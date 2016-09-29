@@ -1,3 +1,5 @@
+import { Firehose } from 'aws-sdk';
+
 import BaseModel, { jsonSchemaModel } from './base';
 
 import { Notifier, fromArray as notifierFromArray } from './notifier';
@@ -99,6 +101,28 @@ export default class Component extends BaseModel {
         ])
       ))
       .then(results => {
+        const firehose = new Firehose();
+        results.forEach(r => firehose.putRecord({
+          DeliveryStreamName: 'overwatch_watcher_log',
+          Record: {
+            Data: JSON.stringify({
+              Component: {
+                id: this.id,
+                name: this.name,
+              },
+              Watcher: {
+                id: r[0].id,
+                name: r[0].name,
+              },
+              WatchResult: {
+                status: r[1].status,
+                description: r[1].description,
+                createdAt: r[1].createdAt,
+              },
+            }),
+          },
+        }));
+
         const failedWatchers = results.filter(r => (r[1].status === STATUS_ERROR));
         const newStatus = failedWatchers.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
 

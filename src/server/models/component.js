@@ -136,11 +136,9 @@ export default class Component extends BaseModel {
               },
             }),
           },
-        }, (err, data) => {
+        }, (err) => {
           if (err) {
             console.log(err, err.stack); // eslint-disable-line no-console
-          } else {
-            console.log(data); // eslint-disable-line no-console
           }
         }));
 

@@ -3,6 +3,7 @@ import BaseModel, { jsonSchemaModel } from './base';
 import { Notifier, fromArray as notifierFromArray } from './notifier';
 import { Watcher, fromArray as watcherFromArray } from './watcher';
 import { STATUS_SUCCESS, STATUS_ERROR } from './watch_result';
+import { FirehoseLogger } from '../utils/firehose_logger';
 
 @jsonSchemaModel(require('./component_schema')) // eslint-disable-line
 export default class Component extends BaseModel {
@@ -99,6 +100,8 @@ export default class Component extends BaseModel {
         ])
       ))
       .then(results => {
+        FirehoseLogger.logWatcherRecords(this, results);
+
         const failedWatchers = results.filter(r => (r[1].status === STATUS_ERROR));
         const newStatus = failedWatchers.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;
 

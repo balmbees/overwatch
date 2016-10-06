@@ -1,4 +1,4 @@
-import { Firehose } from 'aws-sdk';
+import { Firehose, Config } from 'aws-sdk';
 
 import BaseModel, { jsonSchemaModel } from './base';
 
@@ -13,6 +13,21 @@ export default class Component extends BaseModel {
 
     this.notifiers = notifierFromArray(options.notifiers);
     this.watchers = watcherFromArray(options.watchers);
+  }
+
+  _firehoseConfig() {
+    const config = new Config({
+      accessKeyId: (
+        this.awsAccessKeyId || process.env.FIREHOSE_AWS_ACCESS_KEY_ID
+      ),
+      secretAccessKey: (
+        this.awsSecretAccessKey || process.env.FIREHOSE_AWS_SECRET_ACCESS_KEY
+      ),
+      region: (
+        this.awsRegion || process.env.FIREHOSE_AWS_REGION
+      ),
+    });
+    return config;
   }
 
   static findAll(options) {
@@ -101,7 +116,7 @@ export default class Component extends BaseModel {
         ])
       ))
       .then(results => {
-        const firehose = new Firehose();
+        const firehose = new Firehose(this._firehoseConfig());
         results.forEach(r => firehose.putRecord({
           DeliveryStreamName: 'overwatch_watcher_log',
           Record: {
@@ -121,6 +136,12 @@ export default class Component extends BaseModel {
               },
             }),
           },
+        }, (err, data) => {
+          if (err) {
+            console.log(err, err.stack); // eslint-disable-line no-console
+          } else {
+            console.log(data); // eslint-disable-line no-console
+          }
         }));
 
         const failedWatchers = results.filter(r => (r[1].status === STATUS_ERROR));

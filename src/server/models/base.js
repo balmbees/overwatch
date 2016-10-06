@@ -103,6 +103,6 @@ export default class BaseModel {
   }
 
   static db() {
-    return new GrapheneDB(process.env.GRAPHENEDB_URL);
+    return new GrapheneDB(process.env.GRAPHENEDB_URL || 'http://neo4j:neo4j@127.0.0.1:7474');
   }
 }

@@ -7,7 +7,7 @@ export default class DB {
   static __connection = null;
   static connect() {
     const url = URL.parse(
-      process.env.GRAPHENEDB_URL || 'http://neo4j@neo4j:127.0.0.1'
+      process.env.GRAPHENEDB_URL || 'http://neo4j:neo4j@127.0.0.1:7474'
     );
     if (!this.__connection) {
       this.__connection = seraph({

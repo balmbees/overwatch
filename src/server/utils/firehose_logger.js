@@ -23,7 +23,7 @@ export class FirehoseLogger {
 
   static logWatcherRecords(component, records) {
     this._firehose().putRecordBatch({
-      DeliveryStreamName: 'overwatch_watcher_log',
+      DeliveryStreamName: process.env.FIREHOSE_DELIVERY_STREAM_NAME || 'overwatch_watcher_log',
       Records: records.map(r => ({
         Data: JSON.stringify({
           Component: {

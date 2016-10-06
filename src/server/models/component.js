@@ -15,7 +15,7 @@ export default class Component extends BaseModel {
     this.watchers = watcherFromArray(options.watchers);
   }
 
-  _firehoseConfig() {
+  _firehose() {
     const config = new Config({
       accessKeyId: (
         this.awsAccessKeyId || process.env.FIREHOSE_AWS_ACCESS_KEY_ID
@@ -27,7 +27,8 @@ export default class Component extends BaseModel {
         this.awsRegion || process.env.FIREHOSE_AWS_REGION
       ),
     });
-    return config;
+
+    return new Firehose(config);
   }
 
   static findAll(options) {
@@ -116,10 +117,9 @@ export default class Component extends BaseModel {
         ])
       ))
       .then(results => {
-        const firehose = new Firehose(this._firehoseConfig());
-        results.forEach(r => firehose.putRecord({
+        this._firehose().putRecordBatch({
           DeliveryStreamName: 'overwatch_watcher_log',
-          Record: {
+          Records: results.map(r => ({
             Data: JSON.stringify({
               Component: {
                 id: this.id,
@@ -135,12 +135,12 @@ export default class Component extends BaseModel {
                 createdAt: r[1].createdAt,
               },
             }),
-          },
+          })),
         }, (err) => {
           if (err) {
             console.log(err, err.stack); // eslint-disable-line no-console
           }
-        }));
+        });
 
         const failedWatchers = results.filter(r => (r[1].status === STATUS_ERROR));
         const newStatus = failedWatchers.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;

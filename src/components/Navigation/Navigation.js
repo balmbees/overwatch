@@ -21,8 +21,8 @@ class Navigation extends React.Component {
             editingNode: {
               data: {
                 watchers: [],
-              }
-            }
+              },
+            },
           })}
         >
           <span className="glyphicon glyphicon-plus" />

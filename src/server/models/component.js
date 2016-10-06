@@ -1,10 +1,9 @@
-import { Firehose, Config } from 'aws-sdk';
-
 import BaseModel, { jsonSchemaModel } from './base';
 
 import { Notifier, fromArray as notifierFromArray } from './notifier';
 import { Watcher, fromArray as watcherFromArray } from './watcher';
 import { STATUS_SUCCESS, STATUS_ERROR } from './watch_result';
+import { FirehoseLogger } from '../utils/firehose_logger';
 
 @jsonSchemaModel(require('./component_schema')) // eslint-disable-line
 export default class Component extends BaseModel {
@@ -13,22 +12,6 @@ export default class Component extends BaseModel {
 
     this.notifiers = notifierFromArray(options.notifiers);
     this.watchers = watcherFromArray(options.watchers);
-  }
-
-  _firehose() {
-    const config = new Config({
-      accessKeyId: (
-        this.awsAccessKeyId || process.env.FIREHOSE_AWS_ACCESS_KEY_ID
-      ),
-      secretAccessKey: (
-        this.awsSecretAccessKey || process.env.FIREHOSE_AWS_SECRET_ACCESS_KEY
-      ),
-      region: (
-        this.awsRegion || process.env.FIREHOSE_AWS_REGION
-      ),
-    });
-
-    return new Firehose(config);
   }
 
   static findAll(options) {
@@ -117,30 +100,7 @@ export default class Component extends BaseModel {
         ])
       ))
       .then(results => {
-        this._firehose().putRecordBatch({
-          DeliveryStreamName: 'overwatch_watcher_log',
-          Records: results.map(r => ({
-            Data: JSON.stringify({
-              Component: {
-                id: this.id,
-                name: this.name,
-              },
-              Watcher: {
-                id: r[0].id,
-                name: r[0].name,
-              },
-              WatchResult: {
-                status: r[1].status,
-                description: r[1].description,
-                createdAt: r[1].createdAt,
-              },
-            }),
-          })),
-        }, (err) => {
-          if (err) {
-            console.log(err, err.stack); // eslint-disable-line no-console
-          }
-        });
+        FirehoseLogger.logWatcherRecords(this, results);
 
         const failedWatchers = results.filter(r => (r[1].status === STATUS_ERROR));
         const newStatus = failedWatchers.length === 0 ? STATUS_SUCCESS : STATUS_ERROR;

@@ -2,7 +2,8 @@
   "title": "Watcher",
   "type": "object",
   "required": [
-    "name"
+    "name",
+    "url"
   ],
   "properties": {
     "type": {
@@ -13,12 +14,12 @@
     "name": {
       "type": "string",
       "title": "name",
-      "description": "name of the component"
+      "description": "name of the watcher"
     },
     "url": {
       "type": "string",
-      "title": "name",
-      "description": "full url (http://example.com) to watch"
+      "title": "url",
+      "description": "full url to watch (http://example.com)"
     }
   }
 }

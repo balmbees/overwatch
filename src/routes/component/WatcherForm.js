@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from 'react-jsonschema-form';
 // import componentSchema from '../../server/models/component_schema.json';
+
 const schemas = {
   CloudwatchAlarmWatcher: require('../../server/models/watcher/polymorphs/cloudwatch_alarm_watcher_schema') // eslint-disable-line
 };
@@ -12,15 +13,15 @@ const uiSchema = {
   },
 };
 
-
 class WatcherForm extends React.Component {
   render() {
+    const { watcher } = this.props;
     return (
       <Form
         schema={componentSchema}
         uiSchema={uiSchema}
-        formData={component.data}
-        onChange={(data) => (component.data = data.formData)}
+        formData={watcher.data}
+        onChange={(data) => (watcher.data = data.formData)}
         onSubmit={(data) => this.__submit(data)}
       >
         <button

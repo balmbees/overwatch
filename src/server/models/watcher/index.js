@@ -5,6 +5,8 @@ function fromArray(array) {
   return array.map(data => new watcherPolymorphs[data.type](data));
 }
 
+export default Watcher;
+
 export {
   Watcher,
   watcherPolymorphs as watcherTypes,

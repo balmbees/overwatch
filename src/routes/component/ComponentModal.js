@@ -7,9 +7,10 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './ComponentModal.css';
 
 import componentSchema from '../../server/models/component_schema.json';
-import ComponentStatus from '../home/ComponentsList/ComponentStatus';
 
 import $ from 'jquery';
+
+import Link from '../../components/Link';
 
 const modalStyle = {
   overlay: {
@@ -132,9 +133,6 @@ class ComponentModal extends React.Component {
                     Watcher
                   </th>
                   <th className={s.tableTh}>
-                    Status
-                  </th>
-                  <th className={s.tableTh}>
                     Updated
                   </th>
                   <th className={s.tableTh}>
@@ -148,39 +146,28 @@ class ComponentModal extends React.Component {
                       <b>{w.name}</b>
                     </td>
                     <td className={s.tableTd}>
-                      <ComponentStatus status={(w.result || {}).status} />
-                      <small>{(w.result || {}).description}</small>
-                    </td>
-                    <td className={s.tableTd}>
                       {formatCreatedAt(w.status)}
                     </td>
                     <td className={s.tableTd}>
-                      <button
+                      <Link
                         className="btn btn-xs btn-primary"
-                        onClick={() => alert(JSON.stringify(w))}
+                        to={`/components/${component.data.id}/watchers/${w.id}`}
                       >
                         <span className="glyphicon glyphicon-edit" />
-                      </button>
-                      <button
-                        className="btn btn-xs btn-danger"
-                        onClick={() => alert(JSON.stringify(w))}
-                      >
-                        <span className="glyphicon glyphicon-trash" />
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 ))}
-
-                {component.data.watchers.map(w => (
-                  <tr key={`${w.name}-Edit`}>
-                    <td>
-
-                    </td>
-                  </tr>
-                ))}
-
               </tbody>
             </table>
+            <div className="text-center">
+              <Link
+                className="btn btn-sm btn-primary"
+                to={`/components/${component.data.id}/watchers/new`}
+              >
+                <span className="glyphicon glyphicon-plus" /> Watcher
+              </Link>
+            </div>
           </div>
         );
       } else if (this.state.mode === MODES.EDIT) {

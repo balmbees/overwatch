@@ -98,4 +98,23 @@ cypherRouter.get('/find', (req, res) => {
   });
 });
 
+cypherRouter.post('/relate', (req, res) => {
+  const {
+    firstId,
+    type,
+    properties,
+    secondId,
+  } = req.body;
+
+  dbConnection.relate(firstId, type, secondId, properties, (err, relationship) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+    } else {
+      res.status(200).json({
+        data: relationship,
+      });
+    }
+  });
+});
+
 export default cypherRouter;

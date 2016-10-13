@@ -76,6 +76,39 @@ class ComponentsGraph extends React.Component {
     window.removeEventListener('resize', this.resizeHandler);
   }
 
+  _ComponentDependencyOnClick(component) {
+    if (this.cd.firstComponent) {
+      this._ComponentDependencyCreate(this.cd.firstComponent, component);
+      delete this.isCreatingComponentDependency;
+      delete this.cd;
+    } else {
+      this.cd.firstComponent = component;
+      window.alert('click dependency end component');
+    }
+  }
+
+  _ComponentDependencyStart() {
+    this.isCreatingComponentDependency = true;
+    this.cd = {};
+
+    window.alert('click dependency start component');
+  }
+
+  _ComponentDependencyCreate(firstComponent, secondComponent) {
+    $.post('/api/cypher/relate', {
+      firstId: firstComponent.id,
+      type: 'DEPEND',
+      secondId: secondComponent.id,
+    }).done((result) => {
+      console.log(result);
+      window.alert('Change Saved!');
+      window.location.reload();
+    })
+    .fail((e) => {
+      console.error(e);
+    });
+  }
+
   _componentToNode(c) {
     return {
       id: c.id,
@@ -109,7 +142,13 @@ class ComponentsGraph extends React.Component {
       <ComponentNode
         key={node.id}
         node={node}
-        onClick={() => this.props.navigate(`/components/${node.id}`)}
+        onClick={() => {
+          if (!this.isCreatingComponentDependency) {
+            this.props.navigate(`/components/${node.id}`)
+          } else {
+            this._ComponentDependencyOnClick(node.data);
+          }
+        }}
       />
     ));
   }
@@ -124,6 +163,16 @@ class ComponentsGraph extends React.Component {
           height: '100%',
         }}
       >
+        <button
+          className="btn btn-sm btn-primary"
+          style={{
+            position: 'absolute',
+            margin: '10px',
+          }}
+          onClick={() => this._ComponentDependencyStart()}
+        >
+          Connnect
+        </button>
         <svg
           ref={(c) => { this.svgRef = c; }}
           width="100%"

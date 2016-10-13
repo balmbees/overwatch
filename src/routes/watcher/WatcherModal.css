@@ -1,0 +1,10 @@
+.tableTh {
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.tableTd {
+  text-align: center;
+  vertical-align: middle !important;
+  padding: 0.5em;
+}

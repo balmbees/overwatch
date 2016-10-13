@@ -6,10 +6,11 @@ import moment from 'moment';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './ComponentModal.css';
 
-import componentSchema from '../../../server/models/component_schema.json';
-import ComponentStatus from '../ComponentsList/ComponentStatus';
+import componentSchema from '../../server/models/component_schema.json';
 
 import $ from 'jquery';
+
+import Link from '../../components/Link';
 
 const modalStyle = {
   overlay: {
@@ -73,7 +74,8 @@ class ComponentModal extends React.Component {
         label: componentSchema.title,
         data: data.formData,
       },
-    }, (/* result */) => {
+    }, (result) => {
+      this.props.component.data = result;
       this.setState({ mode: MODES.SHOW });
     });
   }
@@ -81,15 +83,11 @@ class ComponentModal extends React.Component {
   __delete() {
     $.post('/api/cypher/delete', {
       node: {
-        id: this.props.component.id,
+        id: this.props.component.data.id,
       },
     }, () => {
       this.props.close();
     });
-  }
-
-  __close() {
-    this.props.close();
   }
 
   render() {
@@ -135,9 +133,6 @@ class ComponentModal extends React.Component {
                     Watcher
                   </th>
                   <th className={s.tableTh}>
-                    Status
-                  </th>
-                  <th className={s.tableTh}>
                     Updated
                   </th>
                   <th className={s.tableTh}>
@@ -151,24 +146,28 @@ class ComponentModal extends React.Component {
                       <b>{w.name}</b>
                     </td>
                     <td className={s.tableTd}>
-                      <ComponentStatus status={w.result.status} />
-                      <small>{w.result.description}</small>
-                    </td>
-                    <td className={s.tableTd}>
                       {formatCreatedAt(w.status)}
                     </td>
                     <td className={s.tableTd}>
-                      <button
-                        className="btn btn-sm btn-default"
-                        onClick={() => alert(JSON.stringify(w))}
+                      <Link
+                        className="btn btn-xs btn-primary"
+                        to={`/components/${component.data.id}/watchers/${w.id}`}
                       >
                         <span className="glyphicon glyphicon-edit" />
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            <div className="text-center">
+              <Link
+                className="btn btn-sm btn-primary"
+                to={`/components/${component.data.id}/watchers/new`}
+              >
+                <span className="glyphicon glyphicon-plus" /> Watcher
+              </Link>
+            </div>
           </div>
         );
       } else if (this.state.mode === MODES.EDIT) {

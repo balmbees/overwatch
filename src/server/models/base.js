@@ -36,7 +36,7 @@ export function Model(jsonSchema) {
   return model;
 }
 
-export function jsonSchemaModel(jsonSchema) {
+export function jsonSchemaModel(jsonSchema, extraSettingFn = null) {
   return function decorator(targetClass) {
     Object.defineProperty(
       targetClass,
@@ -50,6 +50,10 @@ export function jsonSchemaModel(jsonSchema) {
       'model',
       { value: model }
     );
+
+    if (extraSettingFn) {
+      extraSettingFn(model);
+    }
   };
 }
 
@@ -61,17 +65,21 @@ export default class BaseModel {
       this,
       _.pick(
         settings,
-        Object.keys(this.constructor.schema.properties).concat([
-          'id',
-        ])
+        this.__properties()
       )
     );
   }
 
+  __properties() {
+    const names = Object.keys(this.constructor.schema.properties)
+      .concat(['id'])
+      .concat(Object.keys(this.constructor.model.compositions));
+
+    return names;
+  }
+
   serialize() {
-    return _.pick(this, Object.keys(this.constructor.schema.properties).concat([
-      'id',
-    ]));
+    return _.pick(this, this.__properties());
   }
 
   isValid() {
@@ -84,11 +92,23 @@ export default class BaseModel {
     return this.constructor.model;
   }
 
-  save() {
+  static create(settings) {
     return new Promise((resolve, reject) => {
-      this.__model.save(this.serialize(), (err, saved) => {
+      this.model.save(settings, (err, model) => {
         if (err) reject(err);
-        else resolve(saved);
+        else resolve(new this(model));
+      });
+    });
+  }
+
+  static read(idOrObject) {
+    return new Promise((resolve, reject) => {
+      this.model.read(idOrObject, (err, model) => {
+        if (err) reject(err);
+        else {
+          if (model) resolve(new this(model));
+          else reject(new Error(`Cant find ${this.name} with ${JSON.stringify(idOrObject)}`));
+        }
       });
     });
   }

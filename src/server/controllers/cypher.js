@@ -5,7 +5,7 @@ import Component from '../models/component';
 import Watcher, { fromArray, watcherTypes } from '../models/watcher';
 
 const cypherRouter = new Router();
-const dbConnection = DB.connect();
+const db = DB.connect();
 
 const ALL_MODELS = {};
 ALL_MODELS[Component.name] = Component;
@@ -35,7 +35,7 @@ cypherRouter.post('/save', (req, res) => {
         res.status(400).json({ error: err.message });
       });
   } else {
-    dbConnection.save(node.data, node.label, (err, result) => {
+    db.save(node.data, node.label, (err, result) => {
       if (err) {
         res.status(400).json({ error: err.message });
       } else {
@@ -56,7 +56,7 @@ cypherRouter.get('/read', (req, res) => {
       res.status(400).json({ error: err.message });
     });
   } else {
-    dbConnection.read(id, (err, result) => {
+    db.read(id, (err, result) => {
       if (err) {
         res.status(400).json({ error: err.message });
       } else {
@@ -74,11 +74,17 @@ cypherRouter.get('/read', (req, res) => {
 cypherRouter.post('/delete', (req, res) => {
   const body = req.body;
   const node = body.node;
+  console.log(body);
 
-  dbConnection.delete(node, (err) => {
+  db.query(`
+    MATCH (n)
+    WHERE id(n) = ${node.id}
+    DETACH DELETE n
+  `, (err, result) => {
     if (err) {
       res.status(400).json({ error: err.message });
     } else {
+      console.log(result);
       res.status(200).json({ status: 'success' });
     }
   });
@@ -87,7 +93,7 @@ cypherRouter.post('/delete', (req, res) => {
 cypherRouter.get('/find', (req, res) => {
   const predicate = JSON.parse(req.query.predicate || '{}');
   const label = req.query.label;
-  dbConnection.find(predicate, label, (err, result) => {
+  db.find(predicate, label, (err, result) => {
     if (err) {
       res.status(400).json({ error: err.message });
     } else {
@@ -106,7 +112,7 @@ cypherRouter.post('/relate', (req, res) => {
     secondId,
   } = req.body;
 
-  dbConnection.relate(firstId, type, secondId, properties, (err, relationship) => {
+  db.relate(firstId, type, secondId, properties, (err, relationship) => {
     if (err) {
       res.status(400).json({ error: err.message });
     } else {

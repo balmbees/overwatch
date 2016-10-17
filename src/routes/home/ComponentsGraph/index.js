@@ -83,7 +83,7 @@ class ComponentsGraph extends React.Component {
       delete this.cd;
     } else {
       this.cd.firstComponent = component;
-      window.alert('click dependency end component');
+      window.alert('click dependency end component'); // eslint-disable-line
     }
   }
 
@@ -91,7 +91,7 @@ class ComponentsGraph extends React.Component {
     this.isCreatingComponentDependency = true;
     this.cd = {};
 
-    window.alert('click dependency start component');
+    window.alert('click dependency start component'); // eslint-disable-line
   }
 
   _ComponentDependencyCreate(firstComponent, secondComponent) {
@@ -99,13 +99,12 @@ class ComponentsGraph extends React.Component {
       firstId: firstComponent.id,
       type: 'DEPEND',
       secondId: secondComponent.id,
-    }).done((result) => {
-      console.log(result);
-      window.alert('Change Saved!');
+    }).done(() => {
+      window.alert('Change Saved!'); // eslint-disable-line
       window.location.reload();
     })
     .fail((e) => {
-      console.error(e);
+      console.error(e);  // eslint-disable-line
     });
   }
 
@@ -144,7 +143,7 @@ class ComponentsGraph extends React.Component {
         node={node}
         onClick={() => {
           if (!this.isCreatingComponentDependency) {
-            this.props.navigate(`/components/${node.id}`)
+            this.props.navigate(`/components/${node.id}`);
           } else {
             this._ComponentDependencyOnClick(node.data);
           }

@@ -71,7 +71,7 @@ class WatcherModal extends React.Component {
       },
     }, (result) => {
       this.props.watcher.data = result.watchers[result.watchers.length - 1];
-      window.alert('Change Saved!');
+      window.alert('Change Saved!'); // eslint-disable-line
     });
   }
 

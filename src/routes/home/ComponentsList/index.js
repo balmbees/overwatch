@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './index.css';
-import { STATUS_NONE } from '../../../server/models/watch_result';
 
 import ComponentStatus from './ComponentStatus';
 
@@ -28,49 +27,48 @@ class ComponentsList extends React.Component {
     const componentTableRow = (component) => {
       const watchers = component.watchers;
 
-      if (watchers.length === 0) {
-        return (<tr key={component.name}>
-          <td className={s.tableTd}>
-            {component.name}
-          </td>
-          <td className={s.tableTd}>
-            <ComponentStatus status={STATUS_NONE} />
-          </td>
-        </tr>);
-      }
-
       const result = [];
-      const firstWatcher = watchers[0];
-      result.push(<tr key={firstWatcher.name}>
-        <td className={s.tableTd} rowSpan={watchers.length}>
-          {component.name}
-        </td>
-        <td className={s.tableTd}>
-          {firstWatcher.name}
-        </td>
-        <td className={s.tableTd}>
-          <ComponentStatus status={firstWatcher.result.status} />
-          <small>{firstWatcher.result.description}</small>
-        </td>
-        <td className={s.tableTd}>
-          {formatCreatedAt(firstWatcher.status)}
-        </td>
-      </tr>);
-
-      watchers.slice(1).forEach((w) => {
-        result.push(<tr key={w.name}>
-          <td className={s.tableTd}>
-            {w.name}
-          </td>
-          <td className={s.tableTd}>
-            <ComponentStatus status={w.result.status} />
-            <small>{w.result.description}</small>
-          </td>
-          <td className={s.tableTd}>
-            {formatCreatedAt(w.status)}
-          </td>
-        </tr>);
-      });
+      if (watchers.length === 0) {
+        result.push(
+          <tr key={component.name}>
+            <td className={s.tableTd}>
+              {component.name}
+            </td>
+            <td className={s.tableTd} colSpan="3">
+              <small>
+                {"There isn't any watcher for this component"}
+              </small>
+            </td>
+          </tr>
+        );
+      } else {
+        result.push(
+          ...watchers.map((w, index) => (
+            <tr key={w.name}>
+              {(() => {
+                if (index === 0) {
+                  return (
+                    <td className={s.tableTd} rowSpan={watchers.length}>
+                      {component.name}
+                    </td>
+                  );
+                }
+                return null;
+              })()}
+              <td className={s.tableTd}>
+                {w.name}
+              </td>
+              <td className={s.tableTd}>
+                <ComponentStatus status={w.result.status} />
+                <small>{w.result.description}</small>
+              </td>
+              <td className={s.tableTd}>
+                {formatCreatedAt(w.status)}
+              </td>
+            </tr>
+          ))
+        );
+      }
 
       return result;
     };

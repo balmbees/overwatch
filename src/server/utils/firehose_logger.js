@@ -1,7 +1,3 @@
-/**
- * Created by am2rican5 on 2016. 10. 6..
- */
-
 import { Firehose, Config } from 'aws-sdk';
 
 export class FirehoseLogger {

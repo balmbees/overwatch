@@ -190,7 +190,7 @@ const fetch = () => {
 };
 
 fetch();
-cron.schedule('*/10 * * * * *', fetch);
+cron.schedule('*/30 * * * * *', fetch);
 
 io.on('connection', (socket) => {
   if (latestResponse) {

@@ -74,17 +74,15 @@ cypherRouter.get('/read', (req, res) => {
 cypherRouter.post('/delete', (req, res) => {
   const body = req.body;
   const node = body.node;
-  console.log(body);
 
   db.query(`
     MATCH (n)
     WHERE id(n) = ${node.id}
     DETACH DELETE n
-  `, (err, result) => {
+  `, (err/* , result */) => {
     if (err) {
       res.status(400).json({ error: err.message });
     } else {
-      console.log(result);
       res.status(200).json({ status: 'success' });
     }
   });

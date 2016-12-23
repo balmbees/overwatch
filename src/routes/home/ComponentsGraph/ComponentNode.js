@@ -17,8 +17,10 @@ function ComponentNode(props) {
   return (
     <g transform={`translate(${node.x}, ${node.y}) scale(${component.selected ? 1.5 : 1})`}>
       <circle
+        stroke={STATUS_TO_COLOR_MAP[status]}
+        strokeWidth="3px"
+        fill="rgb(235, 235, 235)"
         style={{
-          fill: STATUS_TO_COLOR_MAP[status],
           r: node.size * 0.5,
           transition: 'fill 0.8s cubic-bezier(0.46, -0.6, 0.46, 2.6)',
         }}
@@ -34,7 +36,7 @@ function ComponentNode(props) {
           attributeType="CSS"
           attributeName="opacity"
           dur="1s"
-          values="0 ; 0.4 ; 0"
+          values="0 ; 0.2 ; 0"
           keyTimes="0 ; 0.1 ; 1"
           repeatCount="indefinite"
         />
@@ -42,7 +44,7 @@ function ComponentNode(props) {
           attributeType="CSS"
           attributeName="r"
           dur="1s"
-          values={[1, 1.4, 1].map((s) => s * node.size * 0.8).join('; ')}
+          values={[1, 1.2, 1].map((s) => s * node.size * 0.8).join('; ')}
           keyTimes="0 ; 0.1 ; 1"
           repeatCount="indefinite"
         />
@@ -50,7 +52,7 @@ function ComponentNode(props) {
       <text
         textAnchor="middle"
         x={0}
-        y={- node.size / 2 - 5}
+        y={ node.size / 2 + 10 }
       >
         {component.name}
       </text>

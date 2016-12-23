@@ -133,7 +133,7 @@ export default class D3ForceLayout {
     });
 
     // Restart
-    this.forceSimulation.restart();
+    this.forceSimulation.stop();
   }
 
   get forceSimulationSize() {

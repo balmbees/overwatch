@@ -37,6 +37,46 @@ import Component from './server/models/component';
 import ComponentUpdater from './server/services/component_updater';
 import CypherRouter from './server/controllers/cypher';
 
+class DataFetcher {
+  constructor() {
+    this.componentUpdater = new ComponentUpdater();
+    this.latestResponse = null;
+  }
+
+  fetch() {
+    function groupById(items) {
+      const set = {};
+      items.forEach((item) => {
+        set[item.id] = item;
+      });
+      return set;
+    }
+
+    return Promise.all([
+      this.componentUpdater.updateAll(),
+      ComponentGroup.findAll(),
+      Promise.resolve([]),
+      Component.fetchComponentDependencies(),
+    ]).then((results) => {
+      const [components, nodes, links, depends] = results;
+      this.latestResponse = updateComponents(
+        groupById(components.map((c) =>
+          Object.assign(
+            c.serialize(),
+            { watchers: c.watchers.map(w => Object.assign(w.serialize(), { result: w.result })) }
+          )
+        )),
+        groupById(nodes.map(n => n.serialize())),
+        groupById(links),
+        groupById(depends),
+      );
+    }).catch((e) => {
+      console.log('Error : ', e, e.stack);
+    });
+  }
+}
+const dataFetcher = new DataFetcher();
+
 const app = express();
 
 //
@@ -90,9 +130,16 @@ app.get('*', async (req, res, next) => {
       name: 'initialNow',
       value: Date.now(),
     }));
+    if (dataFetcher.latestResponse) {
+      store.dispatch(dataFetcher.latestResponse);
+    }
+
     let css = new Set();
     let statusCode = 200;
     const data = { title: '', description: '', style: '', script: assets.main.js, children: '' };
+
+    // Fetch, but don't wait
+    dataFetcher.fetch();
 
     await UniversalRouter.resolve(routes, {
       path: req.path,
@@ -158,43 +205,15 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 const server = new http.Server(app);
 const io = new SocketIO(server);
 
-let latestResponse = null;
-const componentUpdater = new ComponentUpdater();
-const fetch = () => {
-  Promise.all([
-    componentUpdater.updateAll(),
-    ComponentGroup.findAll(),
-    Promise.resolve([]),
-    Component.fetchComponentDependencies(),
-  ]).then(([
-    components,
-    nodes,
-    links,
-    depends,
-  ]) => {
-    latestResponse = updateComponents(
-      components.map((c) =>
-        Object.assign(
-          c.serialize(),
-          { watchers: c.watchers.map(w => Object.assign(w.serialize(), { result: w.result })) }
-        )
-      ),
-      nodes.map(n => n.serialize()),
-      links,
-      depends,
-    );
-    io.sockets.emit('action', latestResponse);
-  }).catch((e) => {
-    console.log('Error : ', e, e.stack);
+cron.schedule('*/5 * * * * *', () => {
+  dataFetcher.fetch().then((response) => {
+    io.sockets.emit('action', response);
   });
-};
-
-fetch();
-cron.schedule('*/30 * * * * *', fetch);
+});
 
 io.on('connection', (socket) => {
-  if (latestResponse) {
-    socket.emit('action', latestResponse);
+  if (dataFetcher.latestResponse) {
+    socket.emit('action', dataFetcher.latestResponse);
   }
 });
 

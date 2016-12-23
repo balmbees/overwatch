@@ -20,6 +20,16 @@
       "type": "string",
       "title": "Status",
       "description": "Summarized status of component"
+    },
+    "x": {
+      "type": "number",
+      "title": "x",
+      "description": "location"
+    },
+    "y": {
+      "type": "number",
+      "title": "y",
+      "description": "location"
     }
   }
 }

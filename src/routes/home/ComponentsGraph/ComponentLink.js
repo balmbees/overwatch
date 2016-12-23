@@ -8,15 +8,24 @@ const LINK_CLASS_NAME = {
   depend: 'dependLink',
 };
 
+const GRID_SIZE = {
+  width: 25,
+  height: 25,
+};
+
 function ComponentLink(props) {
   const { link } = props;
+
   return (
     <g>
       <polyline
         points={[
-          [link.source.x, link.source.y],
-          [(link.target.x + link.source.x) / 2, (link.target.y + link.source.y) / 2],
-          [link.target.x, link.target.y],
+          [Number(link.source.x * GRID_SIZE.width), Number(link.source.y * GRID_SIZE.height)],
+          [
+            (Number(link.target.x * GRID_SIZE.width) + Number(link.source.x * GRID_SIZE.width)) / 2,
+            (Number(link.target.y * GRID_SIZE.height) + Number(link.source.y * GRID_SIZE.height)) / 2
+          ],
+          [Number(link.target.x * GRID_SIZE.width), Number(link.target.y * GRID_SIZE.height)],
         ].join(' ')}
         markerMid="url(#arrowMarker)"
         className={s[LINK_CLASS_NAME[link.type]]}

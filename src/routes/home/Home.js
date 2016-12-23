@@ -24,7 +24,7 @@ function Home(props, context) {
       <div className={s.container}>
         {
           (() => {
-            if (props.components.length > 0) {
+            if (Object.values(props.components).length > 0) {
               if (props.type === TYPES.GRAPH) {
                 return (
                   <ComponentsGraph
@@ -53,10 +53,10 @@ function Home(props, context) {
 }
 
 Home.propTypes = {
-  components: React.PropTypes.array,
-  groups: React.PropTypes.array,
-  contains: React.PropTypes.array,
-  depends: React.PropTypes.array,
+  components: React.PropTypes.object,
+  groups: React.PropTypes.object,
+  contains: React.PropTypes.object,
+  depends: React.PropTypes.object,
   children: React.PropTypes.object,
   type: React.PropTypes.oneOf(_.values(TYPES)),
 };
@@ -66,10 +66,10 @@ Home.contextTypes = {
 
 function stateToProps(state) {
   return {
-    components: state.home.data.components || [],
-    groups: state.home.data.groups || [],
-    contains: state.home.data.contains || [],
-    depends: state.home.data.depends || [],
+    components: state.home.data.components || {},
+    groups: state.home.data.groups || {},
+    contains: state.home.data.contains || {},
+    depends: state.home.data.depends || {},
   };
 }
 

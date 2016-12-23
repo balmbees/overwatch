@@ -1,4 +1,4 @@
-import { UPDATE_COMPONENTS } from '../constants';
+import { UPDATE_COMPONENTS, UPDATE_COMPONENT } from '../constants';
 
 export function updateComponents(components, groups, contains, depends) {
   return {
@@ -8,6 +8,15 @@ export function updateComponents(components, groups, contains, depends) {
       groups,
       contains,
       depends,
+    },
+  };
+}
+
+export function updateComponent(component) {
+  return {
+    type: UPDATE_COMPONENT,
+    data: {
+      component,
     },
   };
 }

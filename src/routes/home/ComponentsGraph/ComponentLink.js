@@ -1,14 +1,11 @@
 import React from 'react';
 
-const LINK_STYLE = {
-  contain: {
-    stroke: 'rgba(0, 0, 0, 0.3)',
-    strokeWidth: '5px',
-  },
-  depend: {
-    stroke: '#bda85d',
-    strokeWidth: '3px',
-  },
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import s from './ComponentLink.css';
+
+const LINK_CLASS_NAME = {
+  contain: 'containLink',
+  depend: 'dependLink',
 };
 
 function ComponentLink(props) {
@@ -22,7 +19,7 @@ function ComponentLink(props) {
           [link.target.x, link.target.y],
         ].join(' ')}
         markerMid="url(#arrowMarker)"
-        {...LINK_STYLE[link.type]}
+        className={s[LINK_CLASS_NAME[link.type]]}
       />
     </g>
   );
@@ -31,4 +28,4 @@ ComponentLink.propTypes = {
   link: React.PropTypes.object,
 };
 
-export default ComponentLink;
+export default withStyles(s)(ComponentLink);

@@ -1,0 +1,11 @@
+.containLink {
+  stroke: black;
+  stroke-opacity: 0.3;
+  stroke-width: 5px,
+}
+
+.dependLink {
+  stroke: #004483;
+  stroke-opacity: 0.76;
+  stroke-width: 2px;
+}

@@ -18,7 +18,7 @@ function ComponentNode(props) {
   if (component.infrastructureType) {
     const imageSize = node.size * 0.6;
     imageTag = (
-      <g transform={`translate(${ -imageSize * 0.5}, ${ -imageSize * 0.5})`}>
+      <g transform={`translate(${-imageSize * 0.5}, ${-imageSize * 0.5})`}>
         <image
           xlinkHref={`/component_icons/${component.infrastructureType}.png`}
           height={node.size * 0.6}
@@ -66,7 +66,7 @@ function ComponentNode(props) {
       <text
         textAnchor="middle"
         x={0}
-        y={ node.size / 2 + 10 }
+        y={node.size / 2 + 10}
       >
         {component.name}
       </text>

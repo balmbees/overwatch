@@ -38,7 +38,7 @@ const modalStyle = {
 
 const uiSchema = {
   status: {
-    'ui:widget': 'hidden'
+    'ui:widget': 'hidden',
   },
   description: {
     'ui:widget': 'textarea',

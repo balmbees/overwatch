@@ -149,9 +149,6 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   );
   res.status(statusCode);
   res.send(`<!doctype html>${html}`);
-
-  // Trigger re-render
-  fetch();
 });
 
 //

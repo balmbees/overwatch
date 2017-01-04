@@ -3,7 +3,8 @@
   "type": "object",
   "required": [
     "name",
-    "description"
+    "description",
+    "infrastructureType"
   ],
   "properties": {
     "name": {
@@ -15,6 +16,27 @@
       "type": "string",
       "title": "Description",
       "description": "description of the component"
+    },
+    "infrastructureType": {
+      "type": "string",
+      "title": "Infrastructure Type",
+      "description": "Infrastructure Type of the component",
+      "enum": [
+        "Custom",
+        "AWS-S3",
+        "AWS-ApiGateway",
+        "AWS-CloudSearch",
+        "AWS-DynamoDB",
+        "AWS-Lambda",
+        "AWS-CloudFront",
+        "AWS-RDS",
+        "AWS-ELB",
+        "AWS-Opsworks",
+        "AWS-EMRCluster",
+        "AWS-KinesisFirehose",
+        "AWS-KinesisStream",
+        "AWS-KinesisAnalytics"
+      ]
     },
     "status": {
       "type": "string",

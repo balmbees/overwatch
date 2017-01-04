@@ -14,6 +14,19 @@ function ComponentNode(props) {
   const { node, onClick } = props;
   const component = node.data;
   const status = component.status;
+  let imageTag = null;
+  if (component.infrastructureType) {
+    const imageSize = node.size * 0.6;
+    imageTag = (
+      <g transform={`translate(${-imageSize * 0.5}, ${-imageSize * 0.5})`}>
+        <image
+          xlinkHref={`/component_icons/${component.infrastructureType}.png`}
+          height={node.size * 0.6}
+          width={node.size * 0.6}
+        />
+      </g>
+    );
+  }
   return (
     <g transform={`translate(${node.x}, ${node.y}) scale(${component.selected ? 1.5 : 1})`}>
       <circle
@@ -49,10 +62,11 @@ function ComponentNode(props) {
           repeatCount="indefinite"
         />
       </circle>
+      {imageTag}
       <text
         textAnchor="middle"
         x={0}
-        y={ node.size / 2 + 10 }
+        y={node.size / 2 + 10}
       >
         {component.name}
       </text>

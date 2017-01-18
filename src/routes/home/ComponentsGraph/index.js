@@ -175,7 +175,7 @@ class ComponentsGraph extends React.Component {
         <svg
           ref={(c) => { this.svgRef = c; }}
           width="100%"
-          height="700px"
+          height="1000px"
           style={{
             border: '1px solid black',
             boxSizing: 'border-box',

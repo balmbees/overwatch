@@ -8,7 +8,7 @@ export default class D3ForceLayout {
 
     const forceManyBody = d3.forceManyBody();
     forceManyBody.strength(-60);
-    forceManyBody.distanceMin(70);
+    forceManyBody.distanceMin(120);
     forceManyBody.distanceMax(350);
     this.forceManyBody = forceManyBody;
 
